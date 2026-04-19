@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@theme {
+  --color-rpjmd-blue: #0A3D91;
+  --color-rpjmd-gold: #FBAF17;
+  --font-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  @apply text-gray-800 bg-white;
+}
+
+/* Custom Utilities for Glassmorphism & Nav */
+.glass {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}

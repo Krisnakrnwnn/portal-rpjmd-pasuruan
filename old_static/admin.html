@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RPJMD Admin - Control Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    .active-nav {
+      @apply bg-blue-600 text-white shadow-lg;
+    }
+  </style>
+</head>
+<body class="font-sans text-gray-800 bg-gray-50 min-h-screen">
+
+  <aside id="sidebarMenu" class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform duration-300 ease-in-out -translate-x-full lg:translate-x-0 bg-[#03112E] text-white shadow-2xl flex flex-col">
+    <!-- Branding Logo -->
+    <div class="h-20 flex items-center justify-center border-b border-indigo-900/30 px-6 shrink-0 bg-[#020a1c]">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg">
+          <span class="text-white font-black text-xl">R</span>
+        </div>
+        <div>
+          <div class="font-black text-lg tracking-wide text-white leading-tight">ADMIN PANEL</div>
+          <div class="text-[10px] uppercase font-bold text-blue-400 tracking-wider">Halaman Pusat</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="flex-1 overflow-y-auto py-6 px-4 space-y-2" id="nav-container">
+      <div class="mb-4">
+        <p class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">Umum</p>
+        
+        <button data-target="section-dashboard" class="nav-btn flex items-center px-4 py-3 bg-blue-600 text-white rounded-lg shadow-lg transition-all w-full text-left active">
+          <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+          <span class="font-semibold text-sm">Dashboard Utama</span>
+        </button>
+      </div>
+
+      <button data-target="section-berita" class="nav-btn flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 hover:text-white rounded-lg transition-all w-full text-left mt-2">
+        <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-.586-1.414l-4.5-4.5A2 2 0 0012.586 3H12"></path></svg>
+        <span class="font-medium text-sm">Manajemen Berita</span>
+      </button>
+
+      <button data-target="section-layanan" class="nav-btn flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 hover:text-white rounded-lg transition-all w-full text-left mt-2">
+        <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path></svg>
+        <span class="font-medium text-sm">Katalog Layanan</span>
+        <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">3</span>
+      </button>
+
+      <div class="mt-8 mb-4">
+        <p class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">Konfigurasi</p>
+        
+        <button data-target="section-pengguna" class="nav-btn flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 hover:text-white rounded-lg transition-all w-full text-left">
+          <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+          <span class="font-medium text-sm">Kelola Pengguna</span>
+        </button>
+
+        <button data-target="section-setelan" class="nav-btn flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 hover:text-white rounded-lg transition-all w-full text-left mt-2">
+          <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          <span class="font-medium text-sm">Setelan Sistem</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Pintu Keluar -->
+    <div class="px-6 py-4 border-t border-indigo-900/50">
+      <a href="/index.html" class="flex justify-center items-center py-2 px-4 rounded-lg bg-gray-800 text-yellow-400 font-bold hover:bg-yellow-400 hover:text-gray-900 transition-colors">
+        Keluar Panel
+      </a>
+    </div>
+  </aside>
+
+  <div id="overlay" class="fixed inset-0 bg-gray-900/60 z-30 hidden lg:hidden transition-opacity"></div>
+
+  <div class="lg:ml-64 flex flex-col min-h-screen">
+    
+    <!-- Topbar Lengket -->
+    <header class="sticky top-0 z-20 w-full h-20 bg-white border-b border-gray-200 flex items-center justify-between px-4 sm:px-8 shrink-0">
+      <div class="flex items-center flex-1">
+        <button id="hamburgerBtn" type="button" class="lg:hidden p-2 text-gray-500 hover:text-blue-600 hover:bg-gray-100 rounded-lg focus:outline-none transition-colors mr-4">
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+
+        <div class="w-full max-w-lg hidden sm:block">
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="w-5 h-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" /></svg>
+            </span>
+            <input type="text" placeholder="Cari di dasbor..." class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:bg-white focus:border-blue-500 block pl-10 p-2.5 transition-colors">
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 md:gap-5">
+        <button class="relative p-2 text-gray-400 hover:text-blue-600 bg-gray-50 border border-gray-200 rounded-full transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+          <span class="absolute top-0.5 right-0.5 h-2.5 w-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+        </button>
+        <div class="h-6 w-px bg-gray-200 hidden md:block"></div>
+        <div class="flex items-center gap-3">
+          <div class="hidden md:block text-right">
+            <div class="text-sm font-bold text-gray-900 leading-none">Anastasya M.</div>
+            <div class="text-[11px] font-semibold text-gray-500 mt-1">Super Administrator</div>
+          </div>
+          <img class="w-10 h-10 rounded-full object-cover border border-gray-300" src="https://i.pravatar.cc/150?img=9" alt="User Profile">
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 p-4 lg:p-8 relative overflow-x-hidden">
+
+      <!-- ============================== -->
+      <!-- SECTION: DASHBOARD (DEFAULT)   -->
+      <!-- ============================== -->
+      <section id="section-dashboard" class="content-section block">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+          <div>
+            <h1 class="text-3xl font-black text-gray-900 mb-1">Tinjauan Dasbor</h1>
+            <p class="text-gray-500 text-sm">Pantau statistik publikasi dan respon kegiatan terkini.</p>
+          </div>
+          <button onclick="showSection('section-berita-form')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-lg shadow cursor-pointer transition-colors w-max text-sm">
+            Tulis Berita Baru +
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Total Berita</h3>
+              <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-.586-1.414l-4.5-4.5A2 2 0 0012.586 3H12"></path></svg>
+              </div>
+            </div>
+            <p class="text-3xl font-black text-gray-900 mb-1">1,342</p>
+            <p class="text-xs text-green-600 font-semibold">+ 4 Berita hari ini</p>
+          </div>
+
+          <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Aduan Masuk</h3>
+              <div class="w-8 h-8 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path></svg>
+              </div>
+            </div>
+            <p class="text-3xl font-black text-gray-900 mb-1">87</p>
+            <p class="text-xs text-red-600 font-semibold">3 Perlu Respon Cepat!</p>
+          </div>
+
+          <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Pengunjung</h3>
+              <div class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+              </div>
+            </div>
+            <p class="text-3xl font-black text-gray-900 mb-1">45.2K</p>
+            <p class="text-xs text-green-600 font-semibold">+ 15% Bulan ini</p>
+          </div>
+
+          <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Staf Aktif</h3>
+              <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+              </div>
+            </div>
+            <p class="text-3xl font-black text-gray-900 mb-1">11</p>
+            <p class="text-xs text-gray-500 font-semibold">Tergabung dalam tim</p>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-[#0c4091] to-[#041a42] rounded-xl shadow-lg border border-blue-900 p-8 text-white relative overflow-hidden mb-8">
+          <div class="absolute -right-10 -top-10 w-40 h-40 bg-yellow-400/20 rounded-full blur-[40px]"></div>
+          <div>
+            <h3 class="text-xl font-bold mb-2 text-white">Sistem Utama Berjalan Stabil</h3>
+            <p class="text-blue-200 text-sm font-light leading-relaxed mb-6">Seluruh layanan e-Musrenbang dan integrasi data SKPD dapat diakses oleh masyarakat umum. Semua metrik dalam kondisi wajar.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================== -->
+      <!-- SECTION: MANAJEMEN BERITA      -->
+      <!-- ============================== -->
+      <section id="section-berita" class="content-section hidden">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+          <div>
+            <h1 class="text-3xl font-black text-gray-900 mb-1">Manajemen Berita</h1>
+            <p class="text-gray-500 text-sm">Organisir manuskrip berita harian dan pembaruan sistem Anda.</p>
+          </div>
+          <button onclick="showSection('section-berita-form')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-lg shadow cursor-pointer transition-colors w-max text-sm">
+            Tulis Artikel Baru
+          </button>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div class="p-6 border-b border-gray-200 flex flex-wrap gap-4 items-center justify-between">
+            <h2 class="text-lg font-bold text-gray-900">Daftar Publikasi Harian</h2>
+            <div class="flex gap-2">
+              <select class="border border-gray-300 rounded px-3 py-1.5 text-sm outline-none focus:border-blue-500">
+                <option>Semua Status</option>
+                <option>Dipublikasi</option>
+                <option>Draft</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="w-full overflow-x-auto">
+            <table class="w-full min-w-[700px] text-left border-collapse">
+              <thead class="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Judul Artikel</th>
+                  <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Kategori</th>
+                  <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Status Draft</th>
+                  <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Tombol Aksi</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100 whitespace-nowrap">
+                <tr class="hover:bg-blue-50/50 transition-colors">
+                  <td class="px-6 py-4">
+                    <div class="font-bold text-gray-900 text-sm">Akselerasi Program Beasiswa</div>
+                    <div class="text-xs text-gray-500">24 Mei 2026</div>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-gray-600 font-medium">Pendidikan Ruang</td>
+                  <td class="px-6 py-4">
+                    <span class="inline-block px-2.5 py-1 text-xs font-bold bg-green-100 text-green-700 rounded-md">Live Publik</span>
+                  </td>
+                  <td class="px-6 py-4 text-right space-x-2">
+                    <button onclick="showSection('section-berita-form')" class="text-xs px-3 py-1 bg-blue-50 text-blue-600 rounded">Ubah</button>
+                    <button class="text-xs px-3 py-1 bg-gray-50 text-gray-600 rounded hover:text-red-600">Hapus</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================== -->
+      <!-- SECTION: FORM BERITA (SUB-SPA) -->
+      <!-- ============================== -->
+      <section id="section-berita-form" class="content-section hidden">
+        <div class="flex items-center gap-4 mb-8">
+          <button onclick="showSection('section-berita')" class="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors text-gray-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+          </button>
+          <div>
+            <h1 class="text-3xl font-black text-gray-900">Tulis/Edit Berita</h1>
+            <p class="text-gray-500 text-sm">Kembali ke daftar berita dengan menekan tombol panah.</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 max-w-4xl">
+          <form class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-2">
+                <label class="text-sm font-bold text-gray-700">Judul Artikel</label>
+                <input type="text" placeholder="Masukkan judul menarik..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all">
+              </div>
+              <div class="space-y-2">
+                <label class="text-sm font-bold text-gray-700">Kategori</label>
+                <select class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all">
+                  <option>Pendidikan</option>
+                  <option>Infrastruktur</option>
+                  <option>Kesehatan</option>
+                  <option>Lingkungan</option>
+                </select>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <label class="text-sm font-bold text-gray-700">Konten Berita</label>
+              <textarea rows="8" placeholder="Tulis rincian berita di sini..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all"></textarea>
+            </div>
+            <div class="flex justify-end gap-3 pt-4">
+              <button type="button" onclick="showSection('section-berita')" class="px-6 py-3 rounded-xl font-bold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">Batalkan</button>
+              <button type="submit" class="px-8 py-3 rounded-xl font-bold bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/20 transition-all">Simpan Publikasi</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ============================== -->
+      <!-- SECTION: LAYANAN PUBLIK        -->
+      <!-- ============================== -->
+      <section id="section-layanan" class="content-section hidden">
+        <h1 class="text-3xl font-black text-gray-900 mb-1">Tiket Layanan Publik</h1>
+        <p class="text-gray-500 text-sm mb-8">Daftar usulan Musrenbang dan keluhan informasi Tata Ruang.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-white border-l-4 border-l-yellow-500 rounded-xl p-6 shadow-sm border border-gray-200">
+            <div class="flex justify-between items-start mb-4">
+              <span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs font-bold rounded">Menunggu</span>
+              <span class="text-xs text-gray-400">1 Menit yang lalu</span>
+            </div>
+            <h3 class="font-bold text-gray-900 mb-2">Usulan Perbaikan Drainase Jalan Sisinga</h3>
+            <p class="text-gray-500 text-sm mb-4">Kepala Dusun mengajukan perbaikan akibat meluapnya air saat hujan lebat kawasan Sisinga.</p>
+            <div class="flex gap-2">
+              <button class="px-4 py-1.5 bg-blue-600 text-white rounded text-xs font-bold hover:bg-blue-700">Tanggapi</button>
+              <button class="px-4 py-1.5 bg-gray-100 text-gray-600 rounded text-xs font-bold hover:bg-gray-200">Arsipkan</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================== -->
+      <!-- SECTION: PENGGUNA SISTEM       -->
+      <!-- ============================== -->
+      <section id="section-pengguna" class="content-section hidden">
+        <h1 class="text-3xl font-black text-gray-900 mb-1">Kelola Pengguna</h1>
+        <p class="text-gray-500 text-sm mb-8">Administrasi kepegawaian dan tingkat otorisasi login.</p>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div class="flex gap-4 items-center border-b border-gray-100 pb-4 mb-4">
+            <img src="https://i.pravatar.cc/150?img=9" class="w-12 h-12 rounded-full border border-gray-300">
+            <div class="flex-1">
+              <h4 class="font-bold text-gray-900">Anastasya M. (Anda)</h4>
+              <p class="text-xs text-gray-500">Super Administrator</p>
+            </div>
+            <button class="px-3 py-1 bg-green-100 text-green-700 rounded text-xs font-bold">Aktif</button>
+          </div>
+          <button class="w-full py-3 border border-dashed border-gray-300 text-gray-500 rounded-lg text-sm font-bold hover:bg-gray-50">
+            + Tambah Pegawai Baru
+          </button>
+        </div>
+      </section>
+
+      <!-- ============================== -->
+      <!-- SECTION: SETELAN SISTEM        -->
+      <!-- ============================== -->
+      <section id="section-setelan" class="content-section hidden">
+        <h1 class="text-3xl font-black text-gray-900 mb-1">Setelan Konfigurasi</h1>
+        <p class="text-gray-500 text-sm mb-8">Pengaturan umum server RPJMD dan visibilitas portal.</p>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8 max-w-2xl">
+           <form class="space-y-6">
+             <div>
+               <label class="block text-sm font-bold text-gray-700 mb-2">Nama Instansi (Header)</label>
+               <input type="text" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-sm" value="RPJMD Kota Pasuruan">
+             </div>
+             <div>
+               <label class="block text-sm font-bold text-gray-700 mb-2">Email Pemulihan Notifikasi</label>
+               <input type="email" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-sm" value="admin@rpjmd.pasuruankota.go.id">
+             </div>
+             <div class="flex items-center gap-3">
+               <input type="checkbox" id="maintenance" class="w-5 h-5 text-blue-600 rounded">
+               <label for="maintenance" class="font-bold text-gray-700 text-sm">Mode Pemeliharaan</label>
+             </div>
+             <button type="button" class="px-6 py-2.5 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 shadow-sm transition-colors">Simpan Setelan</button>
+           </form>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Javascript Khusus Admin (SPA Logic) -->
+  <script>
+    // Penampung elemen global
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const sections = document.querySelectorAll('.content-section');
+    const sidebarMenu = document.getElementById("sidebarMenu");
+    const overlay = document.getElementById("overlay");
+
+    // Fungsi utama perpindahan seksi
+    function showSection(targetId) {
+      // 1. Sembunyikan semua seksi
+      sections.forEach(sec => {
+        sec.classList.remove('block');
+        sec.classList.add('hidden');
+      });
+
+      // 2. Tampilkan seksi target
+      const targetSec = document.getElementById(targetId);
+      if(targetSec) {
+        targetSec.classList.remove('hidden');
+        targetSec.classList.add('block');
+        
+        // Scroll ke atas otomatis
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // 3. Update styling tombol sidebar (hanya jika targetId adalah seksi utama)
+      navButtons.forEach(btn => {
+        const btnTarget = btn.getAttribute('data-target');
+        if(targetId.includes(btnTarget)) { // Memastikan sub-section (seperti form) tetap menghighlight menu induk
+           btn.classList.add('bg-blue-600', 'text-white', 'shadow-lg');
+           btn.classList.remove('text-gray-300', 'hover:bg-white/10');
+        } else {
+           btn.classList.remove('bg-blue-600', 'text-white', 'shadow-lg');
+           btn.classList.add('text-gray-300', 'hover:bg-white/10');
+        }
+      });
+    }
+
+    // Toggle Sidebar Mobile
+    function toggleSidebar() {
+      sidebarMenu.classList.toggle("-translate-x-full");
+      overlay.classList.toggle("hidden");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Hamburger & Overlay listener
+      document.getElementById("hamburgerBtn")?.addEventListener("click", toggleSidebar);
+      overlay?.addEventListener("click", toggleSidebar);
+
+      // Nav Button listener
+      navButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.getAttribute('data-target');
+          showSection(targetId);
+
+          if(window.innerWidth < 1024) toggleSidebar();
+        });
+      });
+    });
+  </script>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

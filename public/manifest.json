@@ -1,0 +1,23 @@
+{
+  "name": "RPJMD Pasuruan",
+  "short_name": "Sistem RPJMD",
+  "description": "Layanan Informasi RPJMD Kota Pasuruan 2025-2029",
+  "start_url": "/?source=pwa",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "192x192",
+      "type": "image/icon",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "512x512",
+      "type": "image/icon"
+    }
+  ]
+}

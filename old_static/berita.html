@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Layanan Informasi RPJMD Kota Pasuruan - Berita</title>
+  <meta name="description" content="Portal Berita Layanan Informasi RPJMD Kota Pasuruan." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+</head>
+<body class="font-sans text-gray-800 bg-gray-50 min-h-screen flex flex-col relative">
+
+  <!-- Navbar -->
+  <nav class="fixed w-full z-50 glass border-b border-gray-100 shadow-sm transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <div class="flex items-center gap-3">
+          <a href="/index.html" class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-900 flex items-center justify-center shadow-lg">
+              <span class="text-white font-black text-xl">R</span>
+            </div>
+            <div>
+              <div class="font-black text-xl tracking-tight text-blue-900 leading-tight">RPJMD</div>
+              <div class="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Kota Pasuruan</div>
+            </div>
+          </a>
+        </div>
+        <div class="hidden md:block">
+          <div class="ml-10 flex items-baseline space-x-6">
+            <a href="/index.html" class="text-gray-600 font-medium px-2 py-2 hover:text-blue-600 transition-colors">Beranda</a>
+            <a href="/profil.html" class="text-gray-600 font-medium px-2 py-2 hover:text-blue-600 transition-colors">Profil</a>
+            <a href="/berita.html" class="text-blue-600 font-bold px-2 py-2 border-b-2 border-blue-600">Informasi</a>
+            <a href="/layanan.html" class="text-gray-600 font-medium px-2 py-2 hover:text-blue-600 transition-colors">Layanan</a>
+            <a href="/kontak.html" class="bg-blue-600 text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-blue-700 shadow-md hover:shadow-lg transition-all ml-4">Hubungi Kami</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="flex-grow pt-20">
+    <!-- Header Spanduk -->
+    <div class="relative w-full min-h-[450px] bg-blue-950 overflow-hidden flex items-center">
+      <div class="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-yellow-500/20 rounded-full blur-[120px] animate-pulse"></div>
+      <img src="/hero.png" class="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-overlay object-top" />
+      <div class="absolute inset-0 bg-gradient-to-t from-[#0A3D91] via-blue-900/80 to-[#041a42]/90"></div>
+      
+      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-16 pb-12 text-center flex flex-col items-center">
+        <!-- Breadcrumbs UI -->
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-6 text-sm text-blue-200">
+          <a href="/index.html" class="hover:text-white cursor-pointer transition-colors text-xs uppercase tracking-wider font-semibold">Beranda</a>
+          <span>/</span>
+          <span class="text-white text-xs uppercase tracking-wider font-bold">Berita & Informasi</span>
+        </div>
+        
+        <h1 class="text-5xl md:text-6xl font-black text-white mb-6 drop-shadow-2xl">
+          Berita & <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500">Informasi</span>
+        </h1>
+        <p class="text-blue-100 text-lg md:text-xl max-w-3xl font-light leading-relaxed">
+          Informasi terkini seputar agenda strategis, capaian program RPJMD, dan inovasi pembangunan yang sedang berjalan di Kota Pasuruan.
+        </p>
+      </div>
+
+      <!-- Bottom Curve Divider -->
+      <div class="absolute bottom-0 w-full overflow-hidden leading-none z-20 translate-y-[2px]">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="relative block w-full h-[50px] lg:h-[80px]">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C54,82.47,110.15,77.58,168.22,76.54,219.64,75.64,271.86,65.68,321.39,56.44Z" fill="#F9FAFB"></path>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Simple Search Section -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 mb-12 relative z-30">
+      <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-2 flex items-center gap-2">
+          <div class="flex-grow relative group">
+            <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+              <svg class="h-5 w-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </div>
+            <input type="text" 
+              class="w-full bg-transparent border-0 focus:ring-0 py-4 pl-12 pr-4 text-gray-700 placeholder-gray-400 font-medium" 
+              placeholder="Cari berita atau pengumuman...">
+          </div>
+          <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl transition-all active:scale-95 shadow-md">
+            Cari
+          </button>
+        </div>
+        <div class="mt-3 flex justify-center gap-4 text-xs font-medium text-gray-400">
+          <span>Populer:</span>
+          <a href="#" class="hover:text-blue-600 transition-colors">#Musrenbang</a>
+          <a href="#" class="hover:text-blue-600 transition-colors">#ProgramIKU</a>
+          <a href="#" class="hover:text-blue-600 transition-colors">#Infrastruktur</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 w-full">
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
+        
+        <!-- Card 1 -->
+        <a href="/detail-berita.html" data-aos="fade-up" data-aos-delay="100" class="group bg-white rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col h-full cursor-pointer">
+          <div class="h-64 relative overflow-hidden">
+            <img src="/news1.png" alt="Musrenbang" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out" />
+            <div class="absolute inset-0 bg-gradient-to-t from-gray-900/40 to-transparent"></div>
+          </div>
+          <div class="p-8 flex-grow flex flex-col">
+            <div class="text-xs font-bold text-blue-600 uppercase tracking-widest mb-3">Musrenbang 2026</div>
+            <h3 class="font-bold text-2xl mb-4 text-gray-900 group-hover:text-blue-600 transition-colors leading-snug">Musrenbang Kota Pasuruan 2026 Hasilkan 68 Usulan Program Prioritas</h3>
+            <p class="text-gray-500 text-sm leading-relaxed line-clamp-3 mb-6">Pemerintah Kota Pasuruan sukses menyelenggarakan Musyawarah Rencana Pembangunan tingkat kota dengan menampung 68 usulan program prioritas dari seluruh OPD dan masyarakat...</p>
+            <div class="mt-auto text-blue-600 font-semibold flex items-center text-sm group-hover:tracking-wider transition-all">
+              Baca Sepenuhnya &rarr;
+            </div>
+          </div>
+        </a>
+
+        <!-- Card 2 -->
+        <a href="/detail-berita.html" data-aos="fade-up" data-aos-delay="200" class="group bg-white rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col h-full cursor-pointer">
+          <div class="h-64 relative overflow-hidden">
+            <img src="/news2.png" alt="Review Data" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out" />
+            <div class="absolute inset-0 bg-gradient-to-t from-gray-900/40 to-transparent"></div>
+          </div>
+          <div class="p-8 flex-grow flex flex-col">
+            <div class="text-xs font-bold text-yellow-600 uppercase tracking-widest mb-3">Dokumen Resmi</div>
+            <h3 class="font-bold text-2xl mb-4 text-gray-900 group-hover:text-blue-600 transition-colors leading-snug">Dokumen RPJMD Kota Pasuruan 2025-2029 Resmi Ditetapkan Perda</h3>
+            <p class="text-gray-500 text-sm leading-relaxed line-clamp-3 mb-6">DPRD Kota Pasuruan mengesahkan Peraturan Daerah tentang RPJMD Kota Pasuruan 2025-2029 dalam sidang paripurna, menjadi acuan pembangunan lima tahun ke depan.</p>
+            <div class="mt-auto text-blue-600 font-semibold flex items-center text-sm group-hover:tracking-wider transition-all">
+              Baca Sepenuhnya &rarr;
+            </div>
+          </div>
+        </a>
+
+        <!-- Card 3 -->
+        <a href="detail-berita.html" data-aos="fade-up" data-aos-delay="300" class="group bg-white rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col h-full cursor-pointer">
+          <div class="h-64 relative overflow-hidden">
+            <img src="/news3.png" alt="Kunjungan Kerja" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out" />
+            <div class="absolute inset-0 bg-gradient-to-t from-gray-900/40 to-transparent"></div>
+          </div>
+          <div class="p-8 flex-grow flex flex-col">
+            <div class="text-xs font-bold text-green-600 uppercase tracking-widest mb-3">Realisasi Program</div>
+            <h3 class="font-bold text-2xl mb-4 text-gray-900 group-hover:text-blue-600 transition-colors leading-snug">Progres Infrastruktur Kota Pasuruan Capai 78% Sesuai Target RPJMD</h3>
+            <p class="text-gray-500 text-sm leading-relaxed line-clamp-3 mb-6">Wali Kota Pasuruan mengumumkan capaian realisasi program infrastruktur telah mencapai 78% dari target RPJMD, dipimpin oleh proyek jalan dan drainase perkotaan.</p>
+            <div class="mt-auto text-blue-600 font-semibold flex items-center text-sm group-hover:tracking-wider transition-all">
+              Baca Sepenuhnya &rarr;
+            </div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-[#041a42] text-gray-300 pt-16 pb-8 border-t border-blue-900 w-full mt-auto relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+        <div class="col-span-1 md:col-span-2">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-md">
+              <span class="text-white font-black text-xs">R</span>
+            </div>
+            <div class="font-black text-lg tracking-tight text-white leading-none">RPJMD Kota Pasuruan</div>
+          </div>
+          <p class="text-gray-400 text-sm leading-relaxed max-w-sm mb-6 font-light">Portal Layanan Informasi RPJMD Kota Pasuruan — menyajikan data perencanaan, capaian kinerja, dan informasi pembangunan kota secara transparan untuk masyarakat.</p>
+        </div>
+        <div>
+          <h4 class="text-white font-bold mb-4 tracking-wide">Tautan Cepat</h4>
+          <ul class="space-y-3 text-sm text-gray-400 flex flex-col">
+            <li><a href="/profil.html" class="hover:text-blue-400 transition-colors">Profil Instansi</a></li>
+            <li><a href="/layanan.html" class="hover:text-blue-400 transition-colors">Layanan Publik</a></li>
+            <li><a href="/berita.html" class="hover:text-blue-400 transition-colors">Berita Terkini</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-bold mb-4 tracking-wide">Kontak Kami</h4>
+          <ul class="space-y-4 text-sm text-gray-400 flex flex-col">
+            <li class="flex items-start group">
+              <span class="hover:text-yellow-400 transition-colors cursor-pointer">Jl. Pahlawan No. 44, Kota Pasuruan, Jawa Timur 67114</span>
+            </li>
+            <li class="flex items-center group">
+              <a href="mailto:rpjmd@pasuruankota.go.id" class="hover:text-yellow-400 transition-colors">rpjmd@pasuruankota.go.id</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-8 border-t border-blue-900/50 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+        <p>&copy; 2026 Layanan Informasi RPJMD Kota Pasuruan. Hak Cipta Dilindungi Undang-Undang.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 1000,
+      once: true,
+      easing: 'ease-out-cubic'
+    });
+  </script>
+</body>
+</html>
