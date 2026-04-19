@@ -1,58 +1,98 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🏛️ Layanan Informasi RPJMD Kota Pasuruan
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem Layanan Informasi Rencana Pembangunan Jangka Menengah Daerah (RPJMD) Terpadu berbasis kecerdasan buatan (*AI Chatbot*). Proyek ini dirancang sebagai platform transparansi data pemerintah yang dilengkapi dasbor analitik (*Chart.js*) progresif, ekspor laporan formal (PDF), serta antarmuka PWA (Progressive Web Application).
 
-## About Laravel
+## 🚀 Fitur Utama
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Integrasi Penuh AI Chatbot**: Dibekali framework pintar RAG yang terhubung ke **Google Gemini**, membantu merespons jutaan data dan skenario layanan untuk memberikan jawaban efisien ke masyarakat. Termasuk pencegahan kebocoran limit API melalui *Quick Options Interceptor*.
+- **Admin Dashboard Dinamis (CMS)**: Manipulasi data Hero Section, target capaian prioritas, program berjalan, yang seketika *real-time* tercermin di halaman Beranda.
+- **Interaktif Visual Data (Chart.js)**: Penampil distribusi sektor (Doughnut Chart) dan Bar Chart langsung ditarik dari Database capaian riil.
+- **PWA (Progressive Web App) Ready**: Mendukung instalasi *"Add To Home Screen"* via browser *mobile* serta pemuatan secepat kilat menggunakan Service Worker Caching.
+- **Smart PDF Export Laporan**: Generator laporan murni dari layout HTML to PDF menggunakan `@media print`, membersihkan tampilan tabel & analitik tanpa sisa kode formulir sehingga menghasilkan bentuk berkas kenegaraan super resmi.
+- **Simulator Database Cerdas (Fake Seeder)**: Siap mendemonstrasikan sistem kapan saja tanpa repot karena sudah tertanam ratusan garis Data Indikator, Capaian Sektor, dan Berita secara otomatis!
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 💻 Tech Stack
 
-## Learning Laravel
+- **Framework**: Laravel 11 (PHP 8.2+)
+- **Frontend**: Vite.js + TailwindCSS 3 
+- **Database**: PostgreSQL (Supabase Connected) / MySQL / SQLite
+- **Libraries**: Chart.js, AOS (Animate on Scroll), Phosphor/Heroicons
+- **API**: Google Gemini LLM API via Laravel HTTP Client
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛠️ Instalasi & Persiapan Lokal (How To Run)
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+Ikuti langkah-langkah di bawah ini untuk menjalankan portal RPJMD secara sempurna di perangkat Lokal/Laptop Anda:
 
-## Agentic Development
+### 1. Requirements Ekosistem
+- **PHP** ^8.2 (Pastikan jalan di sistem)
+- **Composer** ^2.6
+- **Node.js** ^18 & NPM (Untuk *TailwindCSS Vite compiler*)
+- Database Lokal (Laragon/XAMPP) atau Database Remote (Supabase).
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
+### 2. Kloning Repositori
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/Krisnakrnwnn/PBLS6.git
+cd PBLS6
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 3. Konfigurasi Dependensi
+Jalankan komando instalasi *Library* Backend dan Frontend:
+```bash
+# Instal kerangka Laravel
+composer install
 
-## Contributing
+# Instal NPM (Tailwind & Vite)
+npm install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 4. Setup Environment (.env)
+1. Salin file `.env.example` lalu ubah namanya menjadi `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+2. Hasilkan kunci enkripsi aplikasi:
+   ```bash
+   php artisan key:generate
+   ```
+3. Buka konfigurasi `.env` Anda melalui Teks Editor dan isi sambungan Database Anda (MySQL / Postgres) sesuai pengaturan lokal komputer.
+   - Jangan lupa sisipkan API KEY **Google Gemini** pada konfigurasi environment yang relevan jika ingin layanan AI Chatbot berfungsi global.
 
-## Code of Conduct
+### 5. Bangun Database & Simulator
+Berikan nyawa pada sistem Anda dengan membuat struktur (migrasi) tabel dan menyuntikkan simulasi datanya:
+```bash
+# Mengeksekusi tabel dasar
+php artisan migrate:fresh
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# Mengeksekusi penciptaan puluhan Data Sektor, Capaian Indikator, & Ekosistem Aplikasi
+php artisan db:seed --class=DummyDataSeeder
+```
 
-## Security Vulnerabilities
+### 6. Jalankan Server Berdampingan (Dual-Terminal)
+Anda HARUS mengeksekusi dua perintah ini menggunakan dua Terminal *(Command Prompt / PowerShell)* yang berbeda secara serentak.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+**Terminal Pertama (Untuk Server Backend):**
+```bash
+php artisan serve
+# Aplikasi Laravel akan terbuka di alamat -> http://localhost:8000
+```
 
-## License
+**Terminal Kedua (Untuk Asset Compiling UI):**
+```bash
+npm run dev
+# Vite server akan bekerja me-refresh CSS/JS setiap kali ada modifikasi.
+```
+*(Catatan Produksi: Jika proyek ini akan dipresentasikan tanpa perlu diedit lagi, cukup jalankan `npm run build` sekali di tahap ini, lalu terminal kedua tersebut boleh dimatikan).*
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## 🔐 Info Login (Admin Control)
+Akses *backroom* melalui URL **`http://localhost:8000/login`**.
+Karena fungsi pendaftaran terbuka, Anda dapat melakukan registrasi *User* baru melalui alamat `/register`, atau gunakan akun statis jika diinisialisasi melalui migrasi. Seluruh akun akan otomatis memilik hak pengeditan Dashboard.
+
+## 🤝 Kreator & Lisensi
+Proyek pengembangan Sistem Layanan Informasi ini dirancang oleh **Krisnakrnwnn** untuk penugasan *Project Based Learning (PBL)* Universitas.
+All Rights Reserved.
