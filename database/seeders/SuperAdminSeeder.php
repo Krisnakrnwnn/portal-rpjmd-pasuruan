@@ -14,10 +14,10 @@ class SuperAdminSeeder extends Seeder
     public function run(): void
     {
         User::updateOrCreate(
-            ['email' => 'kurniawankrisna803@gmail.com'],
+            ['email' => 'bapperida@pasuruankab.go.id'],
             [
-                'name' => 'Krisna',
-                'password' => Hash::make('Krisnakrnwnn803'),
+                'name' => 'Admin Bapperida',
+                'password' => Hash::make('Pasuruan2026!'),
                 'role' => 'Super Admin',
             ]
         );
