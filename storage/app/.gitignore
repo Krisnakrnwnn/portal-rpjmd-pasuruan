@@ -1,5 +1,6 @@
 *
+!.gitignore
 !private/
 !public/
 !documents/
-!.gitignore
+!documents/**
