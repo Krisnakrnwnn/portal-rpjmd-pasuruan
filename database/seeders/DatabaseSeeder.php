@@ -81,9 +81,10 @@ class DatabaseSeeder extends Seeder
         ]);
         \App\Models\Indicator::create(['sector_id' => $pendidikan->id, 'name' => 'Program Beasiswa', 'progress' => 98]);
         \App\Models\Indicator::create(['sector_id' => $pendidikan->id, 'name' => 'Kualitas Ruang Kelas', 'progress' => 84]);
-        // Panggil Seed Lanjutan (Fake Data & Admin)
+        // Panggil Seed Lanjutan (Fake Data, Admin, & Profil)
         $this->call([
             SuperAdminSeeder::class,
+            ProfileSeeder::class,
             DummyDataSeeder::class,
         ]);
     }
