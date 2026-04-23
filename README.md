@@ -16,7 +16,7 @@ Sistem Layanan Informasi Rencana Pembangunan Jangka Menengah Daerah (RPJMD) Terp
 
 - **Framework**: Laravel 11 (PHP 8.2+)
 - **Frontend**: Vite.js + TailwindCSS 3 
-- **Database**: PostgreSQL (Supabase) / MySQL
+- **Database**: MySQL 5.7+ / MariaDB (Direkomendasikan) / PostgreSQL
 - **AI Engine**: Google Gemini API
 - **Visuals**: Chart.js, AOS, Heroicons
 
@@ -31,6 +31,7 @@ Pastikan server memiliki:
 - **PHP** ^8.2
 - **Composer** ^2.x
 - **Node.js** ^18 & NPM
+- **MySQL** 5.7 atau versi lebih baru
 
 ### 2. Kloning & Instalasi
 ```bash
@@ -48,7 +49,7 @@ php artisan key:generate --force
 ```
 **PENTING**:
 - Atur `APP_ENV=production` dan `APP_DEBUG=false`.
-- Masukkan kredensial database (PostgreSQL/Supabase).
+- Masukkan kredensial database (MySQL).
 - Masukkan `GEMINI_API_KEY` untuk fitur AI Chatbot.
 
 ### 4. Build Assets
@@ -87,5 +88,5 @@ php artisan view:cache
 ```
 
 ## 🤝 Kreator
-Proyek pengembangan Sistem Layanan Informasi ini dirancang oleh **Krisnakrnwnn**.
+Proyek pengembangan Sistem Layanan Informasi ini dirancang oleh **Krisnakrnwnn dkk**.
 All Rights Reserved.
