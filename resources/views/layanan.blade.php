@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Layanan Informasi RPJMD Kabupaten Pasuruan - Layanan')
+@section('title', 'Bapperida Kabupaten Pasuruan - Layanan Publik')
 
 @section('content')
     <!-- Header Spanduk -->
@@ -18,7 +18,7 @@
         </div>
         
         <h1 class="text-4xl md:text-6xl font-black text-white mb-6 drop-shadow-2xl">
-          Layanan <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500">Informasi RPJMD</span>
+          Layanan <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500">Informasi Bapperida</span>
         </h1>
         <p class="text-blue-100 text-lg md:text-xl max-w-3xl font-light leading-relaxed">
           Satu portal untuk mengakses dokumen RPJMD, memantau capaian program prioritas, dan mendapatkan data pembangunan Kabupaten Pasuruan secara transparan.

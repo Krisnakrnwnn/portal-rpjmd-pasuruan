@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Layanan Informasi RPJMD Kabupaten Pasuruan - Kontak')
+@section('title', 'Bapperida Kabupaten Pasuruan - Hubungi Kami')
 
 @section('content')
     <!-- Header Spanduk -->

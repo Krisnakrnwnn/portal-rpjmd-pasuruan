@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'RPJMD Admin - Control Panel')
+@section('title', 'Bapperida Admin - Control Panel')
 
 @section('content')
       <!-- ============================== -->
@@ -18,7 +18,7 @@
           <!-- Hidden for Print Header -->
           <div class="hidden print:block mb-8 pb-6 border-b border-gray-200">
              <div class="text-center mb-6">
-               <h1 class="text-2xl font-black text-gray-900 uppercase tracking-widest">Laporan Progres RPJMD Kabupaten Pasuruan</h1>
+               <h1 class="text-2xl font-black text-gray-900 uppercase tracking-widest">Laporan Progres Bapperida Kabupaten Pasuruan</h1>
                <p class="text-gray-500 text-sm mt-1">Dicetak pada {{ now()->format('d M Y, H:i') }}</p>
              </div>
              
@@ -37,7 +37,7 @@
 
              <!-- Print Only Stats: Capaian Stats -->
              <div class="mb-4 break-inside-avoid text-left">
-               <h3 class="text-[11px] font-black uppercase text-gray-800 tracking-widest mb-3 border-b border-gray-300 pb-2">II. Metrik Capaian Kinerja (RPJMD)</h3>
+               <h3 class="text-[11px] font-black uppercase text-gray-800 tracking-widest mb-3 border-b border-gray-300 pb-2">II. Metrik Capaian Kinerja (Bapperida)</h3>
                <div class="grid grid-cols-4 border-l border-t border-gray-300">
                  @foreach($capaianStats as $st)
                  <div class="p-3 border-r border-b border-gray-300 text-center bg-gray-50 print:bg-transparent">

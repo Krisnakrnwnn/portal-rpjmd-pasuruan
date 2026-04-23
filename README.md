@@ -1,6 +1,6 @@
-# 🏛️ Layanan Informasi RPJMD Kabupaten Pasuruan
+# 🏛️ Bapperida Kabupaten Pasuruan - Portal Layanan Informasi RPJMD
 
-Sistem Layanan Informasi Rencana Pembangunan Jangka Menengah Daerah (RPJMD) Terpadu berbasis kecerdasan buatan (*AI Chatbot*). Proyek ini dirancang sebagai platform transparansi data pemerintah yang dilengkapi dasbor analitik (*Chart.js*) progresif, ekspor laporan formal (PDF), serta antarmuka PWA (Progressive Web Application).
+Sistem Layanan Informasi Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah (Bapperida) Kabupaten Pasuruan. Portal ini menyajikan transparansi data perencanaan (RPJMD) dan capaian kinerja daerah, dilengkapi dengan asisten pintar berbasis kecerdasan buatan (*AI Chatbot*).
 
 ## 🚀 Fitur Utama
 

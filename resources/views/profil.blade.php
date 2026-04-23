@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Layanan Informasi RPJMD Kabupaten Pasuruan - Profil')
+@section('title', 'Bapperida Kabupaten Pasuruan - Profil Instansi')
 
 @section('content')
     <!-- Header Spanduk -->
@@ -18,10 +18,10 @@
         </div>
         
         <h1 class="text-4xl md:text-6xl font-black text-white mb-6 drop-shadow-2xl">
-          Profil <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500">RPJMD Pasuruan</span>
+          Profil <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500">Bapperida Pasuruan</span>
         </h1>
         <p class="text-blue-100 text-lg md:text-xl max-w-3xl font-light leading-relaxed">
-          Mengenal lebih dekat latar belakang, dasar hukum, dan komitmen Pemerintah Kabupaten Pasuruan dalam mewujudkan pembangunan daerah yang terencana, transparan, dan berkelanjutan melalui RPJMD.
+          Mengenal lebih dekat Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah (Bapperida) Kabupaten Pasuruan — Lembaga yang bertanggung jawab atas perencanaan, riset, dan inovasi pembangunan daerah yang berkelanjutan.
         </p>
       </div>
 

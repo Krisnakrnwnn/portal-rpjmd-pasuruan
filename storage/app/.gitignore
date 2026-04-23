@@ -3,4 +3,5 @@
 !private/
 !public/
 !documents/
-!documents/**
+!documents/.gitkeep
+storage/app/documents/*.pdf

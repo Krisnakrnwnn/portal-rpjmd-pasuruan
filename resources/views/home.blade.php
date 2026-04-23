@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Layanan Informasi RPJMD Kabupaten Pasuruan - Beranda')
-@section('meta_description', 'Portal Resmi Layanan Informasi RPJMD Kabupaten Pasuruan — Akses data perencanaan, target pembangunan, dan capaian kinerja Pemerintah Kabupaten Pasuruan secara transparan.')
+@section('title', 'Bapperida Kabupaten Pasuruan - Layanan Informasi RPJMD')
+@section('meta_description', 'Portal Resmi Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah (Bapperida) Kabupaten Pasuruan — Akses data perencanaan, target pembangunan, dan capaian kinerja secara transparan.')
 
 @section('content')
     <!-- Hero Section -->
@@ -15,7 +15,7 @@
         <div class="w-full text-left mt-8 lg:mt-0">
           <div
             class="inline-block px-4 py-1.5 rounded-full bg-blue-100/20 backdrop-blur-md border border-white/20 mb-6 font-medium text-blue-100 text-sm tracking-wide hero-reveal" style="animation-delay: 0.1s; opacity: 0;">
-            #PasuruanMajuBersamaRPJMD
+            #PasuruanMajuBersamaBapperida
           </div>
           <h1 class="text-4xl sm:text-5xl lg:text-7xl font-black text-white mb-6 leading-[1.2] lg:leading-[1.1] drop-shadow-md hero-reveal" style="animation-delay: 0.3s; opacity: 0;">
             Membangun <br />
@@ -24,12 +24,12 @@
           </h1>
           <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 lg:gap-8 mb-8 w-full">
             <p class="text-base sm:text-xl text-blue-100 font-light leading-relaxed max-w-xl hero-reveal m-0" style="animation-delay: 0.5s; opacity: 0;">
-              Portal resmi Layanan Informasi RPJMD Kabupaten Pasuruan. Akses data perencanaan, target pembangunan, dan capaian kinerja daerah secara transparan dan akuntabel.
+              Portal resmi Layanan Informasi Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah (Bapperida) Kabupaten Pasuruan. Akses data perencanaan, target pembangunan, dan capaian kinerja daerah secara transparan.
             </p>
             <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 hero-reveal shrink-0 lg:ml-auto w-full sm:w-auto mt-6 lg:mt-0" style="animation-delay: 0.7s; opacity: 0;">
               <a href="{{ route('layanan') }}"
                 class="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 rounded-full text-blue-900 font-bold bg-white hover:bg-yellow-400 shadow-lg transition-all hover:-translate-y-1 text-center whitespace-nowrap text-sm sm:text-base">
-                Akses Layanan RPJMD
+                Akses Layanan Bapperida
               </a>
               <a href="{{ route('berita') }}"
                 class="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 rounded-full text-white font-semibold bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 transition-all text-center whitespace-nowrap text-sm sm:text-base">

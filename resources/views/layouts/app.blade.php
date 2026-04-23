@@ -14,8 +14,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <title>@yield('title', 'Layanan Informasi RPJMD Kabupaten Pasuruan')</title>
-  <meta name="description" content="@yield('meta_description', 'Portal Layanan Informasi RPJMD Kabupaten Pasuruan. Transparansi data, perencanaan, dan capaian pembangunan kota.')" />
+  <title>@yield('title', 'Bapperida Kabupaten Pasuruan - Layanan Informasi RPJMD')</title>
+  <meta name="description" content="@yield('meta_description', 'Portal Resmi Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah (Bapperida) Kabupaten Pasuruan. Transparansi data perencanaan dan capaian pembangunan.')" />
   
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
@@ -149,7 +149,7 @@
       <img src="{{ asset('logo.png') }}" class="w-16 h-16 object-contain" alt="Logo RPJMD" />
     </div>
     <div>
-      <div class="preloader-text">Memuat Portal RPJMD</div>
+      <div class="preloader-text">Memuat Portal Bapperida</div>
       <div style="width:180px; height:2px; background:rgba(255,255,255,0.1); border-radius:99px; margin-top:10px; overflow:hidden;">
         <div id="preloader-bar" style="height:100%; width:0%; background:linear-gradient(90deg,#3b82f6,#facc15); border-radius:99px; transition: width 0.3s ease;"></div>
       </div>
@@ -176,9 +176,9 @@
       <div class="flex items-center justify-between h-20">
         <div class="flex items-center gap-3">
           <a href="{{ route('home') }}" class="flex items-center gap-3">
-            <img src="{{ asset('logo.png') }}" class="w-10 h-10 object-contain" alt="Logo RPJMD" />
+            <img src="{{ asset('logo.png') }}" class="w-10 h-10 object-contain" alt="Logo Bapperida" />
             <div>
-              <div class="font-black text-xl tracking-tight text-blue-900 leading-tight">RPJMD</div>
+              <div class="font-black text-xl tracking-tight text-blue-900 leading-tight">BAPPERIDA</div>
               <div class="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Kabupaten Pasuruan</div>
             </div>
           </a>
@@ -251,10 +251,10 @@
       <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
         <div class="col-span-1 md:col-span-2">
           <div class="flex items-center gap-3 mb-6">
-            <img src="{{ asset('logo.png') }}" class="w-8 h-8 object-contain" alt="Logo RPJMD" />
-            <div class="font-black text-lg tracking-tight text-white leading-none">RPJMD Kabupaten Pasuruan</div>
+            <img src="{{ asset('logo.png') }}" class="w-8 h-8 object-contain" alt="Logo Bapperida" />
+            <div class="font-black text-lg tracking-tight text-white leading-none">Bapperida Kabupaten Pasuruan</div>
           </div>
-          <p class="text-gray-400 text-sm leading-relaxed max-w-sm mb-6 font-light">Portal Layanan Informasi Rencana Pembangunan Jangka Menengah Daerah (RPJMD) Kabupaten Pasuruan — menyajikan data perencanaan, capaian kinerja, dan informasi pembangunan kota secara transparan untuk masyarakat.</p>
+          <p class="text-gray-400 text-sm leading-relaxed max-w-sm mb-6 font-light">Portal Layanan Informasi Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah (Bapperida) Kabupaten Pasuruan — menyajikan data perencanaan, capaian kinerja, dan inovasi pembangunan daerah secara transparan.</p>
           <div class="flex gap-4">
             <a href="{{ $socials['ig_link'] ?? '#' }}" target="_blank" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-gradient-to-tr hover:from-purple-500 hover:to-pink-500 hover:text-white transition-all shadow-sm">
                 <i class="fab fa-instagram"></i>
