@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Layanan Informasi RPJMD Kota Pasuruan - Profil')
+@section('title', 'Layanan Informasi RPJMD Kabupaten Pasuruan - Profil')
 
 @section('content')
     <!-- Header Spanduk -->
@@ -21,7 +21,7 @@
           Profil <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500">RPJMD Pasuruan</span>
         </h1>
         <p class="text-blue-100 text-lg md:text-xl max-w-3xl font-light leading-relaxed">
-          Mengenal lebih dekat latar belakang, dasar hukum, dan komitmen Pemerintah Kota Pasuruan dalam mewujudkan pembangunan daerah yang terencana, transparan, dan berkelanjutan melalui RPJMD.
+          Mengenal lebih dekat latar belakang, dasar hukum, dan komitmen Pemerintah Kabupaten Pasuruan dalam mewujudkan pembangunan daerah yang terencana, transparan, dan berkelanjutan melalui RPJMD.
         </p>
       </div>
 

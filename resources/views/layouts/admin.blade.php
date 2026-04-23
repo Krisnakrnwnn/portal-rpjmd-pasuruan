@@ -24,9 +24,7 @@
     <!-- Branding Logo -->
     <div class="h-20 flex items-center justify-center border-b border-indigo-900/30 px-6 shrink-0 bg-[#020a1c]">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg">
-          <span class="text-white font-black text-xl">R</span>
-        </div>
+        <img src="{{ asset('logo.png') }}" class="w-10 h-10 object-contain" alt="Logo RPJMD" />
         <div>
           <div class="font-black text-lg tracking-wide text-white leading-tight">ADMIN PANEL</div>
           <div class="text-[10px] uppercase font-bold text-blue-400 tracking-wider">Halaman Pusat</div>

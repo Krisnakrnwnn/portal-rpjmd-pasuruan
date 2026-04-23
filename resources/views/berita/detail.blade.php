@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $news->title . ' - RPJMD Kota Pasuruan')
+@section('title', $news->title . ' - RPJMD Kabupaten Pasuruan')
 @section('meta_description', $meta_description)
 @section('og_image', $og_image)
 
@@ -60,17 +60,19 @@
                 </div>
                 </div>
 
-                <!-- Tombol Kembali -->
-                <div class="mt-16 pt-10 border-t border-gray-100 flex justify-between items-center">
-                   <a href="{{ route('berita') }}" class="flex items-center gap-2 text-blue-600 font-bold hover:gap-4 transition-all uppercase tracking-widest text-xs">
-                      &larr; Kembali ke Daftar Berita
+                <!-- Tombol Kembali & Bagikan -->
+                <div class="mt-12 pt-8 pb-8 sm:mt-16 sm:pt-10 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-6 md:px-12 lg:px-16">
+                   <a href="{{ route('berita') }}" class="group flex items-center justify-center gap-3 w-full sm:w-auto px-6 py-3.5 bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white rounded-full font-bold transition-all shadow-sm">
+                      <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                      <span class="uppercase tracking-wider text-xs">Kembali ke Daftar Berita</span>
                    </a>
-                   <div class="flex items-center gap-4">
-                      <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Bagikan:</span>
-                      <div class="flex gap-2">
-                        <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center cursor-pointer hover:bg-blue-600 hover:text-white transition-all"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg></div>
-                        <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center cursor-pointer hover:bg-blue-600 hover:text-white transition-all"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm3 8h-1.35c-.538 0-.65.221-.65.778v1.222h2l-.209 2h-1.791v7h-3v-7h-2v-2h2v-2.308c0-1.769.931-2.692 3.029-2.692h1.971v3z"/></svg></div>
-                        <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center cursor-pointer hover:bg-blue-600 hover:text-white transition-all"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.17.054 1.805.249 2.227.412.558.217.957.477 1.377.896.419.42.679.819.896 1.377.164.422.359 1.057.412 2.227.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.054 1.17-.248 1.805-.412 2.227-.217.558-.477.957-.896 1.377-.42.419-.819.679-1.377.896-.422.164-1.057.359-2.227.412-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.054-1.805-.249-2.227-.412-.558-.217-.957-.477-1.377-.896-.419-.42-.679-.819-.896-1.377-.164-.422-.359-1.057-.412-2.227-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.054-1.17.249-1.805.412-2.227.217-.558.477-.957.896-1.377.42-.42.819-.679 1.377-.896.422-.164 1.057-.359 2.227-.412 1.266-.058 1.646-.07 4.85-.07m0-2.163c-3.259 0-3.667.014-4.947.072-1.277.057-2.148.258-2.911.554-.789.306-1.459.717-2.126 1.384-.667.667-1.078 1.337-1.384 2.126-.297.763-.497 1.634-.554 2.911-.059 1.28-.073 1.688-.073 4.947s.014 3.667.072 4.947c.057 1.277.258 2.148.554 2.911.306.789.717 1.459 1.384 2.126.667.667 1.337 1.078 2.126 1.384.763.297 1.634.497 2.911.554 1.28.059 1.688.073 4.947.073s3.667-.014 4.947-.072c1.277-.057 2.148-.258 2.911-.554.789-.306 1.459-.717 2.126-1.384.667-.667 1.078-1.337 1.384-2.126.297-.763.497-1.634.554-2.911.059-1.28.073-1.688.073-4.947s-.014-3.667-.072-4.947c-.057-1.277-.258-2.148-.554-2.911-.306-.789-.717-1.459-1.384-2.126-.667-.667-1.337-1.078-2.126-1.384-.763-.297-1.634-.497-2.911-.554-1.28-.059-1.688-.073-4.947-.073z"/></svg></div>
+                   
+                   <div class="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full sm:w-auto p-4 sm:p-0 bg-gray-50 sm:bg-transparent rounded-2xl sm:rounded-none border border-gray-100 sm:border-none">
+                      <span class="text-[11px] font-bold text-gray-500 uppercase tracking-widest">Bagikan Artikel:</span>
+                      <div class="flex gap-3 sm:gap-2">
+                        <div class="w-10 h-10 sm:w-9 sm:h-9 rounded-full bg-white sm:bg-blue-50 border sm:border-none border-gray-200 text-blue-600 flex items-center justify-center cursor-pointer hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all shadow-sm sm:shadow-none"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg></div>
+                        <div class="w-10 h-10 sm:w-9 sm:h-9 rounded-full bg-white sm:bg-blue-50 border sm:border-none border-gray-200 text-blue-600 flex items-center justify-center cursor-pointer hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all shadow-sm sm:shadow-none"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm3 8h-1.35c-.538 0-.65.221-.65.778v1.222h2l-.209 2h-1.791v7h-3v-7h-2v-2h2v-2.308c0-1.769.931-2.692 3.029-2.692h1.971v3z"/></svg></div>
+                        <div class="w-10 h-10 sm:w-9 sm:h-9 rounded-full bg-white sm:bg-blue-50 border sm:border-none border-gray-200 text-blue-600 flex items-center justify-center cursor-pointer hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all shadow-sm sm:shadow-none"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.17.054 1.805.249 2.227.412.558.217.957.477 1.377.896.419.42.679.819.896 1.377.164.422.359 1.057.412 2.227.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.054 1.17-.248 1.805-.412 2.227-.217.558-.477.957-.896 1.377-.42.419-.819.679-1.377.896-.422.164-1.057.359-2.227.412-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.054-1.805-.249-2.227-.412-.558-.217-.957-.477-1.377-.896-.419-.42-.679-.819-.896-1.377-.164-.422-.359-1.057-.412-2.227-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.054-1.17.249-1.805.412-2.227.217-.558.477-.957.896-1.377.42-.42.819-.679 1.377-.896.422-.164 1.057-.359 2.227-.412 1.266-.058 1.646-.07 4.85-.07m0-2.163c-3.259 0-3.667.014-4.947.072-1.277.057-2.148.258-2.911.554-.789.306-1.459.717-2.126 1.384-.667.667-1.078 1.337-1.384 2.126-.297.763-.497 1.634-.554 2.911-.059 1.28-.073 1.688-.073 4.947s.014 3.667.072 4.947c.057 1.277.258 2.148.554 2.911.306.789.717 1.459 1.384 2.126.667.667 1.337 1.078 2.126 1.384.763.297 1.634.497 2.911.554 1.28.059 1.688.073 4.947.073s3.667-.014 4.947-.072c1.277-.057 2.148-.258 2.911-.554.789-.306 1.459-.717 2.126-1.384.667-.667 1.078-1.337 1.384-2.126.297-.763.497-1.634.554-2.911.059-1.28.073-1.688.073-4.947s-.014-3.667-.072-4.947c-.057-1.277-.258-2.148-.554-2.911-.306-.789-.717-1.459-1.384-2.126-.667-.667-1.337-1.078-2.126-1.384-.763-.297-1.634-.497-2.911-.554-1.28-.059-1.688-.073-4.947-.073z"/></svg></div>
                       </div>
                    </div>
                 </div>
@@ -79,9 +81,9 @@
         </div>
 
         <!-- Sidebar -->
-        <div class="lg:col-span-1 space-y-12" data-aos="fade-left" data-aos-delay="400">
+        <div class="lg:col-span-1 space-y-12" data-aos="fade-left" data-aos-delay="400" >
            <!-- Widget Berita Terkait -->
-           <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+           <div class="bg-white rounded-3xl mt-12 p-8 pt-12 shadow-sm border border-gray-100">
               <h4 class="font-black text-xs uppercase tracking-[0.3em] text-blue-600 mb-8 border-b border-blue-50 pb-4">Artikel Terkait</h4>
               <div class="space-y-8">
                  <a href="#" class="group flex gap-4">

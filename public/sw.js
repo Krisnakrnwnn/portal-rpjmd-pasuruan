@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rpjmd-cache-v1';
+const CACHE_NAME = 'rpjmd-cache-v3';
 const urlsToCache = [
   '/',
   '/manifest.json',
@@ -7,6 +7,7 @@ const urlsToCache = [
 ];
 
 self.addEventListener('install', event => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
@@ -16,20 +17,8 @@ self.addEventListener('install', event => {
   );
 });
 
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Cache hit - return response
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
-      })
-  );
-});
-
 self.addEventListener('activate', event => {
+  event.waitUntil(clients.claim());
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
     caches.keys().then(cacheNames => {
@@ -41,5 +30,20 @@ self.addEventListener('activate', event => {
         })
       );
     })
+  );
+});
+
+self.addEventListener('fetch', event => {
+  if (event.request.mode === 'navigate' || event.request.headers.get('accept').includes('text/html')) {
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match(event.request))
+    );
+    return;
+  }
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => {
+        return response || fetch(event.request);
+      })
   );
 });

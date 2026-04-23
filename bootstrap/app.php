@@ -11,9 +11,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'admin.role' => \App\Http\Middleware\AdminRoleMiddleware::class,
             'super.admin' => \App\Http\Middleware\SuperAdminMiddleware::class,
+        ]);
+        
+        $middleware->validateCsrfTokens(except: [
+            '/api/chat'
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

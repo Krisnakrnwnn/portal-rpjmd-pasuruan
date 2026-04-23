@@ -76,7 +76,17 @@ class PortalController extends Controller
 
         $sectors = \App\Models\Sector::with('indicators')->get();
 
-        return view('capaian', compact('stats', 'sectors'));
+        // Ambil waktu update terakhir dari tabel terkait
+        $lastUpdate = collect([
+            \App\Models\Indicator::max('updated_at'),
+            \App\Models\Sector::max('updated_at'),
+            \App\Models\Stat::max('updated_at'),
+            \App\Models\Activity::max('created_at'),
+        ])->filter()->max();
+
+        $lastUpdate = $lastUpdate ? \Carbon\Carbon::parse($lastUpdate) : now();
+
+        return view('capaian', compact('stats', 'sectors', 'lastUpdate'));
     }
 
     public function storeContact(Request $request)

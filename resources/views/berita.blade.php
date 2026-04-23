@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Layanan Informasi RPJMD Kota Pasuruan - Berita & Informasi')
+@section('title', 'Layanan Informasi RPJMD Kabupaten Pasuruan - Berita & Informasi')
 
 @section('content')
     <!-- Header Spanduk -->
@@ -21,7 +21,7 @@
           Berita & <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500">Informasi</span>
         </h1>
         <p class="text-blue-100 text-lg md:text-xl max-w-3xl font-light leading-relaxed">
-          Informasi terkini seputar agenda strategis, capaian program RPJMD, dan inovasi pembangunan yang sedang berjalan di Kota Pasuruan.
+          Informasi terkini seputar agenda strategis, capaian program RPJMD, dan inovasi pembangunan yang sedang berjalan di Kabupaten Pasuruan.
         </p>
       </div>
 

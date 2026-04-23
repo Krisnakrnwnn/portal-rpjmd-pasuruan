@@ -10,13 +10,13 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\File;
 use Smalot\PdfParser\Parser;
 
-#[Signature('rag:ingest {filename?} {--all}')]
-#[Description('Extract text from PDFs, chunk them, get embeddings, and save to DB')]
+#[Signature('rag:ingest {filename?} {--all} {--resume}')]
+#[Description('Extract text from PDFs, chunk them, get embeddings, and save to DB. Use --resume to skip already-ingested pages.')]
 class IngestPdfCommand extends Command
 {
     public function handle()
     {
-        $directory = 'd:/PBL/AssetsPDF';
+        $directory = env('RAG_PDF_PATH', storage_path('app/documents'));
         
         if (!is_dir($directory)) {
             $this->error("Directory not found: $directory");
@@ -26,6 +26,8 @@ class IngestPdfCommand extends Command
         $filename = $this->argument('filename');
         $all = $this->option('all');
 
+        $resume = $this->option('resume');
+
         if ($all) {
             $files = collect(File::files($directory))->map->getFilename()->toArray();
         } elseif ($filename) {
@@ -34,6 +36,10 @@ class IngestPdfCommand extends Command
             // Kita ubah default ke file berukuran 500KB agar berhasil tanpa error memory
             $files = ['Perpres Nomor 12 Tahun 2025 RPJMN 2025-2029.pdf'];
             $this->info("No filename provided. Defaulting to smaller test file 'Perpres Nomor 12 Tahun 2025 RPJMN 2025-2029.pdf'.");
+        }
+
+        if ($resume) {
+            $this->info('Mode RESUME aktif: halaman yang sudah di-ingest akan dilewati.');
         }
 
         // Buka batasan Memory Limit bawaan PHP yang sebelumnya 512MB
@@ -51,12 +57,8 @@ class IngestPdfCommand extends Command
             $filePath = rtrim($directory, '/') . '/' . $file;
 
             if (!file_exists($filePath)) {
-                // Try literal fallback
-                $filePath = 'd:\PBL\AssetsPDF\\' . $file;
-                if (!file_exists($filePath)) {
-                    $this->error("File not found: $filePath");
-                    continue;
-                }
+                $this->error("File not found: $filePath");
+                continue;
             }
 
             $this->info("Processing: $file ...");
@@ -69,6 +71,18 @@ class IngestPdfCommand extends Command
 
                 foreach ($pages as $pageIndex => $page) {
                     $pageNumber = $pageIndex + 1;
+
+                    // === RESUME LOGIC: skip halaman yang sudah ada di DB ===
+                    if ($resume) {
+                        $alreadyIngested = DocumentChunk::where('document_name', $file)
+                            ->where('page_number', $pageNumber)
+                            ->exists();
+                        if ($alreadyIngested) {
+                            $this->line("  [SKIP] Halaman {$pageNumber} sudah ada, dilewati.");
+                            continue;
+                        }
+                    }
+
                     $text = $page->getText();
                     
                     // Bersihkan teks dari karakter non-UTF8 yang rusak (sering terjadi di PDF hasil scan)

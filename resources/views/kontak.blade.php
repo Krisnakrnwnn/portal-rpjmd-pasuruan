@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Layanan Informasi RPJMD Kota Pasuruan - Kontak')
+@section('title', 'Layanan Informasi RPJMD Kabupaten Pasuruan - Kontak')
 
 @section('content')
     <!-- Header Spanduk -->
@@ -20,7 +20,7 @@
           Sampaikan <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500">Aspirasi Anda</span>
         </h1>
         <p class="text-blue-100/90 text-lg md:text-xl max-w-2xl font-light leading-relaxed">
-          Kami hadir untuk masyarakat Kota Pasuruan. Pertanyaan, masukan, maupun saran terkait RPJMD Kota Pasuruan sangat kami harapkan demi perencanaan yang lebih baik.
+          Kami hadir untuk masyarakat Kabupaten Pasuruan. Pertanyaan, masukan, maupun saran terkait RPJMD Kabupaten Pasuruan sangat kami harapkan demi perencanaan yang lebih baik.
         </p>
       </div>
 
@@ -32,42 +32,9 @@
       </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 w-full flex flex-col lg:flex-row gap-12 -mt-10 relative z-30">
-      <!-- Informasi Kontak -->
-      <div class="lg:w-1/3 space-y-6">
-        <div class="flex items-center p-6 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow" data-aos="fade-up" data-aos-delay="100">
-          <div class="w-14 h-14 bg-blue-50 border border-blue-100 rounded-full flex items-center justify-center text-blue-600 shrink-0">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-          </div>
-          <div class="ml-5">
-            <h4 class="font-extrabold text-gray-900 text-lg">Alamat Kantor</h4>
-            <p class="text-gray-500 text-sm mt-1">Jl. Pahlawan No. 44<br>Kota Pasuruan, Jawa Timur 67114</p>
-          </div>
-        </div>
-        
-        <div class="flex items-center p-6 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow" data-aos="fade-up" data-aos-delay="200">
-          <div class="w-14 h-14 bg-yellow-50 border border-yellow-100 rounded-full flex items-center justify-center text-yellow-600 shrink-0">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-          </div>
-          <div class="ml-5">
-            <h4 class="font-extrabold text-gray-900 text-lg">Telepon</h4>
-            <p class="text-gray-500 text-sm mt-1">(0343) 421 230<br>Senin - Jumat, 08:00 - 16:00</p>
-          </div>
-        </div>
-        
-        <div class="flex items-center p-6 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow" data-aos="fade-up" data-aos-delay="300">
-          <div class="w-14 h-14 bg-green-50 border border-green-100 rounded-full flex items-center justify-center text-green-600 shrink-0">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-          </div>
-          <div class="ml-5">
-            <h4 class="font-extrabold text-gray-900 text-lg">Online Service</h4>
-            <p class="text-gray-500 text-sm mt-1">rpjmd@pasuruankota.go.id<br>Terintegrasi portal layanan.</p>
-          </div>
-        </div>
-      </div>
-      
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 w-full -mt-10 relative z-30">
       <!-- Formulir Kontak -->
-      <div class="lg:w-2/3 bg-white rounded-3xl shadow-xl border border-gray-100 p-8 md:p-12 scale-100 transform transition-all hover:scale-[1.01]" data-aos="fade-left">
+      <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 md:p-12 scale-100 transform transition-all hover:scale-[1.01]" data-aos="fade-up">
         <h3 class="text-3xl font-extrabold mb-8 text-blue-900 border-b border-gray-100 pb-4">Tinggalkan Pesan Disini</h3>
         
         @if(session('success'))
@@ -107,7 +74,7 @@
             @error('message') <p class="text-red-500 text-[10px] font-bold mt-1 uppercase">{{ $message }}</p> @enderror
           </div>
           <button type="submit" class="w-full py-5 bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-extrabold text-lg rounded-xl shadow-lg hover:shadow-2xl transition-all hover:-translate-y-1 focus:outline-none">
-            Terbangkan Pesan Sekarang &rarr;
+            Kirim Pesan Sekarang &rarr;
           </button>
         </form>
       </div>

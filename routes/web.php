@@ -50,9 +50,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.role'])->grou
     // Toggle Publik/Draft (Admin & Super Admin)
     Route::post('/berita/{id}/toggle', [AdminController::class, 'togglePublish'])->name('toggle_publish');
 
+    // Profil Instansi (Admin & Super Admin)
+    Route::post('/profile', [AdminController::class, 'updateProfile'])->name('update_profile');
+
     // Super Admin ONLY
     Route::middleware('super.admin')->group(function () {
-        Route::post('/profile', [AdminController::class, 'updateProfile'])->name('update_profile');
         Route::post('/users', [AdminController::class, 'storeUser'])->name('store_user');
         Route::put('/users/{id}', [AdminController::class, 'updateUser'])->name('update_user');
         Route::delete('/users/{id}', [AdminController::class, 'deleteUser'])->name('delete_user');

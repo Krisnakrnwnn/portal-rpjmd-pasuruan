@@ -47,7 +47,7 @@
                         </div>
                         <div class="text-left">
                             <div class="font-black text-2xl tracking-tight text-white leading-none">RPJMD</div>
-                            <div class="text-[10px] uppercase font-bold text-blue-200 tracking-[0.2em]">Kota Pasuruan</div>
+                            <div class="text-[10px] uppercase font-bold text-blue-200 tracking-[0.2em]">Kabupaten Pasuruan</div>
                         </div>
                     </a>
                 </div>
@@ -57,7 +57,7 @@
                 </div>
                 
                 <p class="text-center mt-8 text-blue-200/60 text-xs font-bold uppercase tracking-widest">
-                    &copy; 2026 Pemerintah Kota Pasuruan
+                    &copy; 2026 Pemerintah Kabupaten Pasuruan
                 </p>
             </div>
         </div>

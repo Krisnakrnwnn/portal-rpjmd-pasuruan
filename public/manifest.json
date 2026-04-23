@@ -1,7 +1,7 @@
 {
   "name": "RPJMD Pasuruan",
   "short_name": "Sistem RPJMD",
-  "description": "Layanan Informasi RPJMD Kota Pasuruan 2025-2029",
+  "description": "Layanan Informasi RPJMD Kabupaten Pasuruan 2025-2029",
   "start_url": "/?source=pwa",
   "display": "standalone",
   "background_color": "#ffffff",
