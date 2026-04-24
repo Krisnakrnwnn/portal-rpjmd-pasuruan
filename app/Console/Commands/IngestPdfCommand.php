@@ -85,11 +85,8 @@ class IngestPdfCommand extends Command
 
                     $text = $page->getText();
                     
-                    // Bersihkan teks secara menyeluruh dari karakter ilegal yang bisa merusak JSON
-                    $text = mb_convert_encoding($text, 'UTF-8', 'UTF-8'); 
-                    $text = htmlspecialchars($text, ENT_SUBSTITUTE, 'UTF-8'); // Ganti karakter ilegal dengan simbol substitute
-                    $text = html_entity_decode($text); // Kembalikan karakter normal
-                    $text = preg_replace('/[\x00-\x1F\x7F]/u', '', $text); 
+                    // Pembersihan total: Buang semua karakter yang tidak valid secara UTF-8 dan karakter kontrol yang merusak JSON
+                    $text = preg_replace('/[^\x09\x0A\x0D\x20-\x7E\xA0-\xFF]/u', '', $text); 
                     $text = preg_replace('/\s+/', ' ', trim($text)); 
 
                     if (empty($text) || strlen($text) < 50) continue; // Skip empty or tiny pages
@@ -154,7 +151,8 @@ class IngestPdfCommand extends Command
                 $this->info("Completed: $file!");
 
             } catch (\Exception $e) {
-                $this->error("Error extracting text from $file: " . $e->getMessage());
+                $currentPage = isset($pageNumber) ? " (Halaman $pageNumber)" : "";
+                $this->error("Error pada file $file$currentPage: " . $e->getMessage());
             }
         }
     }
