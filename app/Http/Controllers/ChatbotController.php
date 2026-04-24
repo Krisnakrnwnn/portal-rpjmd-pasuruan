@@ -171,7 +171,15 @@ Instruksi Penting:
             $status = $chatResponse ? $chatResponse->status() : 500;
             
             if ($status == 503) {
-                return response()->json(['reply' => '🙏 Mohon maaf, server AI kami saat ini sedang sangat antre dipanggil oleh orang lain dari seluruh dunia (Server Overload). Silakan coba kirim ulang pertanyaan Anda dalam beberapa detik/menit ke depan.']);
+                return response()->json(['reply' => '🙏 Mohon maaf, server AI kami saat ini sedang sangat antre (Server Overload). Silakan coba kirim ulang pertanyaan Anda dalam beberapa detik/menit ke depan.']);
+            }
+            
+            if ($status == 429) {
+                return response()->json(['reply' => '🚀 Wah, sepertinya Anda terlalu bersemangat bertanya! Sistem kami butuh waktu sejenak untuk bernapas. Mohon tunggu sekitar 1 menit sebelum mengirim pertanyaan lagi ya.']);
+            }
+
+            if ($status == 404) {
+                return response()->json(['reply' => '🧩 Maaf, model AI tidak ditemukan atau endpoint salah (Error 404). Silakan hubungi admin untuk mengecek konfigurasi GEMINI_MODEL.']);
             }
             
             return response()->json(['reply' => "Terjadi kendala pada mesin AI (Kode $status). Silakan coba lagi nanti."], 500);

@@ -449,6 +449,8 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
     const chatSend   = document.getElementById('chat-send');
     const notifDot   = document.getElementById('chat-notif-dot');
     const messages   = document.getElementById('chat-messages');
+    let isChatBusy = false; // Flag untuk mengunci chat
+
 
     function handleToggle() {
       if (chatWindow.classList.contains('hidden')) {
@@ -490,8 +492,13 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
 
     // Kirim pesan
     function sendMessage() {
+      if (isChatBusy) return; // Jangan kirim jika masih sibuk
+      
       const msg = chatInput.value.trim();
       if (!msg) return;
+
+      isChatBusy = true; // Set sibuk
+
 
       // Matikan Input (Disable) agar user tidak bisa mengetik sebelum AI menjawab
       chatInput.disabled = true;
@@ -528,6 +535,7 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
 
       // Fungsi Pembuka Gembok
       function unlockChat() {
+          isChatBusy = false; // Reset sibuk
           chatInput.disabled = false;
           chatSend.disabled = false;
           chatSend.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -610,6 +618,7 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
     // Quick Options Logic
     document.querySelectorAll('.quick-btn').forEach(btn => {
       btn.addEventListener('click', function() {
+        if (isChatBusy) return; // Jangan jalankan jika sibuk
         chatInput.value = this.getAttribute('data-text');
         sendMessage();
       });
