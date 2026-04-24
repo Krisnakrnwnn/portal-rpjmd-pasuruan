@@ -85,8 +85,8 @@ class IngestPdfCommand extends Command
 
                     $text = $page->getText();
                     
-                    // Bersihkan teks dari karakter non-UTF8 yang rusak (sering terjadi di PDF hasil scan)
-                    $text = mb_convert_encoding($text, 'UTF-8', 'UTF-8');
+                    // Bersihkan teks secara agresif dari karakter non-UTF8 yang rusak (biasa di PDF hasil scan/export)
+                    $text = iconv('UTF-8', 'UTF-8//IGNORE', $text);
                     $text = preg_replace('/[\x00-\x1F\x7F]/u', '', $text); // Hapus karakter kontrol
                     $text = preg_replace('/\s+/', ' ', trim($text)); // Clean multiple spaces/newlines
 
