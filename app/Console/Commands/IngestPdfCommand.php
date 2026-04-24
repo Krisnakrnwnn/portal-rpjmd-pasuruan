@@ -85,10 +85,12 @@ class IngestPdfCommand extends Command
 
                     $text = $page->getText();
                     
-                    // Bersihkan teks secara agresif dari karakter non-UTF8 yang rusak (biasa di PDF hasil scan/export)
-                    $text = iconv('UTF-8', 'UTF-8//IGNORE', $text);
-                    $text = preg_replace('/[\x00-\x1F\x7F]/u', '', $text); // Hapus karakter kontrol
-                    $text = preg_replace('/\s+/', ' ', trim($text)); // Clean multiple spaces/newlines
+                    // Bersihkan teks secara menyeluruh dari karakter ilegal yang bisa merusak JSON
+                    $text = mb_convert_encoding($text, 'UTF-8', 'UTF-8'); 
+                    $text = htmlspecialchars($text, ENT_SUBSTITUTE, 'UTF-8'); // Ganti karakter ilegal dengan simbol substitute
+                    $text = html_entity_decode($text); // Kembalikan karakter normal
+                    $text = preg_replace('/[\x00-\x1F\x7F]/u', '', $text); 
+                    $text = preg_replace('/\s+/', ' ', trim($text)); 
 
                     if (empty($text) || strlen($text) < 50) continue; // Skip empty or tiny pages
 
