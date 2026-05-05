@@ -1,0 +1,206 @@
+DRAF PROPOSAL KEGIATAN
+JUDUL PROYEK: IMPLEMENTASI PORTAL INFORMASI DAN ASISTEN VIRTUAL BERBASIS AI SEBAGAI DUKUNGAN TEKNOLOGI DALAM KEGIATAN PENGABDIAN MASYARAKAT PADA BAPPERIDA KABUPATEN PASURUAN
+
+1. LATAR BELAKANG
+    Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah (Bapperida) Kabupaten Pasuruan memiliki peran strategis sebagai motor penggerak perencanaan pembangunan daerah yang berkelanjutan. Berdasarkan amanat Undang-Undang Nomor 25 Tahun 2004 tentang Sistem Perencanaan Pembangunan Nasional, setiap pemerintah daerah wajib menyusun dokumen perencanaan yang komprehensif mulai dari jangka panjang (RPJPD), jangka menengah (RPJMD), hingga tahunan (RKPD). Dokumen-dokumen ini menjadi panduan utama bagi pemerintah daerah dalam menentukan arah kebijakan, alokasi anggaran, dan target pencapaian indikator pembangunan bagi kesejahteraan warga Kabupaten Pasuruan.
+
+    Keterbukaan informasi publik kini menjadi salah satu pilar utama dalam tata kelola pemerintahan yang baik (good governance). Sesuai dengan Undang-Undang Nomor 14 Tahun 2008 tentang Keterbukaan Informasi Publik, instansi pemerintah wajib menyediakan akses informasi yang mudah dan transparan bagi setiap pemangku kepentingan. Masyarakat memiliki hak untuk mengetahui bagaimana rencana pembangunan daerah disusun, apa saja program prioritas yang akan dijalankan, serta bagaimana capaian kinerja pemerintah daerah dalam mengelola sumber daya yang ada.
+
+    Namun, pada kenyataannya, dokumen perencanaan daerah seperti RPJMD dan RKPD seringkali disajikan dalam format dokumen digital (PDF) yang sangat tebal, mencapai ratusan bahkan ribuan halaman. Struktur dokumen yang kompleks dan penuh dengan istilah teknis pemerintahan membuat masyarakat umum seringkali mengalami kesulitan dalam menemukan informasi spesifik yang mereka butuhkan. Hal ini menyebabkan dokumen perencanaan daerah seringkali hanya menjadi arsip administratif yang kurang maksimal dalam mengedukasi maupun melibatkan partisipasi aktif publik.
+
+    Layanan informasi konvensional yang ada saat ini, baik melalui meja informasi fisik maupun website statis, dirasa masih memiliki keterbatasan dalam hal kecepatan dan fleksibilitas. Masyarakat dituntut untuk mengunduh file berukuran besar dan membaca secara manual baris demi baris teks untuk mendapatkan jawaban atas pertanyaan sederhana, seperti visi misi daerah atau jumlah program prioritas. Kondisi ini menunjukkan adanya kesenjangan antara ketersediaan data dengan kemudahan aksesibilitas informasi bagi warga Kabupaten Pasuruan yang semakin menuntut layanan serba cepat dan instan.
+
+    Pesatnya perkembangan teknologi kecerdasan buatan (Artificial Intelligence), khususnya model bahasa besar (Large Language Model) dan teknik Retrieval-Augmented Generation (RAG), menawarkan solusi inovatif untuk mengatasi hambatan tersebut. Dengan teknologi ini, sistem tidak hanya sekadar menyimpan dokumen, tetapi mampu memahami konteks isi dokumen dan memberikan jawaban secara cerdas layaknya seorang asisten virtual. Integrasi AI dalam portal informasi publik akan memungkinkan transformasi data statis menjadi layanan yang interaktif, responsif, dan mudah dijangkau oleh siapapun tanpa batasan waktu.
+
+    Oleh karena itu, sebagai bagian integral dari Kegiatan Pengabdian Masyarakat yang dilaksanakan oleh tim pembimbing di Kabupaten Pasuruan, diusulkan sebuah inisiatif untuk mengembangkan "Portal Layanan Informasi dan Asisten Virtual AI Bapperida Kabupaten Pasuruan". Proyek ini merupakan bentuk kontribusi nyata dunia akademik dalam memberikan solusi berbasis teknologi untuk mempermudah aksesibilitas dokumen perencanaan daerah. Dengan menggabungkan website profil yang estetis dan chatbot pintar berbasis dokumen resmi, diharapkan kegiatan pengabdian ini dapat memberikan dampak positif jangka panjang bagi transparansi pemerintah daerah dan mendorong partisipasi aktif masyarakat dalam mengawal proses pembangunan menuju Pasuruan yang lebih sejahtera.
+
+2. PERMASALAHAN
+Berdasarkan analisis terhadap sistem penyampaian informasi dokumen perencanaan pada Bapperida Kabupaten Pasuruan, terdapat beberapa permasalahan utama sebagai berikut:
+- Kesulitan masyarakat dan stakeholder dalam mencari informasi spesifik di dalam dokumen perencanaan yang tebal.
+- Rendahnya tingkat keterbacaan (readability) dokumen PDF yang bersifat satu arah.
+- Belum adanya layanan informasi digital yang tersedia 24/7 untuk menjawab pertanyaan seputar program prioritas daerah secara otomatis dan akurat.
+
+3. TUJUAN
+Sejalan dengan permasalahan yang diidentifikasi, adapun tujuan dari pengembangan sistem ini adalah sebagai berikut:
+- Membangun portal web yang representatif sebagai media publikasi digital dalam mendukung program Pengabdian Masyarakat di Bapperida Kabupaten Pasuruan.
+- Mengimplementasikan teknologi AI Chatbot berbasis Retrieval-Augmented Generation (RAG) sebagai instrumen pendukung literasi dokumen perencanaan daerah bagi masyarakat.
+- Meningkatkan kualitas layanan publik dan sinergi antara dunia akademik dengan pemerintah daerah melalui penyediaan data perencanaan yang transparan dan mudah diakses.
+
+4. TINJAUAN PUSTAKA
+4.1. Definisi
+Portal Web secara konseptual merupakan sebuah aplikasi berbasis internet yang berfungsi sebagai pintu gerbang utama atau "single entry point" bagi pengguna untuk mengakses berbagai layanan informasi yang disediakan secara terpadu oleh suatu instansi. Dalam konteks pemerintahan, portal web tidak hanya berperan sebagai sarana publikasi informasi statis, tetapi juga diintegrasikan dengan teknologi Chatbot AI (Artificial Intelligence). Chatbot AI itu sendiri merupakan sebuah perangkat lunak kecerdasan buatan yang dirancang untuk mensimulasikan interaksi percakapan manusia secara intelektual. Melalui antarmuka chatbot, pengguna dapat mengajukan pertanyaan dalam bahasa alami (natural language) dan mendapatkan respon seketika, sehingga menciptakan pengalaman layanan yang lebih personal dan komunikatif dibandingkan navigasi website tradisional.
+
+Inti dari kecerdasan sistem yang dibangun dalam proyek ini adalah penerapan teknologi Retrieval-Augmented Generation (RAG). RAG adalah sebuah teknik mutakhir dalam kecerdasan buatan yang mengombinasikan kekuatan Large Language Model (LLM) dengan basis data eksternal yang terverifikasi untuk memastikan setiap jawaban yang diberikan akurat dan memiliki referensi yang jelas. Dalam implementasinya, sistem ini akan merujuk langsung pada dokumen perencanaan daerah, salah satunya adalah Rencana Pembangunan Jangka Menengah Daerah (RPJMD). RPJMD sendiri didefinisikan sebagai dokumen perencanaan pembangunan daerah untuk periode lima tahun yang menjabarkan visi, misi, dan program kepala daerah dengan berpedoman pada rencana jangka panjang daerah. Melalui sinergi teknologi RAG dan dokumen RPJMD, portal ini mampu menyediakan jawaban yang valid secara hukum dan administratif bagi masyarakat Kabupaten Pasuruan.
+
+4.2. Bahasa Pemrograman & Teknologi
+PHP dengan Framework Laravel digunakan sebagai fondasi utama dalam pengembangan backend aplikasi ini. Laravel dipilih karena reputasinya sebagai salah satu framework PHP paling populer yang menawarkan struktur kode yang rapi, keamanan yang kokoh, serta ekosistem yang luas. Dalam portal Bapperida, Laravel berperan untuk mengelola logika bisnis, autentikasi admin, pengolahan dokumen PDF, hingga menjembatani komunikasi data antara server lokal dengan API kecerdasan buatan. Efisiensi yang ditawarkan Laravel memungkinkan pengembangan sistem yang skala-bel (scalable) dan mudah untuk dipelihara dalam jangka panjang.
+
+JavaScript memegang peranan krusial dalam menciptakan pengalaman pengguna yang dinamis dan responsif, terutama pada antarmuka Chatbot AI. Dengan menggunakan JavaScript di sisi client (frontend), aplikasi dapat melakukan pengiriman pesan dan penerimaan respon secara asinkron tanpa perlu memuat ulang (reload) halaman secara keseluruhan. Selain itu, JavaScript juga digunakan untuk mengelola berbagai elemen interaktif pada portal, seperti animasi transisi, validasi formulir input, serta penanganan state pada widget chatbot agar terasa lebih hidup dan intuitif bagi masyarakat yang mengaksesnya.
+
+Google Gemini API diintegrasikan sebagai mesin kecerdasan buatan utama yang memberikan kemampuan pemrosesan bahasa alami (Natural Language Processing) tingkat lanjut pada sistem. Sebagai salah satu Large Language Model (LLM) tercanggih saat ini, Gemini mampu memahami konteks pertanyaan yang kompleks, melakukan penalaran terhadap teks, dan merangkum informasi dari dokumen perencanaan daerah yang sangat teknis. Integrasi API ini memungkinkan chatbot untuk memberikan jawaban yang tidak hanya relevan secara semantik, tetapi juga tetap ramah dan mudah dipahami oleh pengguna dari berbagai latar belakang.
+
+PostgreSQL atau MySQL digunakan sebagai sistem manajemen basis data untuk menyimpan seluruh informasi relasional, mulai dari data profil instansi, berita, hingga metadata dokumen perencanaan. Selain menyimpan data tekstual biasa, database ini juga difungsikan sebagai media penyimpanan untuk vektor dokumen yang dihasilkan dari proses embedding AI. Dengan dukungan performa kueri yang cepat dan integritas data yang tinggi, sistem database ini memastikan bahwa setiap informasi yang dicari oleh pengguna dapat ditarik kembali secara akurat dan efisien, bahkan saat menangani volume data dokumen perencanaan yang besar.
+
+5. METODOLOGI
+5.1. Metode Pengumpulan Data Analisa dan Kebutuhan
+Studi Pustaka dilakukan sebagai langkah awal untuk mengumpulkan teori, standar, serta regulasi yang berkaitan dengan perencanaan daerah dan teknologi kecerdasan buatan. Dalam tahap ini, dilakukan penelaahan mendalam terhadap dokumen-dokumen resmi seperti RPJPD, RPJMD, dan RKPD Kabupaten Pasuruan untuk memahami struktur data dan substansi informasi yang terkandung di dalamnya. Selain itu, studi literatur juga mencakup riset mengenai implementasi Retrieval-Augmented Generation (RAG) dan integrasi Large Language Model (LLM) untuk memastikan bahwa pengembangan sistem didasarkan pada metodologi ilmiah yang valid dan praktik terbaik (best practices) di bidang teknologi informasi.
+
+Metode Observasi diterapkan dengan melakukan pengamatan langsung terhadap proses penyampaian informasi dan layanan publik yang saat ini berjalan di lingkungan Bapperida Kabupaten Pasuruan. Fokus observasi mencakup bagaimana masyarakat atau stakeholder mencari data perencanaan, hambatan yang mereka temui saat berhadapan dengan dokumen PDF statis, serta sejauh mana website yang sudah ada mampu memenuhi kebutuhan informasi publik. Hasil pengamatan ini menjadi landasan penting dalam merancang alur interaksi chatbot agar benar-benar mampu menjawab kendala nyata yang dialami oleh pengguna di lapangan secara efektif dan efisien.
+
+Wawancara dilakukan secara terstruktur dan mendalam dengan staf serta pimpinan di bagian perencanaan Bapperida Kabupaten Pasuruan. Tujuan dari wawancara ini adalah untuk menggali wawasan langsung mengenai poin-poin informasi penting yang paling sering ditanyakan oleh masyarakat maupun instansi terkait lainnya. Melalui diskusi ini, dapat diidentifikasi parameter-parameter kunci dan daftar pertanyaan mendasar (Frequently Asked Questions) yang perlu diprioritaskan dalam basis pengetahuan sistem AI. Selain itu, wawancara ini juga berfungsi untuk memastikan bahwa output yang dihasilkan oleh chatbot tetap selaras dengan kebijakan dan prosedur resmi pemerintah daerah.
+
+5.2. Data Yang Digunakan
+Data yang digunakan dalam pengembangan sistem ini terdiri dari data primer dan data sekunder yang bersumber langsung dari dokumen resmi Bapperida Kabupaten Pasuruan. Data primer utama meliputi dokumen Rencana Pembangunan Jangka Menengah Daerah (RPJMD) 2025-2029, Rencana Kerja Pemerintah Daerah (RKPD) 2026, serta Rencana Pembangunan Jangka Panjang Daerah (RPJPD) 2025-2045 dalam format PDF. Selain dokumen perencanaan tersebut, sistem juga memanfaatkan data sekunder berupa artikel berita, pengumuman kegiatan terbaru, dan informasi profil instansi yang tersimpan dalam basis data portal. Seluruh data ini kemudian diolah melalui proses ekstraksi teks dan chunking untuk kemudian dikonversi menjadi representasi vektor, sehingga dapat digunakan oleh mesin AI sebagai basis pengetahuan yang akurat dalam menjawab pertanyaan pengguna.
+
+5.3. Lokasi
+Kegiatan pengembangan dan implementasi sistem dilakukan di lingkungan Kantor Bapperida Kabupaten Pasuruan, yang berlokasi strategis untuk memudahkan koordinasi dengan stakeholder terkait serta memastikan aksesibilitas selama proses pengembangan.
+
+5.4. Metodologi Pengembangan Sistem
+Metodologi pengembangan sistem yang diterapkan dalam proyek ini adalah metode Agile Development, yang memungkinkan fleksibilitas tinggi dalam merespons perubahan kebutuhan selama proses pembangunan. Siklus pengembangan dilakukan secara iteratif yang dimulai dari tahap Planning untuk menetapkan prioritas fitur dan jadwal, dilanjutkan dengan tahap Design untuk merancang antarmuka dan arsitektur data. Tahap Development difokuskan pada implementasi pengkodean program dan integrasi mesin AI, yang kemudian diikuti oleh tahap Testing yang ketat untuk memastikan fungsionalitas dan akurasi jawaban chatbot. Terakhir, sistem akan masuk ke tahap Deployment untuk diimplementasikan ke server produksi. Keunggulan metode Agile ini terletak pada proses umpan balik yang berkelanjutan, sehingga sistem dapat terus disempurnakan berdasarkan pengujian berkala dan masukan dari stakeholder sebelum benar-benar dirilis sepenuhnya.
+
+6. HASIL DAN PEMBAHASAN
+6.1. Analisis Sistem Berjalan
+Sistem penyampaian informasi yang saat ini berjalan masih memiliki alur yang cukup panjang dan memakan waktu. Berikut adalah ringkasan alur pencarian informasi secara manual:
+
+1. Masyarakat mengidentifikasi kebutuhan data perencanaan (RPJMD/RKPD).
+2. Masyarakat mengakses website resmi Bapperida atau datang langsung ke kantor pusat.
+3. Masyarakat mencari dokumen PDF yang relevan melalui daftar unduhan atau arsip fisik.
+4. Masyarakat melakukan pencarian informasi secara manual dengan membaca ratusan halaman dokumen satu per satu.
+5. Masyarakat menafsirkan sendiri data teknis yang ditemukan tanpa asisten cerdas.
+
+Berikut adalah diagram alir (Flowmap) sistem berjalan:
+
+```mermaid
+graph TD
+    A[Identifikasi Kebutuhan Data] --> B(Akses Portal / Kantor Bapperida)
+    B --> C(Cari & Unduh Dokumen PDF Relevan)
+    C --> D(Pencarian Manual di Ratusan Halaman)
+    D --> E(Interpretasi Data Teknis Mandiri)
+    E --> F[Selesai]
+```
+
+6.2. Analisis Sistem Baru
+Sistem baru yang diusulkan mengintegrasikan teknologi kecerdasan buatan (Artificial Intelligence) dalam bentuk portal layanan informasi yang interaktif dan responsif. Berbeda dengan sistem konvensional, sistem ini menggunakan arsitektur Retrieval-Augmented Generation (RAG) yang memungkinkan mesin untuk membaca, memahami, dan merangkum isi dokumen perencanaan daerah secara otomatis. Dengan adanya asisten virtual ini, hambatan aksesibilitas informasi dapat diminimalisir, sehingga masyarakat dapat berinteraksi langsung dengan data pemerintah melalui percakapan bahasa alami yang sederhana namun tetap akurat karena bersumber langsung dari dokumen resmi.
+
+Berikut adalah aturan bisnis yang akan digunakan pada web/aplikasi kami:
+
+1. Akses Portal Publik:
+Masyarakat mengakses portal Bapperida secara bebas tanpa perlu login. Sistem menampilkan beranda dengan statistik pembangunan, berita terbaru, profil instansi, layanan informasi, dan capaian indikator RPJMD/RKPD secara dinamis.
+
+2. Interaksi Asisten Virtual berbasis RAG:
+Masyarakat dapat mengajukan pertanyaan seputar dokumen perencanaan daerah (RPJMD/RKPD/RPJPD) menggunakan bahasa alami melalui chatbot yang tersedia di seluruh halaman portal. Sistem mengonversi pertanyaan menjadi vektor menggunakan Gemini Embedding, menghitung cosine similarity dengan seluruh chunk dokumen di database, lalu mengirim konteks paling relevan beserta data berita terkini ke model Gemini Flash untuk menghasilkan jawaban yang akurat dan terformat. Riwayat percakapan disimpan dalam sesi aktif agar chatbot dapat memahami konteks pertanyaan lanjutan.
+
+3. Informasi Capaian dan Aspirasi Publik:
+Masyarakat dapat menelusuri halaman capaian pembangunan yang menampilkan data sektor dan indikator RPJMD secara visual. Masyarakat juga dapat mengirimkan aspirasi atau pertanyaan melalui formulir kontak yang tersimpan di database untuk ditindaklanjuti oleh admin.
+
+4. Manajemen Konten oleh Admin:
+Pihak Admin Bapperida yang telah terautentikasi dapat mengelola seluruh konten portal, meliputi berita (termasuk toggle publik/draft), layanan informasi, sektor pembangunan, indikator capaian RPJMD, serta memperbarui statistik beranda secara real-time.
+
+5. Pengelolaan Aspirasi dan Akun oleh Admin:
+Admin dapat memantau dan menyelesaikan (resolve) aspirasi yang masuk dari masyarakat. Khusus Super Admin, terdapat kewenangan eksklusif untuk membuat, mengubah, dan menghapus akun pengguna sistem guna menjamin kontrol akses bertingkat.
+
+6. Pemanfaatan Data oleh Masyarakat:
+Setelah memperoleh informasi yang akurat dan terverifikasi melalui asisten AI, masyarakat dapat memanfaatkan data tersebut untuk keperluan riset akademis, edukasi publik, maupun pengawasan pelaksanaan pembangunan daerah.
+
+Berikut adalah diagram alir (Flowmap) sistem baru:
+
+```mermaid
+flowchart TD
+    Start([Mulai]) --> Portal[Masyarakat Akses Portal Bapperida]
+
+    Portal --> Pilihan{Tujuan Akses?}
+
+    Pilihan -- Lihat Informasi --> InfoPublik[Telusuri Beranda / Berita / Layanan / Capaian / Profil]
+    InfoPublik --> Aspirasi{Kirim Aspirasi?}
+    Aspirasi -- Ya --> FormKontak[Isi Formulir Kontak & Aspirasi]
+    FormKontak --> SimpanAspirasi[(Database: Simpan Aspirasi)]
+    Aspirasi -- Tidak --> End
+
+    Pilihan -- Tanya ke Chatbot --> InputPertanyaan[Input Pertanyaan Bahasa Alami]
+
+    subgraph RAG_Engine [Proses Asisten AI - Arsitektur RAG]
+        direction TB
+        Embed[Embedding: Ubah Pertanyaan ke Vektor]
+        Retrieval[Retrieval: Hitung Cosine Similarity & Ambil Chunk Relevan]
+        Generate[Generation: Gemini Flash Buat Jawaban dari Konteks Dokumen]
+        Embed --> Retrieval --> Generate
+    end
+
+    InputPertanyaan --> Embed
+    Generate --> Jawaban[Tampilkan Jawaban & Referensi Halaman PDF]
+    Jawaban --> LanjutChat{Ada Pertanyaan Lanjut?}
+    LanjutChat -- Ya --> InputPertanyaan
+    LanjutChat -- Tidak --> Manfaat([Pemanfaatan Data: Riset / Edukasi / Pengawasan Pembangunan])
+
+    SimpanAspirasi --> Manfaat
+    Aspirasi -- Tidak --> Manfaat
+
+    subgraph Admin_Panel [Panel Admin Bapperida]
+        direction TB
+        AdminLogin[Admin Login & Validasi Akun]
+        KelolaMKonten[Kelola Berita / Layanan / Sektor / Indikator]
+        KelolaMAspirasi[Pantau & Selesaikan Aspirasi Masuk]
+        UpdateStats[Perbarui Statistik Portal]
+        SuperAdmin[Super Admin: Kelola Akun Pengguna]
+        AdminLogin --> KelolaMKonten & KelolaMAspirasi & UpdateStats & SuperAdmin
+    end
+
+    KelolaMKonten -.->|Konten Diperbarui| InfoPublik
+    KelolaMAspirasi -.->|Status Diperbarui| SimpanAspirasi
+```
+
+6.3. Pembuatan dan Implementasi Sistem
+6.3.1. Tahapan Implementasi
+- Pembuatan struktur database untuk menyimpan metadata dan chunk (potongan teks) PDF guna mendukung pencarian semantik.
+- Integrasi API Google Gemini untuk proses embedding data dan pengolahan jawaban cerdas berbasis dokumen resmi.
+- Pembuatan antarmuka (UI) portal menggunakan Tailwind CSS untuk estetika modern, premium, dan responsif.
+- Pengembangan backend menggunakan framework Laravel untuk manajemen konten (CMS) dan pengelolaan data aspirasi publik.
+
+6.3.2. Kebutuhan Perangkat Lunak
+Berikut merupakan beberapa perangkat lunak yang digunakan dalam proses pengembangan Portal Informasi Bapperida Kabupaten Pasuruan ini:
+
+Tabel 1. Perangkat Lunak Pembuatan Sistem
+No | Perangkat Lunak          | Nama Perangkat
+---|---                       |---
+1  | Sistem Operasi           | Microsoft Windows 11
+2  | Text Editor              | Visual Studio Code
+3  | Web Server               | Apache / PHP Development Server
+4  | Bahasa Pemrograman       | JavaScript & PHP (Laravel Framework)
+5  | Basis Data               | MySQL / PostgreSQL
+6  | AI Service               | Google Gemini API
+7  | Tools & Framework        | Tailwind CSS & Composer/NPM
+
+7. JADWAL KEGIATAN
+Berikut adalah jadwal rencana kegiatan pengabdian masyarakat yang disusun secara mingguan selama periode 23 Maret hingga 19 Juli 2026:
+
+Tabel 2. Jadwal Kegiatan Mingguan (23 Maret - 19 Juli 2026)
+Minggu | Rentang Tanggal | Kegiatan Utama
+---    |---              |---
+1      | 23 Mar - 29 Mar | Studi Pustaka & Pengumpulan Dokumen (RPJMD/RKPD/RPJPD)
+2      | 30 Mar - 05 Apr | Observasi Lapangan & Wawancara Stakeholder Bapperida
+3      | 06 Apr - 12 Apr | Analisis Kebutuhan Sistem & Finalisasi Spesifikasi Teknis
+4      | 13 Apr - 19 Apr | Perancangan UI/UX (Wireframe & High-Fidelity Prototype)
+5      | 20 Apr - 26 Apr | Perancangan Arsitektur Database & Skema Vektor Document
+6      | 27 Apr - 03 Mei | Setup Environment & Inisialisasi Project Framework Laravel
+7      | 04 Mei - 10 Mei | Pengembangan Backend (Autentikasi, API, & CMS Konten)
+8      | 11 Mei - 17 Mei | Pengembangan Frontend (Portal Publik & Dashboard Admin)
+9      | 18 Mei - 24 Mei | Integrasi Google Gemini API & Implementasi Modul Embedding
+10     | 25 Mei - 31 Mei | Pengembangan RAG Engine & Antarmuka Chatbot Interaktif
+11     | 01 Jun - 07 Jun | Sinkronisasi Data Portal & Optimasi Respon Chatbot AI
+12     | 08 Jun - 14 Jun | Proses Ingest Dokumen PDF ke Database Vektor (Chunking)
+13     | 15 Jun - 21 Jun | Internal Testing & Validasi Akurasi Jawaban Asisten AI
+14     | 22 Jun - 28 Jun | User Acceptance Testing (UAT) bersama Tim Bapperida
+15     | 29 Jun - 05 Jul | Final Bug Fixing, Refactoring, & Optimasi Performa Server
+16     | 06 Jul - 12 Jul | Sosialisasi Penggunaan & Pelatihan Operasional Admin
+17     | 13 Jul - 19 Jul | Deployment ke Server Produksi & Penyerahan Hasil Proyek
+
+8. DAFTAR PUSTAKA
+
+Badan Perencanaan Pembangunan Daerah Kabupaten Pasuruan. (2024). Rencana Pembangunan Jangka Menengah Daerah (RPJMD) Kabupaten Pasuruan Tahun 2025-2029. Pasuruan: Bapperida.
+Google. (2024). Gemini API Documentation: Building Applications with Large Language Models. Diakses dari https://ai.google.dev/docs.
+Lewis, P., Perez, E., Piktus, A., Petroni, F., Karpukhin, V., Goyal, N., ... & Kiela, D. (2020). Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks. Advances in Neural Information Processing Systems, 33, 9459-9474.
+Otwell, T. (2024). Laravel: The PHP Framework for Web Artisans. Documentation. Diakses dari https://laravel.com/docs.
+Pemerintah Indonesia. (2004). Undang-Undang Nomor 25 Tahun 2004 tentang Sistem Perencanaan Pembangunan Nasional. Jakarta: Lembaran Negara Republik Indonesia.
+Pemerintah Indonesia. (2008). Undang-Undang Nomor 14 Tahun 2008 tentang Keterbukaan Informasi Publik. Jakarta: Lembaran Negara Republik Indonesia.
+Pressman, R. S., & Maxim, B. R. (2020). Software Engineering: A Practitioner's Approach (9th ed.). New York: McGraw-Hill Education.
+Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., ... & Polosukhin, I. (2017). Attention is All You Need. Advances in Neural Information Processing Systems, 30.

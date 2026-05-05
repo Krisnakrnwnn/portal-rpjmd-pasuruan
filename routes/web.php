@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PortalController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 
 // Public Portal Routes
@@ -15,8 +16,34 @@ Route::get('/capaian', [PortalController::class, 'capaian'])->name('capaian');
 Route::get('/kontak', [PortalController::class, 'kontak'])->name('kontak');
 Route::post('/kontak', [PortalController::class, 'storeContact'])->name('kontak.store');
 
-// API Chatbot
-Route::post('/api/chat', [\App\Http\Controllers\ChatbotController::class, 'chat'])->name('api.chat');
+// API Chatbot (with rate limiting)
+Route::post('/api/chat', [\App\Http\Controllers\ChatbotController::class, 'chat'])
+    ->middleware('throttle:20,1') // Max 20 requests per minute
+    ->name('api.chat');
+
+// Load chat history
+Route::get('/api/chat/history', [\App\Http\Controllers\ChatbotController::class, 'loadHistory'])
+    ->name('api.chat.history');
+
+// Start new session
+Route::post('/api/chat/new-session', [\App\Http\Controllers\ChatbotController::class, 'newSession'])
+    ->name('api.chat.new_session');
+
+// Clear chat history
+Route::post('/api/chat/clear', [\App\Http\Controllers\ChatbotController::class, 'clearHistory'])
+    ->name('api.chat.clear');
+
+// Feedback endpoint (optional analytics)
+Route::post('/api/chat/feedback', [\App\Http\Controllers\ChatbotController::class, 'feedback'])
+    ->name('api.chat.feedback');
+
+// Export chat history
+Route::post('/api/chat/export', [\App\Http\Controllers\ChatbotController::class, 'exportChat'])
+    ->middleware('throttle:10,1') // Max 10 exports per minute
+    ->name('api.chat.export');
+
+// SEO Routes
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 // Admin Routes (Protected by Auth + Admin Role)
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.role'])->group(function () {

@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Bapperida Kabupaten Pasuruan - Layanan Publik')
+@section('seo')
+    <x-seo 
+        title="Layanan Publik Bapperida Kabupaten Pasuruan"
+        description="Akses layanan publik Bapperida: Konsultasi Perencanaan, Data RPJMD, Dokumen Pembangunan, dan Informasi Capaian Kinerja Kabupaten Pasuruan secara transparan."
+        keywords="Layanan Publik, RPJMD, Konsultasi Perencanaan, Data Pembangunan, Bapperida Pasuruan, Dokumen Perencanaan"
+    />
+@endsection
 
 @section('content')
     <!-- Header Spanduk -->

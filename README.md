@@ -1,92 +1,114 @@
-# 🏛️ Bapperida Kabupaten Pasuruan - Portal Layanan Informasi RPJMD
+# Portal RPJMD Kabupaten Pasuruan
 
-Sistem Layanan Informasi Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah (Bapperida) Kabupaten Pasuruan. Portal ini menyajikan transparansi data perencanaan (RPJMD) dan capaian kinerja daerah, dilengkapi dengan asisten pintar berbasis kecerdasan buatan (*AI Chatbot*).
+Portal informasi RPJMD (Rencana Pembangunan Jangka Menengah Daerah) Kabupaten Pasuruan dengan AI Chatbot.
 
 ## 🚀 Fitur Utama
 
-- **Integrasi Penuh AI Chatbot**: Dibekali framework pintar RAG yang terhubung ke **Google Gemini**, membantu merespons jutaan data dan skenario layanan untuk memberikan jawaban efisien ke masyarakat.
-- **Admin Dashboard Dinamis (CMS)**: Kelola data Hero Section, target capaian prioritas, program berjalan, dan aspirasi masyarakat secara real-time.
-- **Interaktif Visual Data (Chart.js)**: Penampil distribusi sektor dan indikator kinerja utama langsung dari database.
-- **PWA (Progressive Web App)**: Mendukung instalasi di perangkat mobile dan desktop dengan dukungan Service Worker.
-- **Smart PDF Export**: Menghasilkan laporan resmi dalam format PDF yang bersih dari elemen navigasi/form.
+### Chatbot AI (Enhanced)
+- ✅ RAG-based responses menggunakan Google Gemini
+- ✅ Export chat (PDF/TXT)
+- ✅ Voice input & output
+- ✅ Multi-language (Indonesian/English)
+- ✅ Persistent chat history
+- ✅ Time-based greetings
 
----
+### Portal Features
+- Profil Instansi
+- Berita & Informasi
+- Layanan Publik
+- Capaian Pembangunan
+- Kontak & Aspirasi
 
-## 💻 Tech Stack
+## 📦 Tech Stack
 
-- **Framework**: Laravel 11 (PHP 8.2+)
-- **Frontend**: Vite.js + TailwindCSS 3 
-- **Database**: MySQL 5.7+ / MariaDB (Direkomendasikan) / PostgreSQL
-- **AI Engine**: Google Gemini API
-- **Visuals**: Chart.js, AOS, Heroicons
+- **Backend:** Laravel 11, PHP 8.1+
+- **Database:** SQLite
+- **AI:** Google Gemini API
+- **Frontend:** Blade, Tailwind CSS, Vanilla JS
+- **PDF:** DomPDF
 
----
+## 🔧 Setup
 
-## 🛠️ Panduan Instalasi Produksi (Hosting)
-
-Gunakan panduan ini jika Anda adalah administrator yang akan melakukan deployment ke server produksi:
-
-### 1. Persiapan Lingkungan
-Pastikan server memiliki:
-- **PHP** ^8.2
-- **Composer** ^2.x
-- **Node.js** ^18 & NPM
-- **MySQL** 5.7 atau versi lebih baru
-
-### 2. Kloning & Instalasi
+### 1. Clone & Install
 ```bash
-git clone https://github.com/Krisnakrnwnn/portal-rpjmd-pasuruan.git
-cd portal-rpjmd-pasuruan
-composer install --optimize-autoloader --no-dev
-npm install
+git clone <repo-url>
+cd PBLS6
+composer install
+npm install && npm run build
 ```
 
-### 3. Konfigurasi Environment
-Salin file `.env.example` ke `.env` dan sesuaikan nilainya:
+### 2. Environment
 ```bash
 cp .env.example .env
-php artisan key:generate --force
+php artisan key:generate
 ```
-**PENTING**:
-- Atur `APP_ENV=production` dan `APP_DEBUG=false`.
-- Masukkan kredensial database (MySQL).
-- Masukkan `GEMINI_API_KEY` untuk fitur AI Chatbot.
 
-### 4. Build Assets
-Kompilasi aset frontend untuk produksi:
+Edit `.env`:
+```env
+GEMINI_API_KEY=your_gemini_api_key_here
+DB_CONNECTION=sqlite
+DB_DATABASE=/full/path/to/database.sqlite
+```
+
+### 3. Database
 ```bash
-npm run build
+touch database/database.sqlite
+php artisan migrate
 ```
 
-### 5. Setup Database & Akun Admin
-Jalankan migrasi dan buat akun Super Admin resmi:
+### 4. Ingest PDF Documents
 ```bash
-# Migrasi struktur tabel
-php artisan migrate --force
-
-# Inisialisasi data dasar & Akun Super Admin Resmi
-php artisan db:seed --class=DatabaseSeeder
+php artisan rag:ingest "path/to/document.pdf"
 ```
+
+## 🚀 Deploy ke Production
+
+### Via Git Pull (Recommended)
+```bash
+# Di server
+cd /path/to/project
+git pull origin main
+php artisan migrate
+php artisan optimize
+```
+
+### Via SCP (Manual)
+```bash
+# Di lokal
+cd PBLS6
+deploy-to-server.bat  # Windows
+# atau
+bash deploy-to-server.sh  # Linux/Mac
+```
+
+## 📝 Maintenance
+
+### Clear Cache
+```bash
+php artisan cache:clear
+php artisan config:clear
+php artisan view:clear
+php artisan route:clear
+```
+
+### Optimize
+```bash
+php artisan optimize
+```
+
+## 🔐 Security
+
+- ✅ CSRF protection
+- ✅ Rate limiting (20 req/min chat, 10 req/min export)
+- ✅ Input validation & sanitization
+- ✅ Secure cookies (HttpOnly)
+- ⚠️ HTTPS required for voice features
+
+## 📞 Support
+
+Website: https://portal-rpjmd-kabpasuruan.artdevata.net/
 
 ---
 
-## 🔐 Informasi Login Admin (Produksi)
-
-Setelah menjalankan seeder di atas, akses halaman admin di `/login` menggunakan akun resmi:
-- **Email**: `bapperida@pasuruankab.go.id`
-- **Password**: `Pasuruan2026!`
-- **Role**: `Super Admin`
-
----
-
-## ⚙️ Optimasi Produksi
-Sangat disarankan menjalankan perintah berikut untuk performa maksimal:
-```bash
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-```
-
-## 🤝 Kreator
-Proyek pengembangan Sistem Layanan Informasi ini dirancang oleh **Krisnakrnwnn dkk**.
-All Rights Reserved.
+**Version:** 2.0 (Chatbot Enhanced)  
+**Last Updated:** May 2026

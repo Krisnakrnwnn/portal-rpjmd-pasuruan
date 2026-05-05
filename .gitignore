@@ -1,25 +1,46 @@
-*.log
-.DS_Store
-.env
-.env.backup
-.env.production
-.phpactor.json
-.phpunit.result.cache
-/.cursor/
-/.idea
-/.nova
-/.phpunit.cache
-/.vscode
-/.zed
-/auth.json
+# Laravel
 /node_modules
-/public/build
 /public/hot
 /public/storage
 /storage/*.key
-/storage/pail
 /vendor
-_ide_helper.php
+.env
+.env.backup
+.env.production
+.phpunit.result.cache
 Homestead.json
 Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
+/.fleet
+/.idea
+/.vscode
+
+# Database
+*.sqlite
+*.sqlite-journal
+
+# Logs
+*.log
+
+# OS
+.DS_Store
 Thumbs.db
+
+# Deployment scripts (optional, uncomment if you don't want to push)
+# deploy-to-server.bat
+# deploy-to-server.sh
+
+# Documentation (keep only essential)
+*.md
+!README.md
+
+# Kiro AI files
+.kiro/
+
+# Laravel Build & Exports
+/public/build
+/resources/views/exports/
+/storage/app/public/documents/*
+!/storage/app/public/documents/.gitignore

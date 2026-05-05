@@ -3,34 +3,17 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <!-- PWA Meta Tags -->
-  <link rel="manifest" href="{{ asset('manifest.json') }}">
-  <meta name="theme-color" content="#2563eb">
-  <link rel="apple-touch-icon" href="{{ asset('favicon.ico') }}">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  {{-- Performance & SEO Components --}}
+  <x-head-performance />
+  @yield('seo')
+  @hasSection('seo')
+  @else
+    <x-seo />
+  @endif
 
-  <title>@yield('title', 'Bapperida Kabupaten Pasuruan - Layanan Informasi RPJMD')</title>
-  <meta name="description" content="@yield('meta_description', 'Portal Resmi Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah (Bapperida) Kabupaten Pasuruan. Transparansi data perencanaan dan capaian pembangunan.')" />
-  
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="{{ url()->current() }}">
-  <meta property="og:title" content="@yield('title', 'Layanan Informasi RPJMD Kabupaten Pasuruan')">
-  <meta property="og:description" content="@yield('meta_description', 'Portal Layanan Informasi RPJMD Kabupaten Pasuruan. Transparansi data, perencanaan, dan capaian pembangunan kota.')">
-  <meta property="og:image" content="@yield('og_image', asset('hero.png'))">
-
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="{{ url()->current() }}">
-  <meta property="twitter:title" content="@yield('title', 'Layanan Informasi RPJMD Kabupaten Pasuruan')">
-  <meta property="twitter:description" content="@yield('meta_description', 'Portal Layanan Informasi RPJMD Kabupaten Pasuruan. Transparansi data, perencanaan, dan capaian pembangunan kota.')">
-  <meta property="twitter:image" content="@yield('og_image', asset('hero.png'))">
-  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -135,6 +118,156 @@
       max-width: 95vw !important;
       max-height: 900px !important;
       transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    /* ===== CHATBOT IMPROVEMENTS ===== */
+    /* Typing indicator animation */
+    .typing-indicator {
+      display: flex;
+      gap: 4px;
+      padding: 12px 16px;
+    }
+    .typing-indicator span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #3b82f6;
+      animation: typing 1.4s infinite;
+    }
+    .typing-indicator span:nth-child(2) { 
+      animation-delay: 0.2s; 
+    }
+    .typing-indicator span:nth-child(3) { 
+      animation-delay: 0.4s; 
+    }
+    @keyframes typing {
+      0%, 60%, 100% { 
+        transform: translateY(0); 
+        opacity: 0.5; 
+      }
+      30% { 
+        transform: translateY(-10px); 
+        opacity: 1; 
+      }
+    }
+    
+    /* Styling untuk markdown content di chatbot */
+    #chat-messages .prose {
+      color: #374151;
+      font-size: 13px;
+    }
+    #chat-messages .prose strong {
+      color: #1f2937;
+      font-weight: 700;
+    }
+    #chat-messages .prose ul, 
+    #chat-messages .prose ol {
+      margin: 0.5rem 0;
+      padding-left: 1.5rem;
+    }
+    #chat-messages .prose li {
+      margin: 0.25rem 0;
+    }
+    #chat-messages .prose p {
+      margin: 0.5rem 0;
+    }
+    #chat-messages .prose h1, 
+    #chat-messages .prose h2, 
+    #chat-messages .prose h3 {
+      font-weight: 700;
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+      color: #1f2937;
+    }
+    #chat-messages .prose code {
+      background: #f3f4f6;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    
+    /* Table formatting for structured data */
+    #chat-messages .prose table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.5rem 0;
+      font-size: 11px;
+    }
+    #chat-messages .prose table th,
+    #chat-messages .prose table td {
+      border: 1px solid #e5e7eb;
+      padding: 4px 6px;
+      text-align: left;
+    }
+    #chat-messages .prose table th {
+      background: #f3f4f6;
+      font-weight: 600;
+    }
+    
+    /* Pre-formatted text for data tables */
+    #chat-messages .prose pre {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 8px;
+      overflow-x: auto;
+      font-size: 10px;
+      line-height: 1.4;
+      font-family: 'Courier New', monospace;
+      white-space: pre;
+    }
+    
+    /* Better line breaks and spacing */
+    #chat-messages .bg-white,
+    #chat-messages .prose {
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    
+    /* Horizontal scroll for wide content */
+    #chat-messages .prose {
+      max-width: 100%;
+      overflow-x: auto;
+    }
+    
+    /* Better formatting for numbers and data */
+    #chat-messages .prose {
+      font-variant-numeric: tabular-nums;
+    }
+    
+    /* Compact spacing for data-heavy responses */
+    #chat-messages .prose.data-heavy {
+      font-size: 11px;
+      line-height: 1.5;
+    }
+    
+    /* Feedback button active state */
+    .feedback-active {
+      opacity: 1 !important;
+    }
+    
+    /* Voice input recording animation */
+    .voice-recording {
+      animation: voicePulse 1.5s ease-in-out infinite;
+    }
+    @keyframes voicePulse {
+      0%, 100% { 
+        transform: scale(1); 
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+      }
+      50% { 
+        transform: scale(1.1); 
+        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+      }
+    }
+    
+    /* Voice output playing animation */
+    .voice-playing {
+      animation: voiceWave 1s ease-in-out infinite;
+    }
+    @keyframes voiceWave {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
     }
   </style>
   @stack('styles')
@@ -349,11 +482,35 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
   </script>
   @stack('scripts')
 
+  <!-- Marked.js untuk Markdown Rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    // Configure marked untuk format yang lebih baik
+    if (typeof marked !== 'undefined') {
+      marked.setOptions({
+        breaks: true,        // Line breaks jadi <br>
+        gfm: true,          // GitHub Flavored Markdown
+        headerIds: false,   // Tidak perlu ID di header
+        mangle: false       // Jangan encode email
+      });
+    }
+  </script>
+
   <!-- ========================================= -->
-  <!-- FLOATING CHATBOT WIDGET (New Design)      -->
+  <!-- FLOATING CHATBOT WIDGET (Improved)        -->
   <!-- ========================================= -->
   <script>
+  // Function to get time-based greeting
+  function getTimeBasedGreeting() {
+    const hour = new Date().getHours();
+    if (hour >= 0 && hour < 11) return 'Selamat pagi';
+    if (hour >= 11 && hour < 15) return 'Selamat siang';
+    if (hour >= 15 && hour < 18) return 'Selamat sore';
+    return 'Selamat malam';
+  }
+  
   document.addEventListener("DOMContentLoaded", () => {
+    const greeting = getTimeBasedGreeting();
     const chatbotHTML = `
       <div id="ai-chatbot-widget" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end">
         
@@ -378,6 +535,19 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
               </div>
             </div>
             <div class="flex items-center gap-1">
+              <select id="language-selector" class="text-xs bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-lg px-2 py-1 cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/30 transition-colors" title="Pilih Bahasa">
+                <option value="id" class="bg-blue-900 text-white">🇮🇩 ID</option>
+                <option value="en" class="bg-blue-900 text-white">🇬🇧 EN</option>
+              </select>
+              <button id="new-session" class="text-blue-200 hover:text-white bg-white/5 hover:bg-white/20 p-2 rounded-full transition-colors cursor-pointer" title="Sesi Baru">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+              </button>
+              <button id="export-chat" class="text-blue-200 hover:text-white bg-white/5 hover:bg-white/20 p-2 rounded-full transition-colors cursor-pointer" title="Ekspor Chat">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+              </button>
+              <button id="clear-history" class="text-blue-200 hover:text-white bg-white/5 hover:bg-white/20 p-2 rounded-full transition-colors cursor-pointer" title="Hapus Riwayat Chat">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+              </button>
               <button id="expand-chat" class="hidden sm:block text-blue-200 hover:text-white bg-white/5 hover:bg-white/20 p-2 rounded-full transition-colors cursor-pointer" title="Perbesar/Perkecil">
                 <svg id="expand-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
               </button>
@@ -399,8 +569,8 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
               <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 mr-2 mt-1 hidden sm:flex">
                 <span class="text-blue-600 font-bold text-xs">AI</span>
               </div>
-              <div class="bg-white border border-gray-100 text-gray-800 rounded-2xl rounded-tl-sm px-4 sm:px-5 py-3 sm:py-3.5 max-w-[90%] sm:max-w-[80%] shadow-sm font-medium leading-relaxed text-[13px] sm:text-sm">
-                Halo warga! 🙏 <br>Saya asisten AI Layanan Informasi RPJMD Kabupaten Pasuruan. Ada yang ingin Anda ketahui tentang program prioritas, capaian pembangunan, atau dokumen RPJMD 2025-2029?
+              <div class="bg-white border border-gray-100 text-gray-800 rounded-2xl rounded-tl-sm px-4 sm:px-5 py-3 sm:py-3.5 max-w-[95%] sm:max-w-[85%] shadow-sm font-medium leading-relaxed text-[13px] sm:text-sm">
+                ${greeting}! 🙏 <br>Saya asisten AI Layanan Informasi RPJMD Kabupaten Pasuruan. Ada yang ingin Anda ketahui tentang program prioritas, capaian pembangunan, atau dokumen RPJMD 2025-2029?
               </div>
             </div>
 
@@ -415,8 +585,8 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
 
           <!-- Area Input Chat -->
           <div class="p-3 sm:p-4 bg-white border-t border-gray-100 flex items-center gap-2 sm:gap-3 shrink-0">
-            <button class="hidden sm:block p-2 text-gray-400 hover:text-blue-600 transition-colors bg-gray-50 rounded-full shrink-0">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+            <button id="voice-input-btn" class="hidden sm:block p-2 text-gray-400 hover:text-blue-600 transition-colors bg-gray-50 rounded-full shrink-0" title="Input Suara">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
             </button>
             <input id="chat-input" type="text" placeholder="Tanyakan seputar RPJMD..." class="flex-1 bg-gray-50 border border-gray-200 rounded-full px-4 sm:px-5 py-2 sm:py-2.5 text-base sm:text-sm focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all font-medium">
             <button id="chat-send" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 shadow-md hover:shadow-lg transition-transform hover:-translate-y-0.5 shrink-0 focus:outline-none">
@@ -449,7 +619,244 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
     const chatSend   = document.getElementById('chat-send');
     const notifDot   = document.getElementById('chat-notif-dot');
     const messages   = document.getElementById('chat-messages');
+    const clearHistory = document.getElementById('clear-history');
     let isChatBusy = false; // Flag untuk mengunci chat
+    let messageCount = 0; // Counter untuk pesan
+
+    // ===== VOICE INPUT/OUTPUT CLASSES =====
+    class VoiceInput {
+      constructor() {
+        this.recognition = null;
+        this.isSupported = 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
+        
+        if (this.isSupported) {
+          const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+          this.recognition = new SpeechRecognition();
+          this.recognition.lang = 'id-ID';
+          this.recognition.continuous = false;
+          this.recognition.interimResults = false;
+        }
+      }
+      
+      start() {
+        if (!this.isSupported || !this.recognition) {
+          return Promise.reject('Speech recognition not supported');
+        }
+        
+        return new Promise((resolve, reject) => {
+          this.recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            resolve(transcript);
+          };
+          
+          this.recognition.onerror = (event) => {
+            reject(event.error);
+          };
+          
+          this.recognition.start();
+        });
+      }
+      
+      stop() {
+        if (this.recognition) {
+          this.recognition.stop();
+        }
+      }
+    }
+
+    class VoiceOutput {
+      constructor() {
+        this.synthesis = window.speechSynthesis;
+        this.utterance = null;
+        this.isSupported = 'speechSynthesis' in window;
+      }
+      
+      speak(text, lang = 'id-ID') {
+        if (!this.isSupported) {
+          return Promise.reject('Speech synthesis not supported');
+        }
+        
+        return new Promise((resolve, reject) => {
+          // Stop any ongoing speech
+          this.stop();
+          
+          // Remove markdown and HTML tags for better speech
+          const cleanText = text
+            .replace(/<[^>]*>/g, '')
+            .replace(/\*\*(.*?)\*\*/g, '$1')
+            .replace(/\*(.*?)\*/g, '$1')
+            .replace(/\n/g, '. ');
+          
+          this.utterance = new SpeechSynthesisUtterance(cleanText);
+          this.utterance.lang = lang;
+          this.utterance.rate = 0.9;
+          this.utterance.pitch = 1;
+          
+          this.utterance.onend = () => resolve();
+          this.utterance.onerror = (event) => reject(event);
+          
+          this.synthesis.speak(this.utterance);
+        });
+      }
+      
+      stop() {
+        if (this.synthesis) {
+          this.synthesis.cancel();
+        }
+      }
+      
+      isPlaying() {
+        return this.synthesis && this.synthesis.speaking;
+      }
+    }
+
+    // Initialize voice instances
+    const voiceInput = new VoiceInput();
+    const voiceOutput = new VoiceOutput();
+    let isRecording = false;
+    
+    // ===== MULTI-LANGUAGE SUPPORT =====
+    const translations = {
+      id: {
+        placeholder: 'Tanyakan seputar RPJMD...',
+        send: 'Kirim',
+        clear: 'Hapus Riwayat',
+        export: 'Ekspor Chat',
+        greeting: (time) => `${time}! 🙏 <br>Saya asisten AI Layanan Informasi RPJMD Kabupaten Pasuruan. Ada yang ingin Anda ketahui tentang program prioritas, capaian pembangunan, atau dokumen RPJMD 2025-2029?`,
+        quickReplies: [
+          { text: 'Visi Misi Kabupaten', question: 'Apa Visi dan Misi Kabupaten Pasuruan?' },
+          { text: 'Program Prioritas', question: 'Berapa jumlah Program Prioritas saat ini?' },
+          { text: 'Apa itu RPJMD?', question: 'Tolong jelaskan apa itu RPJMD secara singkat.' }
+        ],
+        today: 'Hari ini',
+        waiting: 'Menunggu balasan AI...',
+        noConversation: 'Tidak Ada Percakapan',
+        noConversationText: 'Belum ada percakapan untuk diekspor. Mulai chat terlebih dahulu!',
+        exportTitle: '📥 Ekspor Percakapan',
+        exportText: (count) => `Pilih format file untuk mengekspor ${count} pesan:`,
+        processing: 'Memproses...',
+        processingText: (format) => `Sedang membuat file ${format.toUpperCase()}...`,
+        success: 'Berhasil!',
+        exportSuccess: (format) => `File ${format.toUpperCase()} berhasil diunduh`,
+        exportFailed: 'Gagal Mengekspor',
+        exportFailedText: 'Terjadi kesalahan saat mengekspor chat. Silakan coba lagi.',
+        confirmClear: 'Yakin ingin menghapus semua riwayat percakapan?',
+        voiceInputError: 'Gagal Merekam',
+        voiceInputErrorText: 'Tidak dapat mengakses mikrofon. Pastikan izin mikrofon sudah diberikan.'
+      },
+      en: {
+        placeholder: 'Ask about RPJMD...',
+        send: 'Send',
+        clear: 'Clear History',
+        export: 'Export Chat',
+        greeting: (time) => `${time}! 🙏 <br>I am the AI assistant for RPJMD Information Services of Pasuruan Regency. What would you like to know about priority programs, development achievements, or RPJMD 2025-2029 documents?`,
+        quickReplies: [
+          { text: 'Vision & Mission', question: 'What is the Vision and Mission of Pasuruan Regency?' },
+          { text: 'Priority Programs', question: 'How many Priority Programs are there currently?' },
+          { text: 'What is RPJMD?', question: 'Please explain what RPJMD is briefly.' }
+        ],
+        today: 'Today',
+        waiting: 'Waiting for AI response...',
+        noConversation: 'No Conversation',
+        noConversationText: 'No conversation to export yet. Start chatting first!',
+        exportTitle: '📥 Export Conversation',
+        exportText: (count) => `Choose file format to export ${count} messages:`,
+        processing: 'Processing...',
+        processingText: (format) => `Creating ${format.toUpperCase()} file...`,
+        success: 'Success!',
+        exportSuccess: (format) => `${format.toUpperCase()} file downloaded successfully`,
+        exportFailed: 'Export Failed',
+        exportFailedText: 'An error occurred while exporting chat. Please try again.',
+        confirmClear: 'Are you sure you want to delete all conversation history?',
+        voiceInputError: 'Recording Failed',
+        voiceInputErrorText: 'Cannot access microphone. Make sure microphone permission is granted.'
+      }
+    };
+    
+    class LanguageManager {
+      constructor() {
+        this.currentLang = localStorage.getItem('chatbot_lang') || 'id';
+        this.selector = document.getElementById('language-selector');
+        
+        // Set initial value
+        if (this.selector) {
+          this.selector.value = this.currentLang;
+        }
+      }
+      
+      setLanguage(lang) {
+        this.currentLang = lang;
+        localStorage.setItem('chatbot_lang', lang);
+        this.updateUI();
+        
+        // Update voice recognition language
+        if (voiceInput.recognition) {
+          voiceInput.recognition.lang = lang === 'en' ? 'en-US' : 'id-ID';
+        }
+      }
+      
+      translate(key, ...args) {
+        const value = translations[this.currentLang][key];
+        return typeof value === 'function' ? value(...args) : value;
+      }
+      
+      updateUI() {
+        // Update input placeholder
+        chatInput.placeholder = this.translate('placeholder');
+        
+        // Update button titles
+        document.getElementById('export-chat').title = this.translate('export');
+        document.getElementById('clear-history').title = this.translate('clear');
+        
+        // Reload initial greeting
+        this.reloadGreeting();
+      }
+      
+      reloadGreeting() {
+        const currentGreeting = getTimeBasedGreeting();
+        const greeting = this.translate('greeting', currentGreeting);
+        const quickReplies = this.translate('quickReplies');
+        
+        messages.innerHTML = `
+          <div class="flex justify-center mb-2">
+            <span class="px-3 py-1 bg-gray-200/60 text-gray-500 rounded-full text-[10px] font-bold tracking-widest uppercase">${this.translate('today')}</span>
+          </div>
+
+          <div class="flex justify-start group">
+            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 mr-2 mt-1 hidden sm:flex">
+              <span class="text-blue-600 font-bold text-xs">AI</span>
+            </div>
+            <div class="bg-white border border-gray-100 text-gray-800 rounded-2xl rounded-tl-sm px-4 sm:px-5 py-3 sm:py-3.5 max-w-[95%] sm:max-w-[85%] shadow-sm font-medium leading-relaxed text-[13px] sm:text-sm">
+              ${greeting}
+            </div>
+          </div>
+
+          <div id="chat-quick-options" class="flex flex-wrap gap-2 sm:ml-10 -mt-2 animate-chat-msg opacity-0" style="animation-delay: 0.3s forwards">
+            ${quickReplies.map(q => `<button class="quick-btn text-[10px] sm:text-[11px] font-bold bg-white border border-blue-200 text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-full transition-colors shadow-sm hover:shadow" data-text="${q.question}">${q.text}</button>`).join('')}
+          </div>
+        `;
+        
+        // Re-attach quick button handlers
+        document.querySelectorAll('.quick-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            if (isChatBusy) return;
+            chatInput.value = this.getAttribute('data-text');
+            sendMessage();
+          });
+        });
+      }
+    }
+    
+    // Initialize language manager
+    const languageManager = new LanguageManager();
+    
+    // Language selector handler
+    const languageSelector = document.getElementById('language-selector');
+    if (languageSelector) {
+      languageSelector.addEventListener('change', function() {
+        languageManager.setLanguage(this.value);
+      });
+    }
 
 
     function handleToggle() {
@@ -463,6 +870,10 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
         ], { duration: 300, easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)', fill: 'forwards' });
         chatToggle.classList.add('scale-75', 'opacity-60');
         if (notifDot) notifDot.classList.add('hidden');
+        
+        // Load history from database when opening
+        loadChatHistory();
+        
         setTimeout(() => chatInput?.focus(), 350);
       } else {
         // Tutup
@@ -474,6 +885,63 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
           chatWindow.classList.remove('flex');
         };
         chatToggle.classList.remove('scale-75', 'opacity-60');
+      }
+    }
+    
+    // Load chat history from database
+    async function loadChatHistory() {
+      try {
+        const response = await fetch('/api/chat/history');
+        const data = await response.json();
+        
+        if (data.messages && data.messages.length > 0) {
+          // Clear current messages except the greeting
+          const quickOptions = document.getElementById('chat-quick-options');
+          if (quickOptions) quickOptions.style.display = 'none';
+          
+          // Add loaded messages
+          data.messages.forEach(msg => {
+            if (msg.role === 'user') {
+              messages.innerHTML += `
+                <div class="flex justify-end animate-chat-msg opacity-0">
+                  <div class="bg-blue-600 text-white rounded-2xl rounded-tr-sm px-5 py-3 max-w-[80%] shadow-sm font-medium leading-relaxed text-sm">${msg.text}</div>
+                </div>`;
+            } else {
+              messageCount++;
+              const msgId = 'msg-' + messageCount;
+              const formattedReply = typeof marked !== 'undefined' ? marked.parse(msg.message) : msg.message.replace(/\n/g, '<br>');
+              
+              messages.innerHTML += `
+                <div class="flex justify-start animate-chat-msg opacity-0 group" id="${msgId}">
+                  <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 mr-2 mt-1 hidden sm:flex">
+                    <span class="text-blue-600 font-bold text-xs">AI</span>
+                  </div>
+                  <div class="flex-1 max-w-[95%] sm:max-w-[85%]">
+                    <div class="bg-white border border-gray-100 text-gray-800 rounded-2xl rounded-tl-sm px-4 sm:px-5 py-3 sm:py-3.5 shadow-sm leading-relaxed text-[13px] sm:text-sm prose prose-sm max-w-none">${formattedReply}</div>
+                    <div class="flex items-center gap-2 mt-1 ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button onclick="speakMessage('${msgId}')" class="text-gray-400 hover:text-blue-600 p-1 rounded transition-colors" title="Dengarkan">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+                      </button>
+                      <button onclick="copyMessage('${msgId}')" class="text-gray-400 hover:text-blue-600 p-1 rounded transition-colors" title="Salin">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                      </button>
+                      <button onclick="feedbackMessage('${msgId}', 'like')" class="text-gray-400 hover:text-green-600 p-1 rounded transition-colors" title="Berguna">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path></svg>
+                      </button>
+                      <button onclick="feedbackMessage('${msgId}', 'dislike')" class="text-gray-400 hover:text-red-600 p-1 rounded transition-colors" title="Kurang Berguna">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5"></path></svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>`;
+            }
+          });
+          
+          messages.scrollTop = messages.scrollHeight;
+        }
+      } catch (error) {
+        console.error('Failed to load history:', error);
+        // Silent fail, show default greeting
       }
     }
 
@@ -490,23 +958,20 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
       }
     });
 
-    // Kirim pesan
+    // Kirim pesan (IMPROVED)
     function sendMessage() {
-      if (isChatBusy) return; // Jangan kirim jika masih sibuk
+      if (isChatBusy) return;
       
       const msg = chatInput.value.trim();
       if (!msg) return;
 
-      isChatBusy = true; // Set sibuk
-
-
-      // Matikan Input (Disable) agar user tidak bisa mengetik sebelum AI menjawab
+      isChatBusy = true;
       chatInput.disabled = true;
       chatSend.disabled = true;
       chatSend.classList.add('opacity-50', 'cursor-not-allowed');
       chatInput.placeholder = "Menunggu balasan AI...";
 
-      // Sembunyikan quick options setelah pesan pertama terkirim
+      // Sembunyikan quick options
       const quickOptions = document.getElementById('chat-quick-options');
       if (quickOptions) quickOptions.style.display = 'none';
 
@@ -518,28 +983,28 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
       chatInput.value = '';
       messages.scrollTop = messages.scrollHeight;
 
-      // Typing indicator
+      // Typing indicator (IMPROVED)
       const typingId = 'typing-' + Date.now();
       messages.innerHTML += `
-        <div id="${typingId}" class="flex justify-start animate-chat-msg opacity-0">
-          <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 mr-2 mt-1">
+        <div id="${typingId}" class="flex justify-start">
+          <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 mr-2 mt-1 hidden sm:flex">
             <span class="text-blue-600 font-bold text-xs">AI</span>
           </div>
-          <div class="bg-white border border-gray-100 text-gray-800 rounded-2xl rounded-tl-sm px-5 py-4 shadow-sm flex items-center gap-1.5">
-            <div class="w-2.5 h-2.5 bg-blue-400 rounded-full animate-bounce"></div>
-            <div class="w-2.5 h-2.5 bg-blue-500 rounded-full animate-bounce" style="animation-delay:0.15s"></div>
-            <div class="w-2.5 h-2.5 bg-blue-600 rounded-full animate-bounce" style="animation-delay:0.3s"></div>
+          <div class="bg-white border border-gray-100 rounded-2xl rounded-tl-sm shadow-sm">
+            <div class="typing-indicator">
+              <span></span><span></span><span></span>
+            </div>
           </div>
         </div>`;
       messages.scrollTop = messages.scrollHeight;
 
       // Fungsi Pembuka Gembok
       function unlockChat() {
-          isChatBusy = false; // Reset sibuk
+          isChatBusy = false;
           chatInput.disabled = false;
           chatSend.disabled = false;
           chatSend.classList.remove('opacity-50', 'cursor-not-allowed');
-          chatInput.placeholder = "Tanyakan seputar RPJMD Kabupaten Pasuruan...";
+          chatInput.placeholder = "Tanyakan seputar RPJMD...";
           setTimeout(() => chatInput.focus(), 100);
       }
 
@@ -575,7 +1040,10 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': csrfToken
         },
-        body: JSON.stringify({ message: msg })
+        body: JSON.stringify({ 
+          message: msg,
+          language: languageManager.currentLang
+        })
       })
       .then(response => response.json())
       .then(data => {
@@ -583,30 +1051,49 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
         
         const reply = data.reply || 'Maaf, terjadi kesalahan saat menghubungi AI.';
         
-        // Use marked.js or basic replace to handle newlines/bold from Gemini
-        const formattedReply = reply.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        // IMPROVED: Use marked.js for proper markdown rendering
+        const formattedReply = typeof marked !== 'undefined' ? marked.parse(reply) : reply.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        messageCount++;
+        const msgId = 'msg-' + messageCount;
 
         messages.innerHTML += `
-          <div class="flex justify-start animate-chat-msg opacity-0">
-            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 mr-2 mt-1">
+          <div class="flex justify-start animate-chat-msg opacity-0 group" id="${msgId}">
+            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 mr-2 mt-1 hidden sm:flex">
               <span class="text-blue-600 font-bold text-xs">AI</span>
             </div>
-            <div class="bg-white border border-gray-100 text-gray-800 rounded-2xl rounded-tl-sm px-5 py-3.5 max-w-[80%] shadow-sm font-medium leading-relaxed text-sm">${formattedReply}</div>
+            <div class="flex-1 max-w-[95%] sm:max-w-[85%]">
+              <div class="bg-white border border-gray-100 text-gray-800 rounded-2xl rounded-tl-sm px-4 sm:px-5 py-3 sm:py-3.5 shadow-sm leading-relaxed text-[13px] sm:text-sm prose prose-sm max-w-none">${formattedReply}</div>
+              <div class="flex items-center gap-2 mt-1 ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onclick="speakMessage('${msgId}')" class="text-gray-400 hover:text-blue-600 p-1 rounded transition-colors" title="Dengarkan">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+                </button>
+                <button onclick="copyMessage('${msgId}')" class="text-gray-400 hover:text-blue-600 p-1 rounded transition-colors" title="Salin">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                </button>
+                <button onclick="feedbackMessage('${msgId}', 'like')" class="text-gray-400 hover:text-green-600 p-1 rounded transition-colors" title="Berguna">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path></svg>
+                </button>
+                <button onclick="feedbackMessage('${msgId}', 'dislike')" class="text-gray-400 hover:text-red-600 p-1 rounded transition-colors" title="Kurang Berguna">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5"></path></svg>
+                </button>
+              </div>
+            </div>
           </div>`;
         messages.scrollTop = messages.scrollHeight;
-        unlockChat(); // Buka gembok
+        unlockChat();
       })
       .catch(error => {
         document.getElementById(typingId)?.remove();
         messages.innerHTML += `
           <div class="flex justify-start animate-chat-msg opacity-0">
-            <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center shrink-0 mr-2 mt-1">
-              <span class="text-red-500 font-bold text-xs">AI</span>
+            <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center shrink-0 mr-2 mt-1 hidden sm:flex">
+              <span class="text-red-500 font-bold text-xs">⚠️</span>
             </div>
-            <div class="bg-white border border-red-100 text-red-600 rounded-2xl rounded-tl-sm px-5 py-3.5 max-w-[80%] shadow-sm font-medium leading-relaxed text-sm">Gagal terhubung dengan server. Silakan coba lagi.</div>
+            <div class="bg-red-50 border border-red-100 text-red-600 rounded-2xl rounded-tl-sm px-5 py-3.5 max-w-[80%] shadow-sm font-medium leading-relaxed text-sm">❌ Gagal terhubung dengan server. Silakan coba lagi.</div>
           </div>`;
         messages.scrollTop = messages.scrollHeight;
-        unlockChat(); // Buka gembok
+        unlockChat();
       });
     }
 
@@ -623,6 +1110,341 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
         sendMessage();
       });
     });
+
+    // Export Chat Logic
+    const exportChat = document.getElementById('export-chat');
+    exportChat.addEventListener('click', async function() {
+      if (isChatBusy) return;
+      
+      // Get all messages from chat
+      const chatMessages = [];
+      const messageDivs = messages.querySelectorAll('.flex.justify-start, .flex.justify-end');
+      
+      messageDivs.forEach(div => {
+        const isUser = div.classList.contains('justify-end');
+        const textElement = div.querySelector('.prose, .bg-white, .bg-blue-600');
+        if (textElement) {
+          chatMessages.push({
+            role: isUser ? 'user' : 'ai',
+            text: textElement.innerText || textElement.textContent
+          });
+        }
+      });
+      
+      if (chatMessages.length === 0) {
+        Swal.fire({
+          icon: 'warning',
+          title: languageManager.translate('noConversation'),
+          text: languageManager.translate('noConversationText'),
+          confirmButtonColor: '#2563eb',
+          customClass: {
+            popup: 'rounded-3xl border-none shadow-2xl',
+            title: 'font-black'
+          }
+        });
+        return;
+      }
+      
+      // Show format selection with SweetAlert2
+      const { value: format } = await Swal.fire({
+        title: languageManager.translate('exportTitle'),
+        html: `
+          <div class="text-left space-y-3 mt-4">
+            <p class="text-gray-600 text-sm mb-4">${languageManager.translate('exportText', chatMessages.length)}</p>
+          </div>
+        `,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: '<i class="fas fa-file-pdf mr-2"></i> PDF',
+        cancelButtonText: '<i class="fas fa-file-alt mr-2"></i> TXT',
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#2563eb',
+        reverseButtons: true,
+        customClass: {
+          popup: 'rounded-3xl border-none shadow-2xl',
+          title: 'font-black text-xl',
+          confirmButton: 'rounded-xl px-6 py-3 font-bold',
+          cancelButton: 'rounded-xl px-6 py-3 font-bold'
+        }
+      });
+      
+      // User clicked X or Esc
+      if (format === undefined) return;
+      
+      const selectedFormat = format ? 'pdf' : 'txt';
+      
+      // Show loading
+      Swal.fire({
+        title: languageManager.translate('processing'),
+        html: languageManager.translate('processingText', selectedFormat),
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+        customClass: {
+          popup: 'rounded-3xl border-none shadow-2xl',
+          title: 'font-black'
+        }
+      });
+      
+      // Send export request
+      fetch('/api/chat/export', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+        },
+        body: JSON.stringify({
+          messages: chatMessages,
+          format: selectedFormat
+        })
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('Export failed');
+        return response.blob();
+      })
+      .then(blob => {
+        // Trigger download
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `chat-rpjmd-${Date.now()}.${selectedFormat}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        
+        // Show success
+        Swal.fire({
+          icon: 'success',
+          title: languageManager.translate('success'),
+          text: languageManager.translate('exportSuccess', selectedFormat),
+          timer: 2000,
+          showConfirmButton: false,
+          customClass: {
+            popup: 'rounded-3xl border-none shadow-2xl',
+            title: 'font-black'
+          }
+        });
+      })
+      .catch(error => {
+        console.error('Export error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: languageManager.translate('exportFailed'),
+          text: languageManager.translate('exportFailedText'),
+          confirmButtonColor: '#2563eb',
+          customClass: {
+            popup: 'rounded-3xl border-none shadow-2xl',
+            title: 'font-black'
+          }
+        });
+      });
+    });
+
+    // Clear History Logic
+    clearHistory.addEventListener('click', function() {
+      if (isChatBusy) return;
+      
+      if (confirm(languageManager.translate('confirmClear'))) {
+        // Reload greeting with current language
+        languageManager.reloadGreeting();
+        
+        // Clear server-side session
+        fetch('/api/chat/clear', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+          }
+        }).catch(() => {
+          // Silent fail, UI already cleared
+        });
+        
+        messageCount = 0;
+      }
+    });
+    
+    // New Session Logic
+    const newSessionBtn = document.getElementById('new-session');
+    if (newSessionBtn) {
+      newSessionBtn.addEventListener('click', async function() {
+        if (isChatBusy) return;
+        
+        const confirmMsg = languageManager.currentLang === 'en' 
+          ? 'Start a new chat session? Current conversation will be saved.'
+          : 'Mulai sesi chat baru? Percakapan saat ini akan disimpan.';
+        
+        if (confirm(confirmMsg)) {
+          try {
+            const response = await fetch('/api/chat/new-session', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+              }
+            });
+            
+            if (response.ok) {
+              // Reload greeting with current language
+              languageManager.reloadGreeting();
+              messageCount = 0;
+              
+              const successMsg = languageManager.currentLang === 'en'
+                ? 'New session started!'
+                : 'Sesi baru dimulai!';
+              
+              Swal.fire({
+                icon: 'success',
+                title: successMsg,
+                timer: 1500,
+                showConfirmButton: false,
+                customClass: {
+                  popup: 'rounded-3xl border-none shadow-2xl',
+                  title: 'font-black'
+                }
+              });
+            }
+          } catch (error) {
+            console.error('Failed to start new session:', error);
+          }
+        }
+      });
+    }
+
+    // Copy message function (global scope)
+    window.copyMessage = function(msgId) {
+      const msgElement = document.getElementById(msgId);
+      if (!msgElement) return;
+      
+      const textContent = msgElement.querySelector('.prose')?.innerText || msgElement.querySelector('.bg-white')?.innerText;
+      if (!textContent) return;
+      
+      navigator.clipboard.writeText(textContent).then(() => {
+        // Show temporary success message
+        const btn = event.target.closest('button');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
+        btn.classList.add('text-green-600');
+        setTimeout(() => {
+          btn.innerHTML = originalHTML;
+          btn.classList.remove('text-green-600');
+        }, 1500);
+      }).catch(() => {
+        alert('Gagal menyalin teks');
+      });
+    };
+
+    // Feedback function (global scope)
+    window.feedbackMessage = function(msgId, type) {
+      const btn = event.target.closest('button');
+      const wasActive = btn.classList.contains('feedback-active');
+      
+      // Remove active state from all feedback buttons in this message
+      const msgElement = document.getElementById(msgId);
+      msgElement.querySelectorAll('.feedback-active').forEach(b => {
+        b.classList.remove('feedback-active', 'text-green-600', 'text-red-600');
+      });
+      
+      if (!wasActive) {
+        btn.classList.add('feedback-active');
+        btn.classList.add(type === 'like' ? 'text-green-600' : 'text-red-600');
+        
+        // Send feedback to server (optional analytics)
+        fetch('/api/chat/feedback', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+          },
+          body: JSON.stringify({ message_id: msgId, type: type })
+        }).catch(() => {
+          // Silent fail
+        });
+      }
+    };
+    
+    // ===== VOICE INPUT HANDLER =====
+    const voiceInputBtn = document.getElementById('voice-input-btn');
+    
+    if (voiceInputBtn) {
+      // Check if voice input is supported
+      if (!voiceInput.isSupported) {
+        voiceInputBtn.style.display = 'none';
+      } else {
+        voiceInputBtn.addEventListener('click', async function() {
+          if (isChatBusy || isRecording) return;
+          
+          isRecording = true;
+          voiceInputBtn.classList.add('voice-recording', 'bg-red-500', 'text-white');
+          voiceInputBtn.title = 'Merekam... (klik untuk berhenti)';
+          
+          try {
+            const transcript = await voiceInput.start();
+            chatInput.value = transcript;
+            chatInput.focus();
+          } catch (error) {
+            console.error('Voice input error:', error);
+            if (error !== 'no-speech' && error !== 'aborted') {
+              Swal.fire({
+                icon: 'error',
+                title: languageManager.translate('voiceInputError'),
+                text: languageManager.translate('voiceInputErrorText'),
+                confirmButtonColor: '#2563eb',
+                customClass: {
+                  popup: 'rounded-3xl border-none shadow-2xl',
+                  title: 'font-black'
+                }
+              });
+            }
+          } finally {
+            isRecording = false;
+            voiceInputBtn.classList.remove('voice-recording', 'bg-red-500', 'text-white');
+            voiceInputBtn.title = 'Input Suara';
+          }
+        });
+      }
+    }
+    
+    // ===== VOICE OUTPUT HANDLER (Global function) =====
+    window.speakMessage = function(msgId) {
+      const msgElement = document.getElementById(msgId);
+      if (!msgElement) return;
+      
+      const btn = event.target.closest('button');
+      const textContent = msgElement.querySelector('.prose')?.innerText || msgElement.querySelector('.bg-white')?.innerText;
+      if (!textContent) return;
+      
+      // If already playing this message, stop it
+      if (btn.classList.contains('voice-playing')) {
+        voiceOutput.stop();
+        btn.classList.remove('voice-playing', 'text-blue-600');
+        btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>';
+        return;
+      }
+      
+      // Stop any other playing voice
+      document.querySelectorAll('.voice-playing').forEach(b => {
+        b.classList.remove('voice-playing', 'text-blue-600');
+        b.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>';
+      });
+      
+      // Start playing
+      btn.classList.add('voice-playing', 'text-blue-600');
+      btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"></path></svg>';
+      
+      voiceOutput.speak(textContent)
+        .then(() => {
+          btn.classList.remove('voice-playing', 'text-blue-600');
+          btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>';
+        })
+        .catch((error) => {
+          console.error('Voice output error:', error);
+          btn.classList.remove('voice-playing', 'text-blue-600');
+          btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>';
+        });
+    };
   });
   </script>
   <script>

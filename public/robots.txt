@@ -1,2 +1,9 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /admin
+Disallow: /login
+Disallow: /register
+Disallow: /dashboard
+
+# Sitemap
+Sitemap: https://portal-rpjmd-kabpasuruan.artdevata.net/sitemap.xml

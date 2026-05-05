@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Layanan Informasi RPJMD Kabupaten Pasuruan - Berita & Informasi')
+@section('seo')
+    <x-seo 
+        title="Berita & Informasi Terkini - Bapperida Kabupaten Pasuruan"
+        description="Berita terbaru seputar pembangunan, program prioritas, dan kegiatan Bapperida Kabupaten Pasuruan. Update informasi RPJMD dan capaian kinerja pembangunan daerah."
+        keywords="Berita Pasuruan, Informasi Pembangunan, Program Prioritas, RPJMD, Bapperida, Kabupaten Pasuruan"
+    />
+@endsection
 
 @section('content')
     <!-- Header Spanduk -->

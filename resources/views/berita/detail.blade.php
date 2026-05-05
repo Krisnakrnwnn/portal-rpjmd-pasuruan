@@ -1,8 +1,79 @@
 @extends('layouts.app')
 
-@section('title', $news->title . ' - RPJMD Kabupaten Pasuruan')
-@section('meta_description', $meta_description)
-@section('og_image', $og_image)
+@section('seo')
+    <x-seo 
+        :title="$news->title"
+        :description="Str::limit(strip_tags($news->content), 155)"
+        :image="Str::startsWith($news->image_url, 'http') ? $news->image_url : asset($news->image_url ?? 'news1.png')"
+        type="article"
+        :keywords="'Berita Pasuruan, ' . $news->category . ', RPJMD, Bapperida, Kabupaten Pasuruan, Pembangunan Daerah'"
+        :publishedTime="$news->published_at?->toIso8601String()"
+        :modifiedTime="$news->updated_at->toIso8601String()"
+    >
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "NewsArticle",
+          "headline": "{{ $news->title }}",
+          "image": [
+            "{{ Str::startsWith($news->image_url, 'http') ? $news->image_url : asset($news->image_url ?? 'news1.png') }}"
+          ],
+          "datePublished": "{{ $news->published_at?->toIso8601String() ?? $news->created_at->toIso8601String() }}",
+          "dateModified": "{{ $news->updated_at->toIso8601String() }}",
+          "author": {
+            "@type": "Organization",
+            "name": "Bapperida Kabupaten Pasuruan",
+            "url": "{{ url('/') }}"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Bapperida Kabupaten Pasuruan",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "{{ asset('logo.png') }}",
+              "width": 600,
+              "height": 60
+            }
+          },
+          "description": "{{ Str::limit(strip_tags($news->content), 155) }}",
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "{{ route('berita.detail', ['slug' => $news->slug]) }}"
+          },
+          "articleSection": "{{ $news->category }}",
+          "inLanguage": "id-ID"
+        }
+        </script>
+        
+        {{-- Breadcrumb Schema --}}
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Beranda",
+              "item": "{{ route('home') }}"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Berita",
+              "item": "{{ route('berita') }}"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "{{ $news->title }}",
+              "item": "{{ route('berita.detail', ['slug' => $news->slug]) }}"
+            }
+          ]
+        }
+        </script>
+    </x-seo>
+@endsection
 
 @section('content')
     <!-- Header Spanduk Minimalis -->

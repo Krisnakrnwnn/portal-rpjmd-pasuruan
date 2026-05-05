@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\DocumentChunk;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ChatbotController extends Controller
 {
@@ -12,6 +13,8 @@ class ChatbotController extends Controller
     {
         $request->validate(['message' => 'required|string']);
         $userMessage = $request->input('message');
+        $language = $request->input('language', 'id'); // Get language parameter
+        $sessionId = $request->cookie('chat_session_id') ?? \Illuminate\Support\Str::uuid()->toString();
         $apiKey = env('GEMINI_API_KEY');
 
         if (!$apiKey) {
@@ -19,6 +22,18 @@ class ChatbotController extends Controller
         }
 
         try {
+            // Save user message to database
+            \App\Models\ChatMessage::create([
+                'session_id' => $sessionId,
+                'role' => 'user',
+                'message' => $userMessage
+            ]);
+            
+            // Ensure session exists
+            \App\Models\ChatSession::firstOrCreate(
+                ['session_id' => $sessionId],
+                ['user_ip' => $request->ip()]
+            );
             // STEP 1: Embed User Message with Retry Logic
             $retryCount = 0;
             $maxRetries = 3;
@@ -101,14 +116,20 @@ class ChatbotController extends Controller
                 // Abaikan jika tabel tidak siap
             }
 
-            // STEP 3: Prompt Gemini to answer (Instruksi dibuat jauh lebih pintar dan ketat)
-            $systemInstruction = "Anda adalah Asisten Virtual Cerdas Rencana Pembangunan Jangka Menengah Daerah (RPJMD) Kabupaten Pasuruan.
-Instruksi Penting:
-1. Jawablah pengguna dengan bahasa yang ramah, hangat, berwibawa, dan mudah dipahami.
-2. JIKA dokumen konteks disediakan di bawah, JAWAB WAJIB BERDASARKAN DOKUMEN TERSEBUT.
-3. JIKA dokumen tidak menebutkan jawabannya, JANGAN MENGARANG FAKTA. Katakan sejujurnya bahwa informasi yang diminta tidak tercantum dalam dokumen RPJMD saat ini.
-4. JIKA menyebutkan daftar, visi misi, atau langkah-langkah, WAJIB gunakan format Markdown lengkap (seperti Bullet points, angka, teks tebal/bold, atau garis baru) agar teks terlihat sangat rapi dan mudah dibaca oleh warga.
-5. Jika pengguna sekadar menyapa ('Halo', 'Hai'), balas sapaan tersebut dan tawarkan bantuan terkait info dokumen Pemerintah Kabupaten Pasuruan.";
+            // STEP 3: Prompt Gemini to answer (IMPROVED PROMPT)
+            // Get appropriate greeting based on time
+            $hour = now()->format('H');
+            $greeting = 'Selamat pagi'; // Default 00:00 - 10:59
+            if ($hour >= 11 && $hour < 15) {
+                $greeting = 'Selamat siang';
+            } elseif ($hour >= 15 && $hour < 18) {
+                $greeting = 'Selamat sore';
+            } elseif ($hour >= 18) {
+                $greeting = 'Selamat malam';
+            }
+            
+            // Get system instruction based on language
+            $systemInstruction = $this->getSystemPrompt($language, $greeting);
 
             $prompt = $systemInstruction . "\n\n" . $contextText . "\n\n" . $webDataText . "\n\nPertanyaan Baru Warga: " . $userMessage;
 
@@ -151,6 +172,13 @@ Instruksi Penting:
             if ($chatResponse && $chatResponse->successful()) {
                 $reply = $chatResponse->json('candidates.0.content.parts.0.text') ?? 'Saya tidak dapat memberikan jawaban saat ini.';
                 
+                // Save AI response to database
+                \App\Models\ChatMessage::create([
+                    'session_id' => $sessionId,
+                    'role' => 'model',
+                    'message' => $reply
+                ]);
+                
                 // Simpan pertanyaan ASLI warga (tanpa prompt panjang biar bot tdk mabuk teks/kena token limit max)
                 $history[] = ['role' => 'user', 'parts' => [['text' => $userMessage]]];
                 // Simpan balasan text bot
@@ -163,7 +191,8 @@ Instruksi Penting:
                 session()->put('chatbot_history', $history);
                 
                 // Format markdown if needed (Gemini returns markdown, can be processed client-side)
-                return response()->json(['reply' => $reply]);
+                return response()->json(['reply' => $reply])
+                    ->cookie('chat_session_id', $sessionId, 43200); // 30 days
             }
 
             // Jika masih error setelah di-retry (Atau gagal gara-gara alasan lain)
@@ -204,5 +233,233 @@ Instruksi Penting:
 
         if ($normA == 0 || $normB == 0) return 0;
         return $dotProduct / (sqrt($normA) * sqrt($normB));
+    }
+
+    /**
+     * Clear chat history from session
+     */
+    public function clearHistory(Request $request)
+    {
+        session()->forget('chatbot_history');
+        return response()->json(['success' => true, 'message' => 'Riwayat chat berhasil dihapus']);
+    }
+    
+    /**
+     * Load chat history from database
+     */
+    public function loadHistory(Request $request)
+    {
+        $sessionId = $request->cookie('chat_session_id');
+        
+        if (!$sessionId) {
+            return response()->json(['messages' => []]);
+        }
+        
+        $messages = \App\Models\ChatMessage::where('session_id', $sessionId)
+            ->orderBy('created_at', 'asc')
+            ->limit(50)
+            ->get()
+            ->map(function($msg) {
+                return [
+                    'role' => $msg->role,
+                    'text' => $msg->message,
+                    'timestamp' => $msg->created_at->format('H:i')
+                ];
+            });
+        
+        return response()->json(['messages' => $messages]);
+    }
+    
+    /**
+     * Start a new chat session
+     */
+    public function newSession(Request $request)
+    {
+        $newSessionId = \Illuminate\Support\Str::uuid()->toString();
+        
+        // Create new session in database
+        \App\Models\ChatSession::create([
+            'session_id' => $newSessionId,
+            'user_ip' => $request->ip()
+        ]);
+        
+        // Clear in-memory history
+        session()->forget('chatbot_history');
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Sesi baru dimulai'
+        ])->cookie('chat_session_id', $newSessionId, 43200); // 30 days
+    }
+
+    /**
+     * Store feedback for analytics (optional)
+     */
+    public function feedback(Request $request)
+    {
+        $request->validate([
+            'message_id' => 'required|string',
+            'type' => 'required|in:like,dislike'
+        ]);
+
+        // Optional: Store feedback in database or log file for analytics
+        // For now, just return success
+        \Log::info('Chatbot Feedback', [
+            'message_id' => $request->message_id,
+            'type' => $request->type,
+            'timestamp' => now()
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Terima kasih atas feedback Anda!']);
+    }
+
+    /**
+     * Export chat history to PDF or TXT
+     */
+    public function exportChat(Request $request)
+    {
+        $request->validate([
+            'messages' => 'required|array',
+            'format' => 'required|in:pdf,txt'
+        ]);
+
+        $messages = $request->input('messages');
+        $format = $request->input('format');
+
+        if ($format === 'pdf') {
+            return $this->exportToPdf($messages);
+        }
+
+        return $this->exportToTxt($messages);
+    }
+
+    /**
+     * Export chat to PDF format
+     */
+    private function exportToPdf($messages)
+    {
+        $pdf = Pdf::loadView('exports.chat-pdf', [
+            'messages' => $messages,
+            'date' => now()->format('d M Y H:i')
+        ]);
+
+        return $pdf->download('chat-rpjmd-' . now()->format('YmdHis') . '.pdf');
+    }
+
+    /**
+     * Export chat to TXT format
+     */
+    private function exportToTxt($messages)
+    {
+        $content = "Portal RPJMD Kabupaten Pasuruan - Chat Export\n";
+        $content .= "Tanggal: " . now()->format('d M Y H:i') . "\n\n";
+        $content .= str_repeat("=", 50) . "\n\n";
+
+        foreach ($messages as $msg) {
+            $role = $msg['role'] === 'user' ? 'Anda' : 'AI';
+            $text = strip_tags($msg['text']); // Remove HTML tags
+            $content .= "{$role}: {$text}\n\n";
+        }
+
+        return response($content)
+            ->header('Content-Type', 'text/plain')
+            ->header('Content-Disposition', 'attachment; filename="chat-rpjmd-' . now()->format('YmdHis') . '.txt"');
+    }
+    
+    /**
+     * Get system prompt based on language
+     */
+    private function getSystemPrompt($language, $greeting)
+    {
+        if ($language === 'en') {
+            return "You are the RPJMD Virtual Assistant for Pasuruan Regency, intelligent and helpful.
+
+IDENTITY:
+- Name: RPJMD AI Assistant
+- Task: Help citizens understand RPJMD documents, development programs, and Bapperida services
+
+GREETING:
+- Use greeting: '{$greeting}' (according to current time)
+- Example: '{$greeting}! I am RPJMD AI Assistant, ready to help you...'
+
+IMPORTANT RULES:
+1. ALWAYS answer in English that is friendly and easy to understand
+2. IF there is document context, MUST use information from that document
+3. IF not in the document, say honestly: 'This information is not available in the current RPJMD documents'
+4. DO NOT fabricate facts or data that don't exist
+5. Use Markdown format for neat answers:
+   - **Bold** for important points
+   - Bullet points (•) for lists
+   - Numbering (1. 2. 3.) for steps
+   - Short paragraphs (max 3-4 sentences)
+   - For TABLE DATA or NUMBERS: Use easy-to-read summary format, DO NOT copy-paste raw tables
+
+ANSWER FORMAT:
+- Greeting: {$greeting} (according to time)
+- Content: Straight to the point, not verbose
+- Closing: Offer further assistance if needed
+
+SPECIFICALLY FOR TABLE/NUMBER DATA:
+- DO NOT display raw tables with pipes (|) or lines
+- Summarize data in bullet points or paragraph format
+- GOOD example: 'Total Regional Expenditure for 2025 is IDR 4.3 Trillion'
+- BAD example: '| 5 | REGIONAL EXPENDITURE (Total) | 4,346,062,666,981.00 |'
+
+TOPICS THAT CAN BE ANSWERED:
+✅ Vision & Mission of Pasuruan Regency
+✅ RPJMD Priority Programs
+✅ Development Achievements
+✅ Bapperida Services
+✅ Planning Documents
+✅ Latest News & Information
+
+IF ASKED OUTSIDE THE TOPIC:
+'Sorry, I specialize in helping with information about RPJMD and development of Pasuruan Regency. For other questions, please contact the relevant services! 😊'";
+        }
+        
+        // Indonesian (default)
+        return "Anda adalah Asisten Virtual RPJMD Kabupaten Pasuruan yang cerdas dan membantu.
+
+IDENTITAS:
+- Nama: RPJMD AI Assistant
+- Tugas: Membantu warga memahami dokumen RPJMD, program pembangunan, dan layanan Bapperida
+
+SAPAAN:
+- Gunakan sapaan: '{$greeting}' (sesuai waktu saat ini)
+- Contoh: '{$greeting}! Saya RPJMD AI Assistant, siap membantu Anda...'
+
+ATURAN PENTING:
+1. SELALU jawab dalam Bahasa Indonesia yang ramah dan mudah dipahami
+2. JIKA ada konteks dokumen, WAJIB gunakan informasi dari dokumen tersebut
+3. JIKA tidak ada di dokumen, katakan dengan jujur: 'Informasi ini tidak tersedia dalam dokumen RPJMD saat ini'
+4. JANGAN mengarang fakta atau data yang tidak ada
+5. Gunakan format Markdown untuk jawaban yang rapi:
+   - **Bold** untuk poin penting
+   - Bullet points (•) untuk daftar
+   - Numbering (1. 2. 3.) untuk langkah-langkah
+   - Paragraf pendek (max 3-4 kalimat)
+   - Untuk DATA TABEL atau ANGKA: Gunakan format ringkasan yang mudah dibaca, JANGAN copy-paste tabel mentah
+
+FORMAT JAWABAN:
+- Sapaan: {$greeting} (sesuai waktu)
+- Isi: Langsung to the point, tidak bertele-tele
+- Penutup: Tawarkan bantuan lanjutan jika perlu
+
+KHUSUS UNTUK DATA TABEL/ANGKA:
+- JANGAN tampilkan tabel mentah dengan pipe (|) atau garis
+- Ringkas data dalam format bullet points atau paragraf
+- Contoh BAIK: 'Belanja Daerah Total tahun 2025 adalah Rp 4,3 Triliun'
+- Contoh BURUK: '| 5 | BELANJA DAERAH (Total) | 4.346.062.666.981,00 |'
+
+TOPIK YANG BISA DIJAWAB:
+✅ Visi & Misi Kabupaten Pasuruan
+✅ Program Prioritas RPJMD
+✅ Capaian Pembangunan
+✅ Layanan Bapperida
+✅ Dokumen Perencanaan
+✅ Berita & Informasi Terkini
+
+JIKA DITANYA DI LUAR TOPIK:
+'Maaf, saya khusus membantu informasi seputar RPJMD dan pembangunan Kabupaten Pasuruan. Untuk pertanyaan lain, silakan hubungi layanan terkait ya! 😊'";
     }
 }

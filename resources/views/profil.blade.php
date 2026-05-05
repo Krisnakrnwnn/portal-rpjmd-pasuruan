@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Bapperida Kabupaten Pasuruan - Profil Instansi')
+@section('seo')
+    <x-seo 
+        title="Profil Bapperida Kabupaten Pasuruan"
+        description="Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah (Bapperida) Kabupaten Pasuruan - Visi, Misi, Struktur Organisasi, dan Tugas Pokok Fungsi dalam mendukung pembangunan daerah."
+        keywords="Profil Bapperida, Visi Misi, Struktur Organisasi, Tupoksi, Kabupaten Pasuruan, Perencanaan Pembangunan"
+    />
+@endsection
 
 @section('content')
     <!-- Header Spanduk -->

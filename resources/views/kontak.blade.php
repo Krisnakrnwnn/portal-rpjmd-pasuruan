@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Bapperida Kabupaten Pasuruan - Hubungi Kami')
+@section('seo')
+    <x-seo 
+        title="Hubungi Kami - Bapperida Kabupaten Pasuruan"
+        description="Hubungi Bapperida Kabupaten Pasuruan untuk konsultasi perencanaan pembangunan, informasi RPJMD, dan layanan publik lainnya. Kami siap melayani Anda."
+        keywords="Kontak Bapperida, Hubungi Kami, Alamat Bapperida Pasuruan, Email Bapperida, Konsultasi Perencanaan"
+    />
+@endsection
 
 @section('content')
     <!-- Header Spanduk -->
