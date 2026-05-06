@@ -82,62 +82,83 @@ class IngestPdfCommand extends Command
                             ->where('page_number', $pageNumber)
                             ->exists();
                         if ($alreadyIngested) {
-                            $this->line("  [SKIP] Halaman {$pageNumber} sudah ada, dilewati.");
+                            $this->line("  [SKIP] Page {$pageNumber} already ingested.");
                             continue;
                         }
                     }
 
                     $this->line("Extracting text from page {$pageNumber}...");
 
-                    // Extract single page using Imagick to a temporary PDF file
-                    $singlePageImagick = new \Imagick();
-                    $singlePageImagick->readImage($filePath . "[" . $pageIndex . "]");
-                    $tempPagePath = storage_path("app/temp_page_{$pageNumber}.pdf");
-                    $singlePageImagick->writeImage($tempPagePath);
-                    $singlePageImagick->clear();
-                    $singlePageImagick->destroy();
+                    try {
+                        // Extract single page using Imagick
+                        $singlePageImagick = new \Imagick();
+                        // Set resolution before reading to keep it light
+                        $singlePageImagick->setResolution(72, 72); 
+                        $singlePageImagick->readImage($filePath . "[" . $pageIndex . "]");
+                        $tempPagePath = storage_path("app/temp_page_{$pageNumber}.pdf");
+                        $singlePageImagick->writeImage($tempPagePath);
+                        $singlePageImagick->clear();
+                        $singlePageImagick->destroy();
 
-                    // Parse the single-page PDF
-                    $pdf = $parser->parseFile($tempPagePath);
-                    $text = $pdf->getText();
-                    
-                    // Cleanup temp file
-                    if (file_exists($tempPagePath)) unlink($tempPagePath);
-
-                    // Cleaning text
-                    $text = preg_replace('/[^\x09\x0A\x0D\x20-\x7E\xA0-\xFF]/u', '', $text); 
-                    $text = preg_replace('/\s+/', ' ', trim($text)); 
-
-                    if (empty($text) || strlen($text) < 10) continue; 
-
-                    // Chunking and Embedding (existing logic)
-                    $chunks = str_split($text, 1500);
-
-                    foreach ($chunks as $chunkIndex => $chunk) {
-                        $this->line("  Embedding page {$pageNumber} (chunk {$chunkIndex})...");
+                        // Parse the single-page PDF
+                        $pagePdf = $parser->parseFile($tempPagePath);
+                        $text = $pagePdf->getText();
                         
-                        $response = Http::timeout(60)->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key={$apiKey}", [
-                            'model' => 'models/gemini-embedding-001',
-                            'content' => [
-                                'parts' => [
-                                    ['text' => "Document: $file\nPage: $pageNumber\nContent: $chunk"]
-                                ]
-                            ]
-                        ]);
+                        // Cleanup temp file immediately
+                        if (file_exists($tempPagePath)) unlink($tempPagePath);
 
-                        if ($response->successful()) {
-                            $embedding = $response->json('embedding.values');
+                        // Cleaning text
+                        $text = preg_replace('/[^\x09\x0A\x0D\x20-\x7E\xA0-\xFF]/u', '', $text); 
+                        $text = preg_replace('/\s+/', ' ', trim($text)); 
 
-                            DocumentChunk::create([
-                                'document_name' => $file,
-                                'page_number' => $pageNumber,
-                                'chunk_text' => $chunk,
-                                'embedding' => $embedding
-                            ]);
-                            sleep(3); // Rate limit respect
-                        } else {
-                            $this->error("  Failed to embed page $pageNumber: " . $response->body());
+                        if (empty($text) || strlen($text) < 10) {
+                            $this->line("  [SKIP] Page {$pageNumber} has no readable text.");
+                            continue;
                         }
+
+                        // Chunking
+                        $chunks = str_split($text, 1500);
+
+                        foreach ($chunks as $chunkIndex => $chunk) {
+                            $this->line("  Embedding page {$pageNumber} (chunk {$chunkIndex})...");
+                            
+                            $response = Http::timeout(60)->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key={$apiKey}", [
+                                'model' => 'models/gemini-embedding-001',
+                                'content' => [
+                                    'parts' => [
+                                        ['text' => "Document: $file\nPage: $pageNumber\nContent: $chunk"]
+                                    ]
+                                ]
+                            ]);
+
+                            if ($response->successful()) {
+                                $embedding = $response->json('embedding.values');
+
+                                DocumentChunk::create([
+                                    'document_name' => $file,
+                                    'page_number' => $pageNumber,
+                                    'chunk_text' => $chunk,
+                                    'embedding' => $embedding
+                                ]);
+                                
+                                // Rate limit respect
+                                sleep(1); 
+                            } else {
+                                $this->error("  Failed to embed page $pageNumber: " . $response->body());
+                            }
+                            
+                            unset($embedding);
+                            unset($response);
+                        }
+
+                        // AGGRESSIVE MEMORY CLEANUP
+                        unset($text);
+                        unset($pagePdf);
+                        unset($chunks);
+                        gc_collect_cycles();
+                        
+                    } catch (\Exception $pageException) {
+                        $this->error("  Error on page $pageNumber: " . $pageException->getMessage());
                     }
                 }
                 

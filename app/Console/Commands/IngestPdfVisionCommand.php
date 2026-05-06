@@ -64,8 +64,8 @@ class IngestPdfVisionCommand extends Command
 
                 $this->info("Found $numPages pages.");
 
-                for ($i = 0; $i < $numPages; $i++) {
-                    $pageNumber = $i + 1;
+                for ($pageIndex = 0; $pageIndex < $numPages; $pageIndex++) {
+                    $pageNumber = $pageIndex + 1;
 
                     if ($resume) {
                         $exists = DocumentChunk::where('document_name', $file)
@@ -79,27 +79,19 @@ class IngestPdfVisionCommand extends Command
 
                     $this->line("Reading page $pageNumber with Gemini Vision...");
 
-                    // Create fresh instance for each page to keep memory usage low
-                    $imagick = new \Imagick();
-                    $imagick->setResolution(150, 150);
-                    // ONLY read the specific page: filename.pdf[index]
-                    $imagick->readImage($filePath . "[" . $i . "]");
-                    $imagick->setImageFormat('png');
-                    
-                    $imageData = base64_encode($imagick->getImageBlob());
-
-                    // 1. Ask Gemini to describe/transcribe the page
-                    $transcription = $this->transcribePageWithVision($imageData, $apiKey);
-
-                    if (!$transcription) {
-                        $this->error("Failed to transcribe page $pageNumber. Skipping.");
-                        // Optional: Show a snippet of the error if it's available in a temporary static variable or just tell them to check logs
-                        $this->line("  [TIP] Check storage/logs/laravel.log for details.");
+                    try {
+                        // Create fresh instance for each page to keep memory usage low
+                        $imagick = new \Imagick();
+                        $imagick->setResolution(100, 100);
+                        // ONLY read the specific page: filename.pdf[index]
+                        $imagick->readImage($filePath . "[" . $pageIndex . "]");
+                        $imagick->setImageFormat('jpeg');
+                        $imagick->setImageCompressionQuality(70);
+                        
+                        $base64Image = base64_encode($imagick->getImageBlob());
+                        
                         $imagick->clear();
                         $imagick->destroy();
-                        continue;
-                    }
-
                     // 2. Get embedding for the transcription
                     $this->line("  Getting embedding for page $pageNumber...");
                     $embedding = $this->getEmbedding($transcription, $apiKey, $file, $pageNumber);
