@@ -64,15 +64,19 @@ class IngestPdfCommand extends Command
             $this->info("Processing: $file ...");
 
             try {
-                $pdf = $parser->parseFile($filePath);
-                $pages = $pdf->getPages();
+            try {
+                // Use Imagick to get page count and process one by one
+                $tempImagick = new \Imagick();
+                $tempImagick->pingImage($filePath);
+                $numPages = $tempImagick->getNumberImages();
+                $tempImagick->clear();
+                $tempImagick->destroy();
 
-                $this->info("Found " . count($pages) . " pages.");
+                $this->info("Found $numPages pages.");
 
-                foreach ($pages as $pageIndex => $page) {
+                for ($pageIndex = 0; $pageIndex < $numPages; $pageIndex++) {
                     $pageNumber = $pageIndex + 1;
 
-                    // === RESUME LOGIC: skip halaman yang sudah ada di DB ===
                     if ($resume) {
                         $alreadyIngested = DocumentChunk::where('document_name', $file)
                             ->where('page_number', $pageNumber)
@@ -83,68 +87,57 @@ class IngestPdfCommand extends Command
                         }
                     }
 
-                    $text = $page->getText();
+                    $this->line("Extracting text from page {$pageNumber}...");
+
+                    // Extract single page using Imagick to a temporary PDF file
+                    $singlePageImagick = new \Imagick();
+                    $singlePageImagick->readImage($filePath . "[" . $pageIndex . "]");
+                    $tempPagePath = storage_path("app/temp_page_{$pageNumber}.pdf");
+                    $singlePageImagick->writeImage($tempPagePath);
+                    $singlePageImagick->clear();
+                    $singlePageImagick->destroy();
+
+                    // Parse the single-page PDF
+                    $pdf = $parser->parseFile($tempPagePath);
+                    $text = $pdf->getText();
                     
-                    // Pembersihan total: Buang semua karakter yang tidak valid secara UTF-8 dan karakter kontrol yang merusak JSON
+                    // Cleanup temp file
+                    if (file_exists($tempPagePath)) unlink($tempPagePath);
+
+                    // Cleaning text
                     $text = preg_replace('/[^\x09\x0A\x0D\x20-\x7E\xA0-\xFF]/u', '', $text); 
                     $text = preg_replace('/\s+/', ' ', trim($text)); 
 
-                    if (empty($text) || strlen($text) < 50) continue; // Skip empty or tiny pages
+                    if (empty($text) || strlen($text) < 10) continue; 
 
-                    // Simple fixed-length chunking (every ~1000 characters)
-                    $chunks = str_split($text, 1000);
+                    // Chunking and Embedding (existing logic)
+                    $chunks = str_split($text, 1500);
 
                     foreach ($chunks as $chunkIndex => $chunk) {
-                        $this->line("Embedding page {$pageNumber} (chunk {$chunkIndex})...");
+                        $this->line("  Embedding page {$pageNumber} (chunk {$chunkIndex})...");
                         
-                        $retryCount = 0;
-                        $maxRetries = 8;
-                        $success = false;
-
-                        while (!$success && $retryCount < $maxRetries) {
-                            // Call Gemini API for embedding
-                            $response = Http::timeout(60)->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key={$apiKey}", [
-                                'model' => 'models/gemini-embedding-001',
-                                'content' => [
-                                    'parts' => [
-                                        ['text' => "Document: $file\nPage: $pageNumber\nContent: $chunk"]
-                                    ]
+                        $response = Http::timeout(60)->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key={$apiKey}", [
+                            'model' => 'models/gemini-embedding-001',
+                            'content' => [
+                                'parts' => [
+                                    ['text' => "Document: $file\nPage: $pageNumber\nContent: $chunk"]
                                 ]
+                            ]
+                        ]);
+
+                        if ($response->successful()) {
+                            $embedding = $response->json('embedding.values');
+
+                            DocumentChunk::create([
+                                'document_name' => $file,
+                                'page_number' => $pageNumber,
+                                'chunk_text' => $chunk,
+                                'embedding' => $embedding
                             ]);
-
-                            if ($response->successful()) {
-                                $embedding = $response->json('embedding.values');
-
-                                DocumentChunk::create([
-                                    'document_name' => $file,
-                                    'page_number' => $pageNumber,
-                                    'chunk_text' => $chunk,
-                                    'embedding' => $embedding
-                                ]);
-                                $success = true;
-                                
-                                // Explicitly delay 3 seconds between successful hits to respect the 15 RPM free tier limit
-                                sleep(3);
-                            } else {
-                                if ($response->status() === 429) {
-                                    $sleepTime = 20 + ($retryCount * 15); // 20s, 35s, 50s, 65s...
-                                    $this->warn("Rate limit hit (429). Sleeping for {$sleepTime} seconds before retrying...");
-                                    sleep($sleepTime);
-                                    $retryCount++;
-                                } else {
-                                    // Other fatal API error
-                                    $this->error("Failed to embed chunk on page $pageNumber: " . $response->body());
-                                    break; // Skip chunk if it's a fatal error (not rate limit)
-                                }
-                            }
+                            sleep(3); // Rate limit respect
+                        } else {
+                            $this->error("  Failed to embed page $pageNumber: " . $response->body());
                         }
-                        
-                        if (!$success) {
-                            $this->error("Failed to inject chunk after $maxRetries retries. Skipping chunk.");
-                        }
-                        
-                        // Prevent overloading API limits
-                        usleep(300000); // 0.3s delay between chunks
                     }
                 }
                 
