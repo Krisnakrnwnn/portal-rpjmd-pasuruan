@@ -524,7 +524,8 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
                 <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 p-2 flex items-center justify-center overflow-hidden shadow-inner">
                   <img src="{{ asset('logo.png') }}" class="w-full h-full object-contain" alt="Logo">
                 </div>
-                <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-[#041a42] rounded-full shadow-lg"></span>
+                <!-- Status Dot: Now strictly absolute to the logo container -->
+                <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-[#041a42] rounded-full shadow-lg translate-x-1/4 translate-y-1/4"></span>
               </div>
               <div class="flex flex-col">
                 <div class="flex items-center gap-1.5">
@@ -537,13 +538,6 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
               </div>
             </div>
             <div class="flex items-center gap-1">
-              <button id="export-chat" class="text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-xl transition-all cursor-pointer" title="Ekspor Chat">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-              </button>
-              <button id="clear-history" class="text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-xl transition-all cursor-pointer" title="Hapus Riwayat Chat">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-              </button>
-              <div class="w-px h-6 bg-white/10 mx-1 hidden sm:block"></div>
               <button id="expand-chat" class="hidden sm:block text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-xl transition-all cursor-pointer" title="Perbesar/Perkecil">
                 <svg id="expand-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
               </button>
