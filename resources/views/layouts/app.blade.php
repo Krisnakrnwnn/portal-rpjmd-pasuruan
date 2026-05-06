@@ -518,40 +518,36 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
         <div id="chat-window" class="hidden w-[calc(100vw-2rem)] sm:w-96 md:w-[400px] bg-white rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.2)] border border-gray-100 mb-3 sm:mb-4 overflow-hidden flex-col h-[calc(100vh-8rem)] sm:h-[500px] max-h-[600px] transform transition-all origin-bottom-right">
           
           <!-- Header Chat -->
-          <div class="bg-gradient-to-r from-blue-700 to-[#041a42] p-4 sm:p-5 flex justify-between items-center text-white shrink-0">
+          <div class="bg-gradient-to-r from-blue-700 to-[#041a42] p-4 sm:p-5 flex justify-between items-center text-white shrink-0 shadow-xl relative z-10">
             <div class="flex items-center gap-3">
-              <div class="relative hidden sm:block">
-                <div class="w-10 h-10 rounded-full ring-2 ring-yellow-400/50 bg-white/10 flex items-center justify-center overflow-hidden">
-                  <svg class="w-6 h-6 text-yellow-300 drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              <div class="relative">
+                <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 p-2 flex items-center justify-center overflow-hidden shadow-inner">
+                  <img src="{{ asset('logo.png') }}" class="w-full h-full object-contain" alt="Logo">
                 </div>
-                <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-blue-900 rounded-full animate-pulse"></span>
+                <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-[#041a42] rounded-full shadow-lg"></span>
               </div>
-              <div>
-                <h4 class="font-bold text-sm sm:text-base tracking-wide flex items-center gap-2">
-                  RPJMD Pasuruan AI 
-                  <svg class="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                </h4>
-                <p class="text-[10px] sm:text-xs text-blue-200 font-medium opacity-90">Asisten Virtual RPJMD</p>
+              <div class="flex flex-col">
+                <div class="flex items-center gap-1.5">
+                  <h4 class="font-black text-sm sm:text-base tracking-tight leading-tight">
+                    RPJMD Pasuruan AI
+                  </h4>
+                  <svg class="w-3.5 h-3.5 text-blue-400" fill="currentColor" viewBox="0 0 20 20"><path d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
+                </div>
+                <span class="text-[10px] sm:text-[11px] font-medium text-blue-200/80 tracking-wide">Asisten Virtual RPJMD</span>
               </div>
             </div>
             <div class="flex items-center gap-1">
-              <select id="language-selector" class="text-xs bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-lg px-2 py-1 cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/30 transition-colors" title="Pilih Bahasa">
-                <option value="id" class="bg-blue-900 text-white">🇮🇩 ID</option>
-                <option value="en" class="bg-blue-900 text-white">🇬🇧 EN</option>
-              </select>
-              <button id="new-session" class="text-blue-200 hover:text-white bg-white/5 hover:bg-white/20 p-2 rounded-full transition-colors cursor-pointer" title="Sesi Baru">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-              </button>
-              <button id="export-chat" class="text-blue-200 hover:text-white bg-white/5 hover:bg-white/20 p-2 rounded-full transition-colors cursor-pointer" title="Ekspor Chat">
+              <button id="export-chat" class="text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-xl transition-all cursor-pointer" title="Ekspor Chat">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
               </button>
-              <button id="clear-history" class="text-blue-200 hover:text-white bg-white/5 hover:bg-white/20 p-2 rounded-full transition-colors cursor-pointer" title="Hapus Riwayat Chat">
+              <button id="clear-history" class="text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-xl transition-all cursor-pointer" title="Hapus Riwayat Chat">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
               </button>
-              <button id="expand-chat" class="hidden sm:block text-blue-200 hover:text-white bg-white/5 hover:bg-white/20 p-2 rounded-full transition-colors cursor-pointer" title="Perbesar/Perkecil">
+              <div class="w-px h-6 bg-white/10 mx-1 hidden sm:block"></div>
+              <button id="expand-chat" class="hidden sm:block text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-xl transition-all cursor-pointer" title="Perbesar/Perkecil">
                 <svg id="expand-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
               </button>
-              <button id="close-chat" class="text-blue-200 hover:text-white bg-white/5 hover:bg-white/20 p-2 rounded-full transition-colors cursor-pointer" title="Tutup">
+              <button id="close-chat" class="text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-xl transition-all cursor-pointer" title="Tutup">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
               </button>
             </div>
@@ -622,13 +618,11 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
     const clearHistory = document.getElementById('clear-history');
     let isChatBusy = false; // Flag untuk mengunci chat
     let messageCount = 0; // Counter untuk pesan
-
     // ===== VOICE INPUT/OUTPUT CLASSES =====
     class VoiceInput {
       constructor() {
         this.recognition = null;
         this.isSupported = 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
-        
         if (this.isSupported) {
           const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
           this.recognition = new SpeechRecognition();
@@ -637,99 +631,49 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
           this.recognition.interimResults = false;
         }
       }
-      
       start() {
-        if (!this.isSupported || !this.recognition) {
-          return Promise.reject('Speech recognition not supported');
-        }
-        
+        if (!this.isSupported || !this.recognition) return Promise.reject('Not supported');
         return new Promise((resolve, reject) => {
-          this.recognition.onresult = (event) => {
-            const transcript = event.results[0][0].transcript;
-            resolve(transcript);
-          };
-          
-          this.recognition.onerror = (event) => {
-            reject(event.error);
-          };
-          
+          this.recognition.onresult = (e) => resolve(e.results[0][0].transcript);
+          this.recognition.onerror = (e) => reject(e.error);
           this.recognition.start();
         });
       }
-      
-      stop() {
-        if (this.recognition) {
-          this.recognition.stop();
-        }
-      }
+      stop() { this.recognition && this.recognition.stop(); }
     }
 
     class VoiceOutput {
       constructor() {
         this.synthesis = window.speechSynthesis;
-        this.utterance = null;
         this.isSupported = 'speechSynthesis' in window;
       }
-      
-      speak(text, lang = 'id-ID') {
-        if (!this.isSupported) {
-          return Promise.reject('Speech synthesis not supported');
-        }
-        
+      speak(text) {
+        if (!this.isSupported) return Promise.reject('Not supported');
         return new Promise((resolve, reject) => {
-          // Stop any ongoing speech
-          this.stop();
-          
-          // Remove markdown and HTML tags for better speech
-          const cleanText = text
-            .replace(/<[^>]*>/g, '')
-            .replace(/\*\*(.*?)\*\*/g, '$1')
-            .replace(/\*(.*?)\*/g, '$1')
-            .replace(/\n/g, '. ');
-          
-          this.utterance = new SpeechSynthesisUtterance(cleanText);
-          this.utterance.lang = lang;
-          this.utterance.rate = 0.9;
-          this.utterance.pitch = 1;
-          
-          this.utterance.onend = () => resolve();
-          this.utterance.onerror = (event) => reject(event);
-          
-          this.synthesis.speak(this.utterance);
+          this.synthesis.cancel();
+          const cleanText = text.replace(/<[^>]*>/g, '').replace(/\*\*(.*?)\*\*/g, '$1').replace(/\n/g, '. ');
+          const utterance = new SpeechSynthesisUtterance(cleanText);
+          utterance.lang = 'id-ID';
+          utterance.onend = () => resolve();
+          utterance.onerror = (e) => reject(e);
+          this.synthesis.speak(utterance);
         });
       }
-      
-      stop() {
-        if (this.synthesis) {
-          this.synthesis.cancel();
-        }
-      }
-      
-      isPlaying() {
-        return this.synthesis && this.synthesis.speaking;
-      }
+      stop() { this.synthesis && this.synthesis.cancel(); }
     }
 
-    // Initialize voice instances
     const voiceInput = new VoiceInput();
     const voiceOutput = new VoiceOutput();
     let isRecording = false;
-    
-    // ===== MULTI-LANGUAGE SUPPORT =====
+
+    // ===== SIMPLIFIED LANGUAGE MANAGER (Indonesian Only) =====
     const translations = {
       id: {
         placeholder: 'Tanyakan seputar RPJMD...',
-        send: 'Kirim',
         clear: 'Hapus Riwayat',
         export: 'Ekspor Chat',
         greeting: (time) => `${time}! 🙏 <br>Saya asisten AI Layanan Informasi RPJMD Kabupaten Pasuruan. Ada yang ingin Anda ketahui tentang program prioritas, capaian pembangunan, atau dokumen RPJMD 2025-2029?`,
-        quickReplies: [
-          { text: 'Visi Misi Kabupaten', question: 'Apa Visi dan Misi Kabupaten Pasuruan?' },
-          { text: 'Program Prioritas', question: 'Berapa jumlah Program Prioritas saat ini?' },
-          { text: 'Apa itu RPJMD?', question: 'Tolong jelaskan apa itu RPJMD secara singkat.' }
-        ],
         today: 'Hari ini',
-        waiting: 'Menunggu balasan AI...',
         noConversation: 'Tidak Ada Percakapan',
         noConversationText: 'Belum ada percakapan untuk diekspor. Mulai chat terlebih dahulu!',
         exportTitle: '📥 Ekspor Percakapan',
@@ -739,104 +683,40 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
         success: 'Berhasil!',
         exportSuccess: (format) => `File ${format.toUpperCase()} berhasil diunduh`,
         exportFailed: 'Gagal Mengekspor',
-        exportFailedText: 'Terjadi kesalahan saat mengekspor chat. Silakan coba lagi.',
+        exportFailedText: 'Terjadi kesalahan saat mengekspor chat.',
         confirmClear: 'Yakin ingin menghapus semua riwayat percakapan?',
         voiceInputError: 'Gagal Merekam',
-        voiceInputErrorText: 'Tidak dapat mengakses mikrofon. Pastikan izin mikrofon sudah diberikan.'
-      },
-      en: {
-        placeholder: 'Ask about RPJMD...',
-        send: 'Send',
-        clear: 'Clear History',
-        export: 'Export Chat',
-        greeting: (time) => `${time}! 🙏 <br>I am the AI assistant for RPJMD Information Services of Pasuruan Regency. What would you like to know about priority programs, development achievements, or RPJMD 2025-2029 documents?`,
-        quickReplies: [
-          { text: 'Vision & Mission', question: 'What is the Vision and Mission of Pasuruan Regency?' },
-          { text: 'Priority Programs', question: 'How many Priority Programs are there currently?' },
-          { text: 'What is RPJMD?', question: 'Please explain what RPJMD is briefly.' }
-        ],
-        today: 'Today',
-        waiting: 'Waiting for AI response...',
-        noConversation: 'No Conversation',
-        noConversationText: 'No conversation to export yet. Start chatting first!',
-        exportTitle: '📥 Export Conversation',
-        exportText: (count) => `Choose file format to export ${count} messages:`,
-        processing: 'Processing...',
-        processingText: (format) => `Creating ${format.toUpperCase()} file...`,
-        success: 'Success!',
-        exportSuccess: (format) => `${format.toUpperCase()} file downloaded successfully`,
-        exportFailed: 'Export Failed',
-        exportFailedText: 'An error occurred while exporting chat. Please try again.',
-        confirmClear: 'Are you sure you want to delete all conversation history?',
-        voiceInputError: 'Recording Failed',
-        voiceInputErrorText: 'Cannot access microphone. Make sure microphone permission is granted.'
+        voiceInputErrorText: 'Pastikan izin mikrofon sudah diberikan.'
       }
     };
-    
-    class LanguageManager {
-      constructor() {
-        this.currentLang = localStorage.getItem('chatbot_lang') || 'id';
-        this.selector = document.getElementById('language-selector');
-        
-        // Set initial value
-        if (this.selector) {
-          this.selector.value = this.currentLang;
-        }
-      }
-      
-      setLanguage(lang) {
-        this.currentLang = lang;
-        localStorage.setItem('chatbot_lang', lang);
-        this.updateUI();
-        
-        // Update voice recognition language
-        if (voiceInput.recognition) {
-          voiceInput.recognition.lang = lang === 'en' ? 'en-US' : 'id-ID';
-        }
-      }
-      
-      translate(key, ...args) {
-        const value = translations[this.currentLang][key];
-        return typeof value === 'function' ? value(...args) : value;
-      }
-      
-      updateUI() {
-        // Update input placeholder
-        chatInput.placeholder = this.translate('placeholder');
-        
-        // Update button titles
-        document.getElementById('export-chat').title = this.translate('export');
-        document.getElementById('clear-history').title = this.translate('clear');
-        
-        // Reload initial greeting
-        this.reloadGreeting();
-      }
-      
-      reloadGreeting() {
-        const currentGreeting = getTimeBasedGreeting();
-        const greeting = this.translate('greeting', currentGreeting);
-        const quickReplies = this.translate('quickReplies');
-        
+
+    const languageManager = {
+      currentLang: 'id',
+      translate: (key, ...args) => {
+        const val = translations.id[key];
+        return typeof val === 'function' ? val(...args) : val;
+      },
+      reloadGreeting: () => {
+        const time = getTimeBasedGreeting();
+        const msg = languageManager.translate('greeting', time);
         messages.innerHTML = `
           <div class="flex justify-center mb-2">
-            <span class="px-3 py-1 bg-gray-200/60 text-gray-500 rounded-full text-[10px] font-bold tracking-widest uppercase">${this.translate('today')}</span>
+            <span class="px-3 py-1 bg-gray-200/60 text-gray-500 rounded-full text-[10px] font-bold tracking-widest uppercase">${languageManager.translate('today')}</span>
           </div>
-
           <div class="flex justify-start group">
             <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 mr-2 mt-1 hidden sm:flex">
               <span class="text-blue-600 font-bold text-xs">AI</span>
             </div>
             <div class="bg-white border border-gray-100 text-gray-800 rounded-2xl rounded-tl-sm px-4 sm:px-5 py-3 sm:py-3.5 max-w-[95%] sm:max-w-[85%] shadow-sm font-medium leading-relaxed text-[13px] sm:text-sm">
-              ${greeting}
+              ${msg}
             </div>
           </div>
-
           <div id="chat-quick-options" class="flex flex-wrap gap-2 sm:ml-10 -mt-2 animate-chat-msg opacity-0" style="animation-delay: 0.3s forwards">
-            ${quickReplies.map(q => `<button class="quick-btn text-[10px] sm:text-[11px] font-bold bg-white border border-blue-200 text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-full transition-colors shadow-sm hover:shadow" data-text="${q.question}">${q.text}</button>`).join('')}
+            <button class="quick-btn text-[10px] sm:text-[11px] font-bold bg-white border border-blue-200 text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-full transition-colors shadow-sm hover:shadow" data-text="Apa Visi dan Misi Kabupaten Pasuruan?">Visi Misi</button>
+            <button class="quick-btn text-[10px] sm:text-[11px] font-bold bg-white border border-blue-200 text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-full transition-colors shadow-sm hover:shadow" data-text="Berapa jumlah Program Prioritas saat ini?">Program Prioritas</button>
+            <button class="quick-btn text-[10px] sm:text-[11px] font-bold bg-white border border-blue-200 text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-full transition-colors shadow-sm hover:shadow" data-text="Tolong jelaskan apa itu RPJMD secara singkat.">Apa itu RPJMD?</button>
           </div>
         `;
-        
-        // Re-attach quick button handlers
         document.querySelectorAll('.quick-btn').forEach(btn => {
           btn.addEventListener('click', function() {
             if (isChatBusy) return;
@@ -845,19 +725,7 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
           });
         });
       }
-    }
-    
-    // Initialize language manager
-    const languageManager = new LanguageManager();
-    
-    // Language selector handler
-    const languageSelector = document.getElementById('language-selector');
-    if (languageSelector) {
-      languageSelector.addEventListener('change', function() {
-        languageManager.setLanguage(this.value);
-      });
-    }
-
+    };
 
     function handleToggle() {
       if (chatWindow.classList.contains('hidden')) {
