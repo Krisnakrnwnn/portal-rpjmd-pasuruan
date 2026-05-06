@@ -10,10 +10,11 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\File;
 use Smalot\PdfParser\Parser;
 
-#[Signature('rag:ingest {filename?} {--all} {--resume}')]
-#[Description('Extract text from PDFs, chunk them, get embeddings, and save to DB. Use --resume to skip already-ingested pages.')]
 class IngestPdfCommand extends Command
 {
+    protected $signature = 'rag:ingest {filename?} {--all} {--resume}';
+    protected $description = 'Extract text from PDFs, chunk them, get embeddings, and save to DB.';
+
     public function handle()
     {
         $directory = env('RAG_PDF_PATH', storage_path('app/documents'));
@@ -63,7 +64,6 @@ class IngestPdfCommand extends Command
 
             $this->info("Processing: $file ...");
 
-            try {
             try {
                 // Use Imagick to get page count and process one by one
                 $tempImagick = new \Imagick();
