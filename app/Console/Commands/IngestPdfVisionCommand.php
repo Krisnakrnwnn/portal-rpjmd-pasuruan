@@ -137,7 +137,7 @@ class IngestPdfVisionCommand extends Command
         3. Jika ada RUMUS, jelaskan atau tulis dalam format yang mudah dibaca.
         4. Jangan memberikan komentar pembuka/penutup, langsung berikan hasil transkripsinya saja.";
 
-        $response = Http::timeout(60)->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={$apiKey}", [
+        $response = Http::timeout(60)->post("https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={$apiKey}", [
             'contents' => [
                 [
                     'parts' => [
@@ -169,8 +169,8 @@ class IngestPdfVisionCommand extends Command
 
     private function getEmbedding($text, $apiKey, $file, $page)
     {
-        $response = Http::timeout(30)->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key={$apiKey}", [
-            'model' => 'models/gemini-embedding-001',
+        $response = Http::timeout(30)->post("https://generativelanguage.googleapis.com/v1/models/text-embedding-004:embedContent?key={$apiKey}", [
+            'model' => 'models/text-embedding-004',
             'content' => [
                 'parts' => [
                     ['text' => "Document: $file\nPage: $page\nContent: $text"]
