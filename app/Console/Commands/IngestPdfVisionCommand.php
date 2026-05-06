@@ -93,6 +93,8 @@ class IngestPdfVisionCommand extends Command
 
                     if (!$transcription) {
                         $this->error("Failed to transcribe page $pageNumber. Skipping.");
+                        // Optional: Show a snippet of the error if it's available in a temporary static variable or just tell them to check logs
+                        $this->line("  [TIP] Check storage/logs/laravel.log for details.");
                         $imagick->clear();
                         $imagick->destroy();
                         continue;
@@ -151,7 +153,18 @@ class IngestPdfVisionCommand extends Command
             ]
         ]);
 
-        return $response->json('candidates.0.content.parts.0.text');
+        if ($response->failed()) {
+            \Illuminate\Support\Facades\Log::error("Gemini API Error: " . $response->body());
+            return null;
+        }
+
+        $text = $response->json('candidates.0.content.parts.0.text');
+        
+        if (!$text) {
+            \Illuminate\Support\Facades\Log::warning("Gemini returned empty content. Response: " . $response->body());
+        }
+
+        return $text;
     }
 
     private function getEmbedding($text, $apiKey, $file, $page)
