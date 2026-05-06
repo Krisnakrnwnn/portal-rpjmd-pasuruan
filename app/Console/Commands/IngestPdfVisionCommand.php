@@ -9,10 +9,11 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 
-#[Signature('rag:ingest-vision {filename?} {--all} {--resume}')]
-#[Description('Ingest PDFs using Gemini Vision to accurately capture tables and formulas.')]
 class IngestPdfVisionCommand extends Command
 {
+    protected $signature = 'rag:ingest-vision {filename?} {--all} {--resume}';
+    protected $description = 'Ingest PDFs using Gemini Vision to accurately capture tables and formulas.';
+
     public function handle()
     {
         $directory = env('RAG_PDF_PATH', storage_path('app/documents'));
