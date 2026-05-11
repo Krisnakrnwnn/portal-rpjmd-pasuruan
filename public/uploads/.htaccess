@@ -1,0 +1,17 @@
+# Security untuk folder uploads
+# Izinkan akses gambar, tapi cegah eksekusi PHP
+
+# Allow image access
+<FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Prevent PHP execution untuk keamanan
+<FilesMatch "\.php$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Prevent directory listing
+Options -Indexes
