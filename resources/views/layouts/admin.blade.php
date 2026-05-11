@@ -2,9 +2,11 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}" />
+  <link rel="icon" type="image/png" href="{{ asset('logo.png') }}" />
+  <link rel="shortcut icon" type="image/png" href="{{ asset('logo.png') }}" />
+  <link rel="apple-touch-icon" href="{{ asset('logo.png') }}" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>@yield('title', 'RPJMD Admin - Control Panel')</title>
+  <title>@yield('title', 'Admin Panel - Bapperida Kabupaten Pasuruan')</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">

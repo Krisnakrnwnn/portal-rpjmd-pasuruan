@@ -12,8 +12,8 @@
     >
         <script type="application/ld+json">
         {
-          "@context": "https://schema.org",
-          "@type": "NewsArticle",
+          "@@context": "https://schema.org",
+          "@@type": "NewsArticle",
           "headline": "{{ $news->title }}",
           "image": [
             "{{ Str::startsWith($news->image_url, 'http') ? $news->image_url : asset($news->image_url ?? 'news1.png') }}"
@@ -21,15 +21,15 @@
           "datePublished": "{{ $news->published_at?->toIso8601String() ?? $news->created_at->toIso8601String() }}",
           "dateModified": "{{ $news->updated_at->toIso8601String() }}",
           "author": {
-            "@type": "Organization",
+            "@@type": "Organization",
             "name": "Bapperida Kabupaten Pasuruan",
             "url": "{{ url('/') }}"
           },
           "publisher": {
-            "@type": "Organization",
+            "@@type": "Organization",
             "name": "Bapperida Kabupaten Pasuruan",
             "logo": {
-              "@type": "ImageObject",
+              "@@type": "ImageObject",
               "url": "{{ asset('logo.png') }}",
               "width": 600,
               "height": 60
@@ -37,8 +37,8 @@
           },
           "description": "{{ Str::limit(strip_tags($news->content), 155) }}",
           "mainEntityOfPage": {
-            "@type": "WebPage",
-            "@id": "{{ route('berita.detail', ['slug' => $news->slug]) }}"
+            "@@type": "WebPage",
+            "@@id": "{{ route('berita.detail', ['slug' => $news->slug]) }}"
           },
           "articleSection": "{{ $news->category }}",
           "inLanguage": "id-ID"
@@ -48,23 +48,23 @@
         {{-- Breadcrumb Schema --}}
         <script type="application/ld+json">
         {
-          "@context": "https://schema.org",
-          "@type": "BreadcrumbList",
+          "@@context": "https://schema.org",
+          "@@type": "BreadcrumbList",
           "itemListElement": [
             {
-              "@type": "ListItem",
+              "@@type": "ListItem",
               "position": 1,
               "name": "Beranda",
               "item": "{{ route('home') }}"
             },
             {
-              "@type": "ListItem",
+              "@@type": "ListItem",
               "position": 2,
               "name": "Berita",
               "item": "{{ route('berita') }}"
             },
             {
-              "@type": "ListItem",
+              "@@type": "ListItem",
               "position": 3,
               "name": "{{ $news->title }}",
               "item": "{{ route('berita.detail', ['slug' => $news->slug]) }}"
