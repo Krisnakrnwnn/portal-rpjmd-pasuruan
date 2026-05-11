@@ -51,8 +51,14 @@ class AdminController extends Controller
 
         $imageUrl = null;
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('news', 'public');
-            $imageUrl = 'storage/' . $path;
+            $file = $request->file('image');
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $uploadDir = public_path('uploads/news');
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            $file->move($uploadDir, $filename);
+            $imageUrl = 'uploads/news/' . $filename;
         }
 
         News::create([
@@ -93,12 +99,25 @@ class AdminController extends Controller
         if ($request->hasFile('image')) {
             // Hapus gambar lama jika ada
             if ($news->image_url) {
-                $oldPath = str_replace('storage/', '', $news->image_url);
-                Storage::disk('public')->delete($oldPath);
+                $oldImagePath = public_path($news->image_url);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+                // Fallback: hapus dari storage juga jika punya path lama
+                if (str_starts_with($news->image_url, 'storage/')) {
+                    $oldPath = str_replace('storage/', '', $news->image_url);
+                    Storage::disk('public')->delete($oldPath);
+                }
             }
-            
-            $path = $request->file('image')->store('news', 'public');
-            $data['image_url'] = 'storage/' . $path;
+
+            $file = $request->file('image');
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $uploadDir = public_path('uploads/news');
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            $file->move($uploadDir, $filename);
+            $data['image_url'] = 'uploads/news/' . $filename;
         }
 
         $news->update($data);
@@ -112,10 +131,17 @@ class AdminController extends Controller
     {
         $news = News::findOrFail($id);
 
-        // Hapus file gambar dari storage jika ada
+        // Hapus file gambar jika ada
         if ($news->image_url) {
-            $path = str_replace('storage/', '', $news->image_url);
-            Storage::disk('public')->delete($path);
+            $oldImagePath = public_path($news->image_url);
+            if (file_exists($oldImagePath)) {
+                unlink($oldImagePath);
+            }
+            // Fallback: hapus dari storage juga jika punya path lama
+            if (str_starts_with($news->image_url, 'storage/')) {
+                $path = str_replace('storage/', '', $news->image_url);
+                Storage::disk('public')->delete($path);
+            }
         }
 
         Activity::log('Berita', 'Hapus', 'Menghapus berita: ' . $news->title);
