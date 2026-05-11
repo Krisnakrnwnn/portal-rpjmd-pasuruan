@@ -22,18 +22,18 @@ class ChatbotController extends Controller
         }
 
         try {
+            // Ensure session exists FIRST before saving message
+            \App\Models\ChatSession::firstOrCreate(
+                ['session_id' => $sessionId],
+                ['user_ip' => $request->ip()]
+            );
+            
             // Save user message to database
             \App\Models\ChatMessage::create([
                 'session_id' => $sessionId,
                 'role' => 'user',
                 'message' => $userMessage
             ]);
-            
-            // Ensure session exists
-            \App\Models\ChatSession::firstOrCreate(
-                ['session_id' => $sessionId],
-                ['user_ip' => $request->ip()]
-            );
             // STEP 1: Embed User Message with Retry Logic
             $retryCount = 0;
             $maxRetries = 3;
