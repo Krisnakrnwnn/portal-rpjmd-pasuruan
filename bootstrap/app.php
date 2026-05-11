@@ -4,7 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
-return Application::configure(basePath: dirname(__DIR__))
+$app = Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
@@ -27,6 +27,8 @@ return Application::configure(basePath: dirname(__DIR__))
     })->create();
 
 // Custom Public Path untuk Shared Hosting
+// Jika index.php ada satu level di atas (public_html/), berarti kita di hosting
+// Di mana struktur: public_html/ = webroot, public_html/laravel/ = app Laravel
 if (file_exists(dirname(__DIR__) . '/../index.php')) {
     $app->usePublicPath(realpath(dirname(__DIR__) . '/../'));
 }
