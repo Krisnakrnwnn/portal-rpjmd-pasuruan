@@ -27,8 +27,8 @@ return Application::configure(basePath: dirname(__DIR__))
     })->create();
 
 // Custom Public Path untuk Shared Hosting
-if (file_exists(dirname(__DIR__) . '/../../index.php')) {
-    $app->usePublicPath(realpath(dirname(__DIR__) . '/../../'));
+if (file_exists(dirname(__DIR__) . '/../index.php')) {
+    $app->usePublicPath(realpath(dirname(__DIR__) . '/../'));
 }
 
 return $app;
