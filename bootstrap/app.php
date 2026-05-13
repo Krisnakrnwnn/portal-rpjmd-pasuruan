@@ -22,8 +22,12 @@ $app = Application::configure(basePath: dirname(__DIR__))
             '/api/chat'
         ]);
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
+    ->withExceptions(function (Exceptions $exceptions) {
         //
+    })
+    ->withSchedule(function (\Illuminate\Console\Scheduling\Schedule $schedule) {
+        // Menjalankan queue secara otomatis setiap menit (Sangat penting untuk Shared Hosting)
+        $schedule->command('queue:work --stop-when-empty')->everyMinute();
     })->create();
 
 // Custom Public Path untuk Shared Hosting

@@ -9,6 +9,8 @@ use App\Models\News;
 use App\Models\Activity;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use App\Models\DocumentIngestion;
+use App\Jobs\IngestDocumentJob;
 
 class AdminController extends Controller
 {
@@ -411,5 +413,64 @@ class AdminController extends Controller
         Activity::log('Pengguna', 'Hapus', 'Menghapus akun admin: ' . $user->name);
         $user->delete();
         return redirect(route('admin.dashboard') . '#section-pengguna')->with('success', 'Pengguna berhasil dihapus!');
+    }
+
+    public function ingestPdf(Request $request)
+    {
+        $request->validate([
+            'pdf_file' => 'required|mimes:pdf|max:51200', // Tingkatkan ke 50MB
+        ]);
+
+        ini_set('memory_limit', '512M');
+        set_time_limit(300);
+
+        if ($request->hasFile('pdf_file')) {
+            $file = $request->file('pdf_file');
+            $originalName = $file->getClientOriginalName();
+            $fileName = time() . '_' . $originalName;
+            
+            // Store file
+            $path = $file->storeAs('documents', $fileName, 'local');
+
+            // Create record
+            $ingestion = DocumentIngestion::create([
+                'file_name' => $fileName,
+                'original_name' => $originalName,
+                'status' => 'pending'
+            ]);
+
+            // Dispatch job
+            IngestDocumentJob::dispatch($ingestion);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Proses ingest telah dimulai di background.',
+                'ingestion_id' => $ingestion->id
+            ]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Gagal mengunggah file.'], 400);
+    }
+
+    public function checkIngestStatus($id)
+    {
+        $ingestion = DocumentIngestion::findOrFail($id);
+        
+        $estimatedTime = 0;
+        if ($ingestion->status === 'processing' && $ingestion->processed_pages > 0) {
+            $elapsedSeconds = now()->diffInSeconds($ingestion->started_at);
+            $secondsPerPage = $elapsedSeconds / $ingestion->processed_pages;
+            $remainingPages = $ingestion->total_pages - $ingestion->processed_pages;
+            $estimatedTime = round($secondsPerPage * $remainingPages);
+        }
+
+        return response()->json([
+            'status' => $ingestion->status,
+            'progress' => $ingestion->progress_percentage,
+            'processed' => $ingestion->processed_pages,
+            'total' => $ingestion->total_pages,
+            'estimated_seconds' => $estimatedTime,
+            'error' => $ingestion->error_message
+        ]);
     }
 }

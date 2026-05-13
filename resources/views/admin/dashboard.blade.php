@@ -1208,6 +1208,153 @@
         </form>
       </section>
       @endif
+
+      <!-- ============================== -->
+      <!-- SECTION: INGEST CHATBOT PDF    -->
+      <!-- ============================== -->
+      <section id="section-ingest" class="content-section hidden">
+        <div class="mb-8">
+            <h1 class="text-3xl font-black text-gray-900 mb-1">Ingest Data Chatbot</h1>
+            <p class="text-gray-500 text-sm">Unggah dokumen PDF RPJMD untuk melatih kecerdasan AI Chatbot Anda.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div class="lg:col-span-1">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 sticky top-24">
+              <h2 class="text-xl font-black text-gray-900 mb-6">Unggah Dokumen</h2>
+              
+              <form id="ingest-form" class="space-y-6">
+                @csrf
+                <div class="space-y-4">
+                  <div class="flex items-center justify-center w-full">
+                    <label for="pdf_file" class="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-2xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-all group">
+                      <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                        <svg class="w-10 h-10 mb-3 text-gray-400 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                        <p class="mb-2 text-sm text-gray-500 font-bold"><span class="text-blue-600">Klik untuk upload</span> atau drag & drop</p>
+                        <p class="text-xs text-gray-400">PDF (Maks. 10MB)</p>
+                      </div>
+                      <input id="pdf_file" name="pdf_file" type="file" class="hidden" accept=".pdf" required />
+                    </label>
+                  </div>
+                  <div id="file-name-preview" class="hidden text-sm font-bold text-blue-600 bg-blue-50 p-3 rounded-xl flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <span class="truncate"></span>
+                  </div>
+                </div>
+
+                <button type="submit" id="btn-start-ingest" class="btn-ingest w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-2xl shadow-lg shadow-blue-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                  <span class="spinner hidden"></span>
+                  <span id="btn-text">Mulai Proses Ingest</span>
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <div class="lg:col-span-2">
+            <div id="ingest-progress-card" class="hidden bg-white rounded-2xl shadow-xl border border-gray-200 p-8 mb-8">
+               <div class="flex items-center justify-between mb-8">
+                  <div>
+                    <h3 id="ingest-file-title" class="text-lg font-black text-gray-900 truncate max-w-md">Memproses Dokumen...</h3>
+                    <p id="ingest-status-text" class="text-sm text-blue-600 font-bold flex items-center gap-2">
+                      <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                      </span>
+                      Menghubungkan ke Gemini AI...
+                    </p>
+                  </div>
+                  <div class="text-right">
+                    <span id="ingest-percentage" class="text-4xl font-black text-gray-900">0%</span>
+                  </div>
+               </div>
+
+               <!-- Progress Bar -->
+               <div class="w-full h-6 bg-gray-100 rounded-full overflow-hidden mb-6 p-1 border border-gray-200">
+                  <div id="ingest-progress-bar" class="h-full bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full transition-all duration-1000 ease-out shadow-inner relative" style="width: 0%">
+                    <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
+                  </div>
+               </div>
+
+               <div class="grid grid-cols-2 gap-4">
+                 <div class="bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                   <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Halaman Terproses</p>
+                   <p id="ingest-pages-info" class="text-xl font-black text-gray-900">0 / 0</p>
+                 </div>
+                 <div class="bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                   <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Estimasi Selesai</p>
+                   <p id="ingest-eta" class="text-xl font-black text-gray-900">Menghitung...</p>
+                 </div>
+               </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+               <div class="p-6 border-b border-gray-200 bg-gray-50">
+                 <h3 class="font-black text-gray-900">Riwayat Ingest</h3>
+               </div>
+               <div class="w-full overflow-x-auto">
+                 <table class="w-full text-left">
+                   <thead class="bg-white border-b border-gray-100">
+                     <tr>
+                       <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Nama File</th>
+                       <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">Status</th>
+                       <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-right">Tanggal</th>
+                     </tr>
+                   </thead>
+                   <tbody id="ingest-history-body" class="divide-y divide-gray-50">
+                     @php $ingestions = \App\Models\DocumentIngestion::latest()->take(10)->get(); @endphp
+                     @forelse($ingestions as $ing)
+                     <tr class="hover:bg-gray-50 transition-colors">
+                       <td class="px-6 py-4">
+                         <div class="font-bold text-gray-900 text-sm truncate max-w-xs">{{ $ing->original_name }}</div>
+                         <div class="text-[10px] text-gray-400 font-bold uppercase">{{ $ing->processed_pages }} / {{ $ing->total_pages }} Halaman</div>
+                       </td>
+                       <td class="px-6 py-4 text-center">
+                         @if($ing->status === 'completed')
+                           <span class="px-2 py-1 bg-green-100 text-green-700 text-[10px] font-black rounded-lg uppercase tracking-wider">Berhasil</span>
+                         @elseif($ing->status === 'failed')
+                           <span class="px-2 py-1 bg-red-100 text-red-700 text-[10px] font-black rounded-lg uppercase tracking-wider" title="{{ $ing->error_message }}">Gagal</span>
+                         @else
+                           <span class="px-2 py-1 bg-blue-100 text-blue-700 text-[10px] font-black rounded-lg uppercase tracking-wider animate-pulse">Proses</span>
+                         @endif
+                       </td>
+                       <td class="px-6 py-4 text-right text-xs text-gray-500 font-medium">
+                         {{ $ing->created_at->format('d/m/Y H:i') }}
+                       </td>
+                     </tr>
+                     @empty
+                     <tr>
+                       <td colspan="3" class="px-6 py-12 text-center text-gray-400 font-bold">Belum ada riwayat ingest.</td>
+                     </tr>
+                     @endforelse
+                   </tbody>
+                 </table>
+               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+<style>
+    .btn-ingest.loading .spinner {
+        display: inline-block;
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+        margin-right: 10px;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .btn-ingest.loading {
+        opacity: 0.8;
+        cursor: not-allowed;
+    }
+</style>
 @endsection
 
 @push('scripts')
@@ -1588,6 +1735,138 @@
     }
     updateMisiButir();
     misiEl.addEventListener('input', updateMisiButir);
+  }
+
+  // ===== INGEST CHATBOT LOGIC =====
+  const ingestForm = document.getElementById('ingest-form');
+  const pdfInput = document.getElementById('pdf_file');
+  const filePreview = document.getElementById('file-name-preview');
+  const ingestProgressCard = document.getElementById('ingest-progress-card');
+  const btnIngest = document.getElementById('btn-start-ingest');
+  const btnText = document.getElementById('btn-text');
+  const spinner = btnIngest ? btnIngest.querySelector('.spinner') : null;
+  let pollingInterval = null;
+
+  pdfInput?.addEventListener('change', function() {
+    if (this.files && this.files[0]) {
+      filePreview.classList.remove('hidden');
+      filePreview.querySelector('span').textContent = this.files[0].name;
+    }
+  });
+
+  ingestForm?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    if (btnIngest) {
+      btnIngest.disabled = true;
+      btnIngest.classList.add('loading');
+    }
+    if (spinner) spinner.classList.remove('hidden');
+    if (btnText) btnText.innerText = 'Memulai...';
+
+    try {
+      const response = await fetch("{{ route('admin.chatbot.ingest') }}", {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+      });
+      const data = await response.json();
+      if (data.success) {
+        startPolling(data.ingestion_id, formData.get('pdf_file').name);
+        Swal.fire({ icon: 'success', title: 'Ingest Dimulai', text: data.message, timer: 2000, showConfirmButton: false });
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      Swal.fire('Error', error.message || 'Gagal memulai ingest', 'error');
+      resetIngestButton();
+    }
+  });
+
+  function resetIngestButton() {
+    if (btnIngest) {
+        btnIngest.disabled = false;
+        btnIngest.classList.remove('loading');
+        if (spinner) spinner.classList.add('hidden');
+        if (btnText) btnText.innerText = 'Mulai Proses Ingest';
+    }
+  }
+
+  function startPolling(id, fileName) {
+    if (ingestProgressCard) ingestProgressCard.classList.remove('hidden');
+    const fileTitle = document.getElementById('ingest-file-title');
+    if (fileTitle) fileTitle.textContent = fileName;
+    if (btnIngest) btnIngest.disabled = true;
+    
+    if (pollingInterval) clearInterval(pollingInterval);
+    
+    pollingInterval = setInterval(async () => {
+      try {
+        const res = await fetch(`/admin/chatbot/ingest-status/${id}`);
+        const data = await res.json();
+        
+        updateIngestUI(data);
+        
+        if (data.status === 'completed' || data.status === 'failed') {
+          clearInterval(pollingInterval);
+          if (data.status === 'completed') {
+            Swal.fire({
+                icon: 'success',
+                title: 'Selesai!',
+                text: 'Dokumen berhasil di-ingest sepenuhnya.',
+                confirmButtonColor: '#2563eb'
+            }).then(() => {
+                location.hash = '#section-ingest';
+                location.reload();
+            });
+          } else {
+            Swal.fire('Gagal', 'Terjadi kesalahan: ' + data.error, 'error');
+            resetIngestButton();
+          }
+        }
+      } catch (e) {
+        console.error('Polling error:', e);
+      }
+    }, 2000);
+  }
+
+  function updateIngestUI(data) {
+    const bar = document.getElementById('ingest-progress-bar');
+    const pct = document.getElementById('ingest-percentage');
+    const info = document.getElementById('ingest-pages-info');
+    const statusText = document.getElementById('ingest-status-text');
+    const eta = document.getElementById('ingest-eta');
+
+    bar.style.width = data.progress + '%';
+    pct.textContent = data.progress + '%';
+    info.textContent = `${data.processed} / ${data.total} Halaman`;
+    
+    if (data.status === 'processing') {
+      statusText.innerHTML = `
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+        </span>
+        Sedang memproses halaman ${data.processed + 1}...
+      `;
+      
+      if (data.estimated_seconds > 0) {
+        const mins = Math.floor(data.estimated_seconds / 60);
+        const secs = data.estimated_seconds % 60;
+        eta.textContent = mins > 0 ? `± ${mins}m ${secs}d` : `± ${secs} detik`;
+      } else {
+        eta.textContent = 'Menghitung...';
+      }
+    } else if (data.status === 'completed') {
+      statusText.textContent = '✅ Selesai!';
+      statusText.className = 'text-sm text-green-600 font-bold';
+      eta.textContent = 'Selesai';
+    } else if (data.status === 'failed') {
+      statusText.textContent = '❌ Gagal';
+      statusText.className = 'text-sm text-red-600 font-bold';
+      eta.textContent = '-';
+    }
   }
 
 </script>

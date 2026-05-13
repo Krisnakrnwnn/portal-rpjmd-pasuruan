@@ -80,6 +80,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.role'])->grou
     // Profil Instansi (Admin & Super Admin)
     Route::post('/profile', [AdminController::class, 'updateProfile'])->name('update_profile');
 
+    // Chatbot Ingestion (Admin & Super Admin)
+    Route::post('/chatbot/ingest', [AdminController::class, 'ingestPdf'])->name('chatbot.ingest');
+    Route::get('/chatbot/ingest-status/{id}', [AdminController::class, 'checkIngestStatus'])->name('chatbot.ingest_status');
+
     // Super Admin ONLY
     Route::middleware('super.admin')->group(function () {
         Route::post('/users', [AdminController::class, 'storeUser'])->name('store_user');
