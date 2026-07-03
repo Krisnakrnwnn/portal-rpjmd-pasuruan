@@ -1083,18 +1083,54 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           <!-- General Settings -->
           <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-            <h2 class="text-xl font-black text-gray-900 mb-6 border-b border-gray-100 pb-4">Setelan Umum</h2>
-            <form class="space-y-6">
+            <h2 class="text-xl font-black text-gray-900 mb-6 border-b border-gray-100 pb-4">Pengaturan Model AI Chatbot</h2>
+            <form action="{{ route('admin.update_settings') }}" method="POST" class="space-y-6">
+              @csrf
+              @php
+                $activeModel = \App\Models\Stat::where('key', 'gemini_model')->first()->value ?? 'gemini-2.5-flash';
+              @endphp
               <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2">Nama Instansi (Header)</label>
-                <input type="text" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-sm" value="RPJMD Kabupaten Pasuruan">
+                <label for="gemini_model" class="block text-sm font-bold text-gray-700 mb-2">Model Google Gemini Aktif</label>
+                <div class="relative rounded-lg shadow-sm">
+                  <input type="text" name="gemini_model" id="gemini_model" 
+                    value="{{ $activeModel }}" 
+                    class="w-full px-4 py-3 rounded-xl border border-gray-300 text-sm font-semibold text-gray-800 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
+                    placeholder="Contoh: gemini-2.5-flash" required>
+                </div>
+                <p class="text-xs text-gray-400 mt-2">Anda dapat mengetik nama model secara manual untuk mendukung model Gemini versi terbaru yang belum terdaftar.</p>
               </div>
 
-              <div class="flex items-center gap-3">
-                <input type="checkbox" id="maintenance" class="w-5 h-5 text-blue-600 rounded">
-                <label for="maintenance" class="font-bold text-gray-700 text-sm">Mode Pemeliharaan</label>
+              <div>
+                <span class="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Pilihan Cepat (Klik untuk memilih):</span>
+                <div class="flex flex-wrap gap-2">
+                  <button type="button" onclick="selectModel('gemini-2.5-flash')" 
+                    class="model-badge px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all duration-200 {{ $activeModel === 'gemini-2.5-flash' ? 'bg-blue-600 border-blue-600 text-white shadow-md' : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300' }}">
+                    Gemini 2.5 Flash
+                  </button>
+                  <button type="button" onclick="selectModel('gemini-2.5-pro')" 
+                    class="model-badge px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all duration-200 {{ $activeModel === 'gemini-2.5-pro' ? 'bg-blue-600 border-blue-600 text-white shadow-md' : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300' }}">
+                    Gemini 2.5 Pro
+                  </button>
+                  <button type="button" onclick="selectModel('gemini-1.5-flash')" 
+                    class="model-badge px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all duration-200 {{ $activeModel === 'gemini-1.5-flash' ? 'bg-blue-600 border-blue-600 text-white shadow-md' : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300' }}">
+                    Gemini 1.5 Flash
+                  </button>
+                  <button type="button" onclick="selectModel('gemini-1.5-pro')" 
+                    class="model-badge px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all duration-200 {{ $activeModel === 'gemini-1.5-pro' ? 'bg-blue-600 border-blue-600 text-white shadow-md' : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300' }}">
+                    Gemini 1.5 Pro
+                  </button>
+                </div>
               </div>
-              <button type="button" class="px-6 py-2.5 bg-gray-100 text-gray-400 font-bold rounded-lg cursor-not-allowed">Simpan Setelan</button>
+
+              <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
+                <div class="flex items-center gap-2 text-xs text-gray-500">
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  Model: <strong class="text-gray-700 font-bold" id="active-model-display">{{ $activeModel }}</strong>
+                </div>
+                <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-md active:scale-95 text-sm">
+                  Simpan Setelan
+                </button>
+              </div>
             </form>
           </div>
 
@@ -1868,6 +1904,35 @@
       eta.textContent = '-';
     }
   }
+
+  // ===== SETELAN MODEL AI LOGIC =====
+  window.selectModel = function(modelName) {
+    const input = document.getElementById('gemini_model');
+    if (!input) return;
+    input.value = modelName;
+    document.getElementById('active-model-display').innerText = modelName;
+    
+    document.querySelectorAll('.model-badge').forEach(btn => {
+      if (btn.getAttribute('onclick').includes(`'${modelName}'`)) {
+        btn.className = "model-badge px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all duration-200 bg-blue-600 border-blue-600 text-white shadow-md";
+      } else {
+        btn.className = "model-badge px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all duration-200 bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300";
+      }
+    });
+  };
+
+  document.getElementById('gemini_model')?.addEventListener('input', function(e) {
+    const val = e.target.value.trim();
+    document.getElementById('active-model-display').innerText = val ? val : 'Tidak diset';
+    
+    document.querySelectorAll('.model-badge').forEach(btn => {
+      if (btn.getAttribute('onclick').includes(`'${val}'`)) {
+        btn.className = "model-badge px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all duration-200 bg-blue-600 border-blue-600 text-white shadow-md";
+      } else {
+        btn.className = "model-badge px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all duration-200 bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300";
+      }
+    });
+  });
 
 </script>
 @endpush

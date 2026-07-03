@@ -6,8 +6,6 @@ use Illuminate\Console\Command;
 use App\Models\DocumentChunk;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\File;
-use Illuminate\Console\Attributes\Description;
-use Illuminate\Console\Attributes\Signature;
 
 class IngestPdfVisionCommand extends Command
 {
@@ -54,8 +52,6 @@ class IngestPdfVisionCommand extends Command
             $this->info("Processing with VISION: $file ...");
 
             try {
-                // Get page count first without loading everything if possible
-                // We'll use a temporary Imagick instance for this
                 $tempImagick = new \Imagick();
                 $tempImagick->pingImage($filePath);
                 $numPages = $tempImagick->getNumberImages();
@@ -72,28 +68,35 @@ class IngestPdfVisionCommand extends Command
                             ->where('page_number', $pageNumber)
                             ->exists();
                         if ($exists) {
-                            $this->line("  [SKIP] Page $pageNumber already ingested.");
+                            $this->line("   [SKIP] Page $pageNumber already ingested.");
                             continue;
                         }
                     }
 
                     $this->line("Reading page $pageNumber with Gemini Vision...");
 
-                    try {
-                        // Create fresh instance for each page to keep memory usage low
-                        $imagick = new \Imagick();
-                        $imagick->setResolution(100, 100);
-                        // ONLY read the specific page: filename.pdf[index]
-                        $imagick->readImage($filePath . "[" . $pageIndex . "]");
-                        $imagick->setImageFormat('jpeg');
-                        $imagick->setImageCompressionQuality(70);
-                        
-                        $base64Image = base64_encode($imagick->getImageBlob());
-                        
-                        $imagick->clear();
-                        $imagick->destroy();
+                    // Create fresh instance for each page to keep memory usage low
+                    $imagick = new \Imagick();
+                    $imagick->setResolution(100, 100);
+                    $imagick->readImage($filePath . "[" . $pageIndex . "]");
+                    $imagick->setImageFormat('jpeg');
+                    $imagick->setImageCompressionQuality(70);
+                    
+                    $base64Image = base64_encode($imagick->getImageBlob());
+                    
+                    $imagick->clear();
+                    $imagick->destroy();
+
+                    // 1. Jalankan transkripsi Vision (Tadi bagian ini terhapus di kode Anda)
+                    $transcription = $this->transcribePageWithVision($base64Image, $apiKey);
+
+                    if (!$transcription) {
+                        $this->error("   [ERROR] Failed to transcribe page $pageNumber");
+                        continue;
+                    }
+
                     // 2. Get embedding for the transcription
-                    $this->line("  Getting embedding for page $pageNumber...");
+                    $this->line("   Getting embedding for page $pageNumber...");
                     $embedding = $this->getEmbedding($transcription, $apiKey, $file, $pageNumber);
 
                     if ($embedding) {
@@ -103,18 +106,14 @@ class IngestPdfVisionCommand extends Command
                             'chunk_text' => $transcription,
                             'embedding' => $embedding
                         ]);
-                        $this->info("  [SUCCESS] Page $pageNumber ingested.");
+                        $this->info("   [SUCCESS] Page $pageNumber ingested.");
                     }
-
-                    // Clean up after each page
-                    $imagick->clear();
-                    $imagick->destroy();
 
                     // Respect rate limits (Free tier is ~15 RPM)
                     sleep(4);
-                }
+                } // Akhir dari perulangan FOR halaman
 
-            } catch (\Exception $e) {
+            } catch (\Exception $e) { 
                 $this->error("Error on $file: " . $e->getMessage());
             }
         }

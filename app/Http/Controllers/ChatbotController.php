@@ -149,12 +149,15 @@ class ChatbotController extends Controller
                 'parts' => [['text' => $prompt]]
             ];
 
+            // Ambil model AI dari database, dengan fallback 'gemini-2.5-flash' jika tidak diset
+            $model = \App\Models\Stat::where('key', 'gemini_model')->first()->value ?? 'gemini-2.5-flash';
+
             // Kirim request ke Gemini dengan sistem percobaan ulang (Retry) jika server Google sibuk
             $retryG = 0;
             $chatResponse = null;
             
             while ($retryG < 3) {
-                $chatResponse = Http::timeout(45)->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$apiKey}", [
+                $chatResponse = Http::timeout(45)->post("https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$apiKey}", [
                     'contents' => $contents
                 ]);
 

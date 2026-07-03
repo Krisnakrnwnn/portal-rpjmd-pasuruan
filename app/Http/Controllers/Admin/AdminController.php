@@ -473,4 +473,25 @@ class AdminController extends Controller
             'error' => $ingestion->error_message
         ]);
     }
+
+    public function updateSettings(Request $request)
+    {
+        $request->validate([
+            'gemini_model' => 'required|string|max:100',
+        ]);
+
+        $model = $request->input('gemini_model');
+
+        \App\Models\Stat::updateOrCreate(
+            ['key' => 'gemini_model'],
+            [
+                'value' => $model,
+                'label' => 'Model AI Chatbot'
+            ]
+        );
+
+        Activity::log('Setelan', 'Update', 'Memperbarui model AI Chatbot menjadi: ' . $model);
+
+        return redirect(route('admin.dashboard') . '#section-setelan')->with('success', 'Setelan model AI berhasil diperbarui!');
+    }
 }

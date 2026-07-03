@@ -41,43 +41,7 @@
       </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 sm:-mt-20 relative z-10">
-      <div class="bg-white rounded-2xl md:rounded-3xl shadow-xl border border-gray-100 p-4 sm:p-8 lg:p-10 shadow-blue-900/5">
-        
-          <style>
-            .custom-scroll::-webkit-scrollbar { height: 4px; }
-            .custom-scroll::-webkit-scrollbar-track { background: transparent; border-radius: 10px; }
-            .custom-scroll::-webkit-scrollbar-thumb { background: rgba(59,130,246,0.3); border-radius: 10px; }
-            .custom-scroll::-webkit-scrollbar-thumb:hover { background: rgba(59,130,246,0.6); }
-            @keyframes bounceHorizontal {
-              0%, 100% { transform: translateX(0); }
-              50% { transform: translateX(4px); }
-            }
-            .animate-bounce-horizontal { animation: bounceHorizontal 1.5s infinite ease-in-out; }
-          </style>
-
-          @if(count($heroStats) > 3)
-          <div class="absolute right-3 top-2 md:hidden z-20">
-            <div class="inline-flex items-center text-[8px] text-blue-600 font-extrabold tracking-widest uppercase bg-blue-50/80 px-2 py-0.5 rounded-full shadow-sm animate-pulse">
-              Geser
-              <svg class="w-2.5 h-2.5 ml-1 animate-bounce-horizontal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
-            </div>
-          </div>
-          @endif
-
-        <div class="flex flex-nowrap items-start gap-2 sm:gap-6 md:gap-12 lg:gap-16 text-center w-full overflow-x-auto snap-x snap-mandatory pb-4 pt-1 scroll-smooth custom-scroll" style="scrollbar-width: thin; scrollbar-color: rgba(59,130,246,0.3) transparent;">
-          @forelse($heroStats as $index => $stat)
-          <div data-aos="zoom-in" data-aos-delay="{{ 100 + ($index * 100) }}" class="flex-1 md:flex-none min-w-[75px] sm:min-w-[120px] snap-center md:first:ml-auto md:last:mr-auto">
-            <div class="text-xl sm:text-4xl lg:text-5xl font-extrabold text-blue-600 mb-0.5 lg:mb-2 truncate">{{ $stat->value }}</div>
-            <div class="text-[9px] sm:text-sm lg:text-base text-gray-500 font-bold tracking-tighter uppercase leading-[1.1]">{{ $stat->label }}</div>
-          </div>
-          @empty
-          <div class="col-span-full py-4 text-gray-400 font-medium text-sm">Belum ada data statistik beranda.</div>
-          @endforelse
-        </div>
-
-      </div>
-    </div>
+ 
 
     <!-- Feature/Berita Singkat -->
     <div id="berita" class="max-w-7xl mx-auto pt-24 pb-24 px-4 sm:px-6 lg:px-8">
