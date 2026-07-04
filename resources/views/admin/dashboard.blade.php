@@ -134,68 +134,7 @@
           {{-- LEFT COLUMN: Two separate stat editors stacked --}}
           <div class="lg:col-span-2 space-y-6">
 
-            {{-- CARD 1: Statistik Utama Beranda --}}
-            <div class="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm print:hidden">
-              <div class="flex items-center gap-3 mb-6">
-                <div class="w-10 h-10 rounded-xl bg-yellow-50 text-yellow-500 flex items-center justify-center flex-shrink-0">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
-                </div>
-                <div>
-                  <h2 class="text-lg font-black text-gray-900">Statistik Utama Halaman Beranda</h2>
-                  <p class="text-xs text-gray-400">Angka yang tampil di panel bawah hero section. Anda dapat menambah atau mengurangi datanya.</p>
-                </div>
-              </div>
-              
-              {{-- Form Edit Data Saat Ini --}}
-              <form action="{{ route('admin.update_hero_stats') }}" method="POST" class="mb-6">
-                @csrf
-                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-4">
-                  @forelse($heroStats as $st)
-                  <div class="relative bg-gray-50 p-4 border border-gray-100 rounded-xl">
-                    <div class="space-y-1.5 mb-2">
-                       <label class="text-[10px] font-black text-gray-500 uppercase tracking-widest block truncate" title="{{ $st->label }}">{{ $st->label }}</label>
-                       <input type="text" name="hero_stats[{{ $st->key }}]" value="{{ $st->value }}"
-                         class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-400/20 focus:border-yellow-400 font-bold text-gray-900 text-sm">
-                    </div>
-                    <div class="absolute top-3 right-3">
-                      <button type="button" onclick="event.preventDefault(); if(confirm('Hapus statistik ini?')) document.getElementById('delete-hero-{{ $st->id }}').submit();" class="text-red-400 hover:text-red-600 bg-white shadow-sm border border-red-100 rounded-full w-6 h-6 flex items-center justify-center transition-colors">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                      </button>
-                    </div>
-                  </div>
-                  @empty
-                  <div class="col-span-full py-4 text-center text-sm text-gray-400">Belum ada data statistik beranda. Silakan tambah baru.</div>
-                  @endforelse
-                </div>
-                <div class="flex justify-end pt-2">
-                  <button type="submit" class="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold py-2.5 px-6 rounded-xl shadow-sm transition-all active:scale-95 text-sm">
-                    Simpan Nilai Beranda
-                  </button>
-                </div>
-              </form>
-
-              {{-- Hidden Delete Forms --}}
-              @foreach($heroStats as $st)
-              <form id="delete-hero-{{ $st->id }}" action="{{ route('admin.delete_hero_stat', $st->id) }}" method="POST" class="hidden">
-                  @csrf @method('DELETE')
-              </form>
-              @endforeach
-
-              {{-- Form Tambah Data Baru --}}
-              <div class="pt-6 border-t border-gray-100">
-                <h3 class="text-xs font-bold text-gray-700 uppercase mb-3">Tambah Statistik Baru</h3>
-                <form action="{{ route('admin.store_hero_stat') }}" method="POST" class="flex flex-col sm:flex-row gap-3">
-                  @csrf
-                  <input type="text" name="label" required placeholder="Label (mis. Jumlah Desa)" class="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:bg-white outline-none focus:border-yellow-400">
-                  <input type="text" name="value" required placeholder="Nilai (mis. 34)" class="w-full sm:w-32 px-3 py-2 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:bg-white outline-none focus:border-yellow-400">
-                  <button type="submit" class="bg-gray-900 hover:bg-black text-white font-bold py-2 px-4 rounded-lg text-sm whitespace-nowrap">
-                    + Tambah
-                  </button>
-                </form>
-              </div>
-            </div>
-
-            {{-- CARD 2: Statistik Capaian RPJMD --}}
+            {{-- CARD: Statistik Capaian RPJMD --}}
             <div class="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
               <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                 <div class="flex items-center gap-3">
@@ -215,14 +154,15 @@
               <form action="{{ route('admin.update_stats') }}" method="POST" class="grid grid-cols-1 sm:grid-cols-3 gap-6 print:hidden">
                 @csrf
                 @foreach($capaianStats as $st)
+                @if(!in_array($st->key, ['gemini_model', 'total_progress', 'program_berjalan', 'target_terlampaui']))
                 <div class="space-y-2">
                   <label class="text-xs font-black text-gray-400 uppercase tracking-widest">{{ $st->label }}</label>
                   <div class="relative">
                     <input type="text" name="stats[{{ $st->key }}]" value="{{ $st->value }}"
                       class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all font-bold text-gray-900">
-                    @if($st->key == 'total_progress') <span class="absolute right-4 top-3.5 font-bold text-gray-400">%</span> @endif
                   </div>
                 </div>
+                @endif
                 @endforeach
                 <div class="sm:col-span-3 pt-4 border-t border-gray-100 flex justify-end">
                   <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-blue-500/20 transition-all active:scale-95">
@@ -230,6 +170,28 @@
                   </button>
                 </div>
               </form>
+            </div>
+
+            {{-- CARD: Pengaturan Model AI Chatbot --}}
+            <div class="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <div>
+                  <h2 class="text-lg font-black text-gray-900">Informasi Model AI Chatbot</h2>
+                  <p class="text-xs text-gray-400">Model Google Gemini yang saat ini aktif digunakan oleh sistem chatbot asisten.</p>
+                </div>
+              </div>
+              <div class="grid grid-cols-1 gap-6">
+                <div class="space-y-2">
+                  <label class="text-xs font-black text-gray-400 uppercase tracking-widest">Model Gemini Aktif</label>
+                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-600 cursor-not-allowed flex items-center">
+                    {{ $capaianStats->where('key', 'gemini_model')->first()->value ?? 'gemini-2.5-flash' }}
+                  </div>
+                  <p class="text-[11px] text-gray-400 mt-2 italic">*Untuk mengubah model ini, silakan gunakan menu <strong>Setelan</strong> sistem.</p>
+                </div>
+              </div>
             </div>
 
           </div>{{-- end left column --}}

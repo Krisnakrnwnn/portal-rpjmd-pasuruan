@@ -76,6 +76,22 @@ class PortalController extends Controller
 
         $sectors = \App\Models\Sector::with('indicators')->get();
 
+        // Kalkulasi dinamis total_progress dari rata-rata seluruh sektor
+        if ($sectors->count() > 0) {
+            $totalSectorProgress = 0;
+            foreach ($sectors as $sector) {
+                $sectorAvg = $sector->indicators->count() > 0 ? $sector->indicators->avg('progress') : 0;
+                $totalSectorProgress += $sectorAvg;
+            }
+            $stats['total_progress'] = round($totalSectorProgress / $sectors->count());
+        } else {
+            $stats['total_progress'] = 0;
+        }
+
+        // Kalkulasi dinamis Program Berjalan & Target Terlampaui
+        $stats['program_berjalan'] = \App\Models\Indicator::count();
+        $stats['target_terlampaui'] = \App\Models\Indicator::where('progress', '>=', 100)->count();
+
         // Ambil waktu update terakhir dari tabel terkait
         $lastUpdate = collect([
             \App\Models\Indicator::max('updated_at'),
