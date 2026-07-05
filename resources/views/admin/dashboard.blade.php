@@ -134,7 +134,7 @@
           {{-- LEFT COLUMN: Two separate stat editors stacked --}}
           <div class="lg:col-span-2 space-y-6">
 
-            <!-- {{-- CARD 1: Statistik Utama Beranda --}}
+            {{-- CARD 1: Statistik Utama Beranda --}}
             <div class="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm print:hidden">
               <div class="flex items-center gap-3 mb-6">
                 <div class="w-10 h-10 rounded-xl bg-yellow-50 text-yellow-500 flex items-center justify-center flex-shrink-0">
@@ -193,7 +193,7 @@
                   </button>
                 </form>
               </div>
-            </div> -->
+            </div>
 
             {{-- CARD 2: Statistik Capaian RPJMD --}}
             <div class="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
@@ -215,14 +215,15 @@
               <form action="{{ route('admin.update_stats') }}" method="POST" class="grid grid-cols-1 sm:grid-cols-3 gap-6 print:hidden">
                 @csrf
                 @foreach($capaianStats as $st)
+                @if(!in_array($st->key, ['gemini_model', 'total_progress', 'program_berjalan', 'target_terlampaui']))
                 <div class="space-y-2">
                   <label class="text-xs font-black text-gray-400 uppercase tracking-widest">{{ $st->label }}</label>
                   <div class="relative">
                     <input type="text" name="stats[{{ $st->key }}]" value="{{ $st->value }}"
                       class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all font-bold text-gray-900">
-                    @if($st->key == 'total_progress') <span class="absolute right-4 top-3.5 font-bold text-gray-400">%</span> @endif
                   </div>
                 </div>
+                @endif
                 @endforeach
                 <div class="sm:col-span-3 pt-4 border-t border-gray-100 flex justify-end">
                   <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-blue-500/20 transition-all active:scale-95">
@@ -230,6 +231,28 @@
                   </button>
                 </div>
               </form>
+            </div>
+
+            {{-- CARD: Pengaturan Model AI Chatbot --}}
+            <div class="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <div>
+                  <h2 class="text-lg font-black text-gray-900">Informasi Model AI Chatbot</h2>
+                  <p class="text-xs text-gray-400">Model Google Gemini yang saat ini aktif digunakan oleh sistem chatbot asisten.</p>
+                </div>
+              </div>
+              <div class="grid grid-cols-1 gap-6">
+                <div class="space-y-2">
+                  <label class="text-xs font-black text-gray-400 uppercase tracking-widest">Model Gemini Aktif</label>
+                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-600 cursor-not-allowed flex items-center">
+                    {{ $capaianStats->where('key', 'gemini_model')->first()->value ?? 'gemini-2.5-flash' }}
+                  </div>
+                  <p class="text-[11px] text-gray-400 mt-2 italic">*Untuk mengubah model ini, silakan gunakan menu <strong>Setelan</strong> sistem.</p>
+                </div>
+              </div>
             </div>
 
           </div>{{-- end left column --}}
