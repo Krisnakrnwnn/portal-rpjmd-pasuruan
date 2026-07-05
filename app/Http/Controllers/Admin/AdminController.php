@@ -26,7 +26,9 @@ class AdminController extends Controller
         // Pisahkan: Statistik Hero Beranda vs Statistik Capaian RPJMD
         $heroStats = \App\Models\Stat::where('key', 'like', 'hero_%')->get();
 
-        $capaianStats = \App\Models\Stat::where('key', 'not like', 'hero_%')->get();
+        $capaianStats = \App\Models\Stat::where('key', 'not like', 'hero_%')
+            ->where('key', '!=', 'gemini_model')
+            ->get();
 
         // Real Statistics for Cards
         $counts = [
@@ -331,14 +333,51 @@ class AdminController extends Controller
         return redirect(route('admin.dashboard') . '#section-dashboard')->with('success', 'Statistik "' . $stat->label . '" berhasil dihapus!');
     }
 
+    // public function updateProfile(Request $request)
+    // {
+    //     $profiles = $request->input('profiles', []);
+    //     \Illuminate\Support\Facades\Log::info('updateProfile Request inputs: ', $request->all());
+    //     \Illuminate\Support\Facades\Log::info('updateProfile Profiles to update: ', $profiles);
+        
+    //     foreach ($profiles as $key => $content) {
+    //         $updated = \App\Models\Profile::where('key', $key)->update(['content' => $content]);
+    //         \Illuminate\Support\Facades\Log::info("Updated key: {$key}, rows affected: {$updated}");
+    //     }
+    //     Activity::log('Profil', 'Update', 'Memperbarui konten profil instansi.');
+    //     return redirect(route('admin.dashboard') . '#section-setelan')->with('success', 'Profil instansi berhasil diperbarui!');
+    // }
     public function updateProfile(Request $request)
-    {
-        foreach ($request->profiles as $key => $content) {
-            \App\Models\Profile::where('key', $key)->update(['content' => $content]);
-        }
-        Activity::log('Profil', 'Update', 'Memperbarui konten profil instansi.');
-        return redirect(route('admin.dashboard') . '#section-setelan')->with('success', 'Profil instansi berhasil diperbarui!');
+{
+    $profiles = $request->input('profiles', []);
+    
+    \Illuminate\Support\Facades\Log::info('updateProfile Request inputs: ', $request->all());
+    
+    if (empty($profiles)) {
+        return redirect(route('admin.dashboard') . '#section-setelan')
+            ->with('error', 'Tidak ada data profil yang dikirim atau diubah.');
     }
+    
+    foreach ($profiles as $key => $content) {
+        // Membuat judul otomatis (contoh: 'sejarah' menjadi 'Sejarah') jika datanya baru dibuat
+        $generatedTitle = ucfirst(str_replace('_', ' ', $key));
+
+        // Menggunakan updateOrCreate untuk menangani update sekaligus insert baru dengan aman
+        \App\Models\Profile::updateOrCreate(
+            ['key' => $key], // Kondisi pencarian data lama
+            [
+                'content' => $content,
+                'title'   => $generatedTitle // Mengisi kolom title jika data belum pernah ada
+            ]
+        );
+        
+        \Illuminate\Support\Facades\Log::info("Berhasil memproses key: {$key}");
+    }
+    
+    Activity::log('Profil', 'Update', 'Memperbarui konten profil instansi.');
+    
+    return redirect(route('admin.dashboard') . '#section-setelan')
+        ->with('success', 'Profil instansi berhasil diperbarui!');
+}
 
     public function resolveContact($id)
     {
@@ -493,5 +532,50 @@ class AdminController extends Controller
         Activity::log('Setelan', 'Update', 'Memperbarui model AI Chatbot menjadi: ' . $model);
 
         return redirect(route('admin.dashboard') . '#section-setelan')->with('success', 'Setelan model AI berhasil diperbarui!');
+    }
+
+    public function destroyIngest($id)
+    {
+        $ingestion = DocumentIngestion::findOrFail($id);
+
+        // Hapus file fisik dari storage jika ada
+        $filePath = 'documents/' . $ingestion->file_name;
+        if (Storage::disk('local')->exists($filePath)) {
+            Storage::disk('local')->delete($filePath);
+        }
+
+        // Hapus semua chunk data chatbot yang memiliki document_name sesuai dengan original_name
+        \App\Models\DocumentChunk::where('document_name', $ingestion->original_name)->delete();
+
+        Activity::log('Chatbot', 'Hapus', 'Menghapus dokumen ingest: ' . $ingestion->original_name);
+
+        // Hapus record ingestion
+        $ingestion->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Dokumen ingest berhasil dihapus.'
+        ]);
+    }
+
+    public function cancelIngest($id)
+    {
+        $ingestion = DocumentIngestion::findOrFail($id);
+
+        if ($ingestion->status === 'processing' || $ingestion->status === 'pending') {
+            $ingestion->update([
+                'status' => 'cancelled'
+            ]);
+            Activity::log('Chatbot', 'Batal', 'Membatalkan proses ingest: ' . $ingestion->original_name);
+            return response()->json([
+                'success' => true,
+                'message' => 'Proses ingest berhasil dibatalkan.'
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Proses tidak dapat dibatalkan karena status: ' . $ingestion->status
+        ], 400);
     }
 }

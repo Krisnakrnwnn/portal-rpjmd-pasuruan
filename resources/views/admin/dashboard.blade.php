@@ -134,7 +134,7 @@
           {{-- LEFT COLUMN: Two separate stat editors stacked --}}
           <div class="lg:col-span-2 space-y-6">
 
-            {{-- CARD 1: Statistik Utama Beranda --}}
+            <!-- {{-- CARD 1: Statistik Utama Beranda --}}
             <div class="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm print:hidden">
               <div class="flex items-center gap-3 mb-6">
                 <div class="w-10 h-10 rounded-xl bg-yellow-50 text-yellow-500 flex items-center justify-center flex-shrink-0">
@@ -193,7 +193,7 @@
                   </button>
                 </form>
               </div>
-            </div>
+            </div> -->
 
             {{-- CARD 2: Statistik Capaian RPJMD --}}
             <div class="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
@@ -1321,6 +1321,14 @@
                    <p id="ingest-eta" class="text-xl font-black text-gray-900">Menghitung...</p>
                  </div>
                </div>
+
+               <!-- Cancel Ingest Button -->
+               <div class="mt-6 flex justify-end">
+                 <button type="button" id="btn-cancel-ingest" onclick="cancelActiveIngestion()" class="px-6 py-2.5 bg-gray-50 hover:bg-red-50 text-gray-500 hover:text-red-600 border border-gray-200 hover:border-red-200 font-bold rounded-xl transition-all text-sm cursor-pointer flex items-center gap-2">
+                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                   Batalkan Ingest
+                 </button>
+               </div>
             </div>
 
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
@@ -1333,7 +1341,8 @@
                      <tr>
                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Nama File</th>
                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">Status</th>
-                       <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-right">Tanggal</th>
+                       <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">Tanggal</th>
+                       <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-right">Aksi</th>
                      </tr>
                    </thead>
                    <tbody id="ingest-history-body" class="divide-y divide-gray-50">
@@ -1349,17 +1358,26 @@
                            <span class="px-2 py-1 bg-green-100 text-green-700 text-[10px] font-black rounded-lg uppercase tracking-wider">Berhasil</span>
                          @elseif($ing->status === 'failed')
                            <span class="px-2 py-1 bg-red-100 text-red-700 text-[10px] font-black rounded-lg uppercase tracking-wider" title="{{ $ing->error_message }}">Gagal</span>
+                         @elseif($ing->status === 'cancelled')
+                           <span class="px-2 py-1 bg-gray-100 text-gray-700 text-[10px] font-black rounded-lg uppercase tracking-wider">Batal</span>
                          @else
                            <span class="px-2 py-1 bg-blue-100 text-blue-700 text-[10px] font-black rounded-lg uppercase tracking-wider animate-pulse">Proses</span>
                          @endif
                        </td>
-                       <td class="px-6 py-4 text-right text-xs text-gray-500 font-medium">
+                       <td class="px-6 py-4 text-center text-xs text-gray-500 font-medium">
                          {{ $ing->created_at->format('d/m/Y H:i') }}
+                       </td>
+                       <td class="px-6 py-4 text-right">
+                         @if($ing->status !== 'processing' && $ing->status !== 'pending')
+                           <button type="button" onclick="deleteIngestion({{ $ing->id }}, '{{ addslashes($ing->original_name) }}')" class="text-xs px-2.5 py-1 bg-red-50 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-colors cursor-pointer font-bold">
+                             Hapus
+                           </button>
+                         @endif
                        </td>
                      </tr>
                      @empty
                      <tr>
-                       <td colspan="3" class="px-6 py-12 text-center text-gray-400 font-bold">Belum ada riwayat ingest.</td>
+                       <td colspan="4" class="px-6 py-12 text-center text-gray-400 font-bold">Belum ada riwayat ingest.</td>
                      </tr>
                      @endforelse
                    </tbody>
@@ -1782,6 +1800,7 @@
   const btnText = document.getElementById('btn-text');
   const spinner = btnIngest ? btnIngest.querySelector('.spinner') : null;
   let pollingInterval = null;
+  let activeIngestionId = null;
 
   pdfInput?.addEventListener('change', function() {
     if (this.files && this.files[0]) {
@@ -1835,6 +1854,7 @@
     if (fileTitle) fileTitle.textContent = fileName;
     if (btnIngest) btnIngest.disabled = true;
     
+    activeIngestionId = id;
     if (pollingInterval) clearInterval(pollingInterval);
     
     pollingInterval = setInterval(async () => {
@@ -1844,7 +1864,7 @@
         
         updateIngestUI(data);
         
-        if (data.status === 'completed' || data.status === 'failed') {
+        if (data.status === 'completed' || data.status === 'failed' || data.status === 'cancelled') {
           clearInterval(pollingInterval);
           if (data.status === 'completed') {
             Swal.fire({
@@ -1853,6 +1873,11 @@
                 text: 'Dokumen berhasil di-ingest sepenuhnya.',
                 confirmButtonColor: '#2563eb'
             }).then(() => {
+                location.hash = '#section-ingest';
+                location.reload();
+            });
+          } else if (data.status === 'cancelled') {
+            Swal.fire('Batal', 'Proses ingest telah dibatalkan.', 'info').then(() => {
                 location.hash = '#section-ingest';
                 location.reload();
             });
@@ -1866,6 +1891,83 @@
       }
     }, 2000);
   }
+
+  window.cancelActiveIngestion = async function() {
+    if (!activeIngestionId) return;
+    
+    const confirmCancel = await Swal.fire({
+      title: 'Batalkan Ingest?',
+      text: 'Proses pemrosesan dokumen PDF akan dihentikan.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Ya, Batalkan!',
+      cancelButtonText: 'Tidak'
+    });
+
+    if (confirmCancel.isConfirmed) {
+      try {
+        const response = await fetch(`/admin/chatbot/ingest/${activeIngestionId}/cancel`, {
+          method: 'POST',
+          headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Content-Type': 'application/json'
+          }
+        });
+        const data = await response.json();
+        if (data.success) {
+          if (pollingInterval) clearInterval(pollingInterval);
+          Swal.fire('Dibatalkan', data.message, 'success').then(() => {
+            location.hash = '#section-ingest';
+            location.reload();
+          });
+        } else {
+          Swal.fire('Gagal', data.message, 'error');
+        }
+      } catch (error) {
+        console.error('Error canceling ingest:', error);
+        Swal.fire('Error', 'Gagal membatalkan proses ingest.', 'error');
+      }
+    }
+  };
+
+  window.deleteIngestion = async function(id, fileName) {
+    const confirmDelete = await Swal.fire({
+      title: 'Hapus Dokumen?',
+      text: `Apakah Anda yakin ingin menghapus dokumen "${fileName}"? AI tidak akan lagi menjawab pertanyaan dari file ini.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Ya, Hapus!',
+      cancelButtonText: 'Batal'
+    });
+
+    if (confirmDelete.isConfirmed) {
+      try {
+        const response = await fetch(`/admin/chatbot/ingest/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Content-Type': 'application/json'
+          }
+        });
+        const data = await response.json();
+        if (data.success) {
+          Swal.fire('Terhapus!', data.message, 'success').then(() => {
+            location.hash = '#section-ingest';
+            location.reload();
+          });
+        } else {
+          Swal.fire('Gagal', data.message, 'error');
+        }
+      } catch (error) {
+        console.error('Error deleting ingestion:', error);
+        Swal.fire('Error', 'Gagal menghapus dokumen.', 'error');
+      }
+    }
+  };
 
   function updateIngestUI(data) {
     const bar = document.getElementById('ingest-progress-bar');

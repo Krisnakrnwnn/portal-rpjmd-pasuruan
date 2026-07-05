@@ -86,6 +86,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.role'])->grou
     // Chatbot Ingestion (Admin & Super Admin)
     Route::post('/chatbot/ingest', [AdminController::class, 'ingestPdf'])->name('chatbot.ingest');
     Route::get('/chatbot/ingest-status/{id}', [AdminController::class, 'checkIngestStatus'])->name('chatbot.ingest_status');
+    Route::delete('/chatbot/ingest/{id}', [AdminController::class, 'destroyIngest'])->name('chatbot.ingest.destroy');
+    Route::post('/chatbot/ingest/{id}/cancel', [AdminController::class, 'cancelIngest'])->name('chatbot.ingest.cancel');
 
     // Super Admin ONLY
     Route::middleware('super.admin')->group(function () {

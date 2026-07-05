@@ -51,6 +51,21 @@ class DocumentIngestor
             $ingestion->update(['total_pages' => $numPages]);
 
             foreach ($pages as $pageIndex => $page) {
+                // Check if ingestion has been cancelled
+                $ingestion->refresh();
+                if ($ingestion->status === 'cancelled') {
+                    // Hapus chunk yang sempat terbuat
+                    DocumentChunk::where('document_name', $ingestion->original_name)->delete();
+                    
+                    // Hapus file fisik
+                    if (Storage::disk('local')->exists('documents/' . $ingestion->file_name)) {
+                        Storage::disk('local')->delete('documents/' . $ingestion->file_name);
+                    }
+                    
+                    Log::info("Ingestion {$ingestion->file_name} has been cancelled during execution.");
+                    return;
+                }
+
                 $pageNumber = $pageIndex + 1;
 
                 try {
