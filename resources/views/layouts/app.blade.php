@@ -323,12 +323,12 @@
               <a href="{{ route('berita') }}" class="text-blue-600 font-semibold border-b-2 border-blue-600 px-2 py-2 transition-colors">Informasi</a>
             @elseif(request()->routeIs('capaian'))
               <a href="{{ route('home') }}" class="text-gray-600 font-medium hover:text-blue-600 px-2 py-2 transition-colors">Beranda</a>
-              <a href="{{ route('layanan') }}" class="text-gray-600 font-medium hover:text-blue-600 px-2 py-2 transition-colors">Layanan</a>
             @else
               <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors">Beranda</a>
               <a href="{{ route('profil') }}" class="{{ request()->routeIs('profil') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors">Profil</a>
               <a href="{{ route('berita') }}" class="{{ request()->routeIs('berita') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors">Informasi</a>
-              <a href="{{ route('layanan') }}" class="{{ request()->routeIs('layanan') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors">Layanan</a>
+
+              <a href="{{ route('capaian') }}" class="{{ request()->routeIs('capaian') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors">Capaian</a>
               <a href="{{ route('kontak') }}" class="bg-blue-600 text-white px-4 py-2.5 rounded-full text-sm font-semibold hover:bg-blue-700 shadow-md hover:shadow-lg transition-all ml-2">Hubungi Kami</a>
             @endif
             
@@ -360,7 +360,8 @@
           <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }} block px-3 py-3 rounded-md text-base font-bold transition-colors">Beranda</a>
           <a href="{{ route('profil') }}" class="{{ request()->routeIs('profil') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }} block px-3 py-3 rounded-md text-base font-bold transition-colors">Profil</a>
           <a href="{{ route('berita') }}" class="{{ request()->routeIs('berita') || request()->routeIs('berita.detail') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }} block px-3 py-3 rounded-md text-base font-bold transition-colors">Informasi & Berita</a>
-          <a href="{{ route('layanan') }}" class="{{ request()->routeIs('layanan') || request()->routeIs('capaian') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }} block px-3 py-3 rounded-md text-base font-bold transition-colors">Layanan Publik</a>
+
+          <a href="{{ route('capaian') }}" class="{{ request()->routeIs('capaian') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }} block px-3 py-3 rounded-md text-base font-bold transition-colors">Capaian</a>
           <a href="{{ route('kontak') }}" class="mt-4 text-center bg-blue-600 text-white px-5 py-3 rounded-xl text-base font-bold hover:bg-blue-700 shadow-md">Hubungi Kami</a>
           
           @auth
@@ -404,7 +405,7 @@
           <h4 class="text-white font-bold mb-4 tracking-wide">Tautan Cepat</h4>
           <ul class="space-y-3 text-sm text-gray-400 flex flex-col">
             <li><a href="{{ route('profil') }}" class="hover:text-blue-400 transition-colors">Profil Instansi</a></li>
-            <li><a href="{{ route('layanan') }}" class="hover:text-blue-400 transition-colors">Layanan Publik</a></li>
+            <li><a href="{{ route('capaian') }}" class="hover:text-blue-400 transition-colors">Capaian Kinerja</a></li>
             <li><a href="{{ route('berita') }}" class="hover:text-blue-400 transition-colors">Berita Terkini</a></li>
           </ul>
         </div>
@@ -575,9 +576,6 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
 
           <!-- Area Input Chat -->
           <div class="p-3 sm:p-4 bg-white border-t border-gray-100 flex items-center gap-2 sm:gap-3 shrink-0">
-            <button id="voice-input-btn" class="hidden sm:block p-2 text-gray-400 hover:text-blue-600 transition-colors bg-gray-50 rounded-full shrink-0" title="Input Suara">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
-            </button>
             <input id="chat-input" type="text" placeholder="Tanyakan seputar RPJMD..." class="flex-1 bg-gray-50 border border-gray-200 rounded-full px-4 sm:px-5 py-2 sm:py-2.5 text-base sm:text-sm focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all font-medium">
             <button id="chat-send" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 shadow-md hover:shadow-lg transition-transform hover:-translate-y-0.5 shrink-0 focus:outline-none">
               <svg class="w-4 h-4 sm:w-5 sm:h-5 translate-x-[-1px] translate-y-[1px]" fill="currentColor" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>

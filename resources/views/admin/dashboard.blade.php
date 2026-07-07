@@ -58,9 +58,9 @@
                 <p class="text-xs text-gray-400">Visualisasi rata-rata capaian per sektor RPJMD.</p>
               </div>
             </div>
-            <button id="toggle-chart-btn" onclick="toggleChartPanel()" class="text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-4 py-2 rounded-xl transition-colors">
+            <!-- <button id="toggle-chart-btn" onclick="toggleChartPanel()" class="text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-4 py-2 rounded-xl transition-colors">
               Sembunyikan Grafik
-            </button>
+            </button> -->
           </div>
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div class="flex flex-col items-center">
@@ -91,18 +91,6 @@
             </div>
           </div>
 
-          {{-- Layanan Aktif --}}
-          <div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path></svg>
-              </div>
-              <div>
-                <p class="text-2xl font-black text-gray-900 leading-tight">{{ $counts['services'] }}</p>
-                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Layanan Aktif</p>
-              </div>
-            </div>
-          </div>
 
           {{-- Pesan Baru --}}
           <div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
@@ -134,66 +122,6 @@
           {{-- LEFT COLUMN: Two separate stat editors stacked --}}
           <div class="lg:col-span-2 space-y-6">
 
-            {{-- CARD 1: Statistik Utama Beranda --}}
-            <div class="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm print:hidden">
-              <div class="flex items-center gap-3 mb-6">
-                <div class="w-10 h-10 rounded-xl bg-yellow-50 text-yellow-500 flex items-center justify-center flex-shrink-0">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
-                </div>
-                <div>
-                  <h2 class="text-lg font-black text-gray-900">Statistik Utama Halaman Beranda</h2>
-                  <p class="text-xs text-gray-400">Angka yang tampil di panel bawah hero section. Anda dapat menambah atau mengurangi datanya.</p>
-                </div>
-              </div>
-              
-              {{-- Form Edit Data Saat Ini --}}
-              <form action="{{ route('admin.update_hero_stats') }}" method="POST" class="mb-6">
-                @csrf
-                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-4">
-                  @forelse($heroStats as $st)
-                  <div class="relative bg-gray-50 p-4 border border-gray-100 rounded-xl">
-                    <div class="space-y-1.5 mb-2">
-                       <label class="text-[10px] font-black text-gray-500 uppercase tracking-widest block truncate" title="{{ $st->label }}">{{ $st->label }}</label>
-                       <input type="text" name="hero_stats[{{ $st->key }}]" value="{{ $st->value }}"
-                         class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-400/20 focus:border-yellow-400 font-bold text-gray-900 text-sm">
-                    </div>
-                    <div class="absolute top-3 right-3">
-                      <button type="button" onclick="event.preventDefault(); if(confirm('Hapus statistik ini?')) document.getElementById('delete-hero-{{ $st->id }}').submit();" class="text-red-400 hover:text-red-600 bg-white shadow-sm border border-red-100 rounded-full w-6 h-6 flex items-center justify-center transition-colors">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                      </button>
-                    </div>
-                  </div>
-                  @empty
-                  <div class="col-span-full py-4 text-center text-sm text-gray-400">Belum ada data statistik beranda. Silakan tambah baru.</div>
-                  @endforelse
-                </div>
-                <div class="flex justify-end pt-2">
-                  <button type="submit" class="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold py-2.5 px-6 rounded-xl shadow-sm transition-all active:scale-95 text-sm">
-                    Simpan Nilai Beranda
-                  </button>
-                </div>
-              </form>
-
-              {{-- Hidden Delete Forms --}}
-              @foreach($heroStats as $st)
-              <form id="delete-hero-{{ $st->id }}" action="{{ route('admin.delete_hero_stat', $st->id) }}" method="POST" class="hidden">
-                  @csrf @method('DELETE')
-              </form>
-              @endforeach
-
-              {{-- Form Tambah Data Baru --}}
-              <div class="pt-6 border-t border-gray-100">
-                <h3 class="text-xs font-bold text-gray-700 uppercase mb-3">Tambah Statistik Baru</h3>
-                <form action="{{ route('admin.store_hero_stat') }}" method="POST" class="flex flex-col sm:flex-row gap-3">
-                  @csrf
-                  <input type="text" name="label" required placeholder="Label (mis. Jumlah Desa)" class="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:bg-white outline-none focus:border-yellow-400">
-                  <input type="text" name="value" required placeholder="Nilai (mis. 34)" class="w-full sm:w-32 px-3 py-2 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:bg-white outline-none focus:border-yellow-400">
-                  <button type="submit" class="bg-gray-900 hover:bg-black text-white font-bold py-2 px-4 rounded-lg text-sm whitespace-nowrap">
-                    + Tambah
-                  </button>
-                </form>
-              </div>
-            </div>
 
             {{-- CARD 2: Statistik Capaian RPJMD --}}
             <div class="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
@@ -233,27 +161,6 @@
               </form>
             </div>
 
-            {{-- CARD: Pengaturan Model AI Chatbot --}}
-            <div class="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
-              <div class="flex items-center gap-3 mb-6">
-                <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                </div>
-                <div>
-                  <h2 class="text-lg font-black text-gray-900">Informasi Model AI Chatbot</h2>
-                  <p class="text-xs text-gray-400">Model Google Gemini yang saat ini aktif digunakan oleh sistem chatbot asisten.</p>
-                </div>
-              </div>
-              <div class="grid grid-cols-1 gap-6">
-                <div class="space-y-2">
-                  <label class="text-xs font-black text-gray-400 uppercase tracking-widest">Model Gemini Aktif</label>
-                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-600 cursor-not-allowed flex items-center">
-                    {{ $capaianStats->where('key', 'gemini_model')->first()->value ?? 'gemini-2.5-flash' }}
-                  </div>
-                  <p class="text-[11px] text-gray-400 mt-2 italic">*Untuk mengubah model ini, silakan gunakan menu <strong>Setelan</strong> sistem.</p>
-                </div>
-              </div>
-            </div>
 
           </div>{{-- end left column --}}
 
@@ -530,55 +437,13 @@
         </div>
       </section>
 
+      <!-- SECTION: ASPIRASI & PESAN       -->
       <!-- ============================== -->
-      <!-- SECTION: LAYANAN PUBLIK        -->
-      <!-- ============================== -->
-      <section id="section-layanan" class="content-section hidden">
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-          <div>
-            <h1 class="text-3xl font-black text-gray-900 mb-1">Manajemen Layanan</h1>
-            <p class="text-gray-500 text-sm">Kelola tombol dan link di halaman portal layanan Anda.</p>
-          </div>
-          <button onclick="showSection('section-layanan-form')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-lg shadow cursor-pointer transition-colors w-max text-sm">
-            Tambah Layanan Baru +
-          </button>
+      <section id="section-aspirasi" class="content-section hidden">
+        <div class="mb-8">
+          <h1 class="text-3xl font-black text-gray-900 mb-1">Aspirasi &amp; Pesan</h1>
+          <p class="text-gray-500 text-sm">Daftar pesan masuk dari halaman Hubungi Kami.</p>
         </div>
-
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          <div class="w-full overflow-x-auto">
-            <table class="w-full min-w-[700px] text-left border-collapse">
-              <thead class="bg-gray-50 border-b border-gray-200">
-                <tr>
-                  <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Nama Layanan</th>
-                  <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">URL Link</th>
-                  <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Aksi</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-100 whitespace-nowrap">
-                @foreach($services as $sv)
-                <tr class="hover:bg-blue-50/50 transition-colors">
-                  <td class="px-6 py-4">
-                    <div class="font-bold text-gray-900 text-sm">{{ $sv->name }}</div>
-                  </td>
-                  <td class="px-6 py-4 text-sm text-gray-600">{{ $sv->url }}</td>
-                  <td class="px-6 py-4 text-right space-x-2">
-                    <button onclick="editLayanan({{ json_encode($sv) }})" class="text-xs px-3 py-1 bg-blue-50 text-blue-600 rounded hover:bg-blue-600 hover:text-white transition-colors">Edit</button>
-                    <form action="{{ route('admin.delete_service', $sv->id) }}" method="POST" class="inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" onclick="return confirm('Hapus layanan ini?')" class="text-xs px-3 py-1 bg-gray-50 text-gray-600 rounded hover:text-red-600 transition-colors">Hapus</button>
-                    </form>
-                  </td>
-                </tr>
-                @endforeach
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Section: Pesan Masuk (Separated for clarity) -->
-        <h1 class="text-2xl font-black text-gray-900 mb-1 mt-12">Aspirasi & Pesan</h1>
-        <p class="text-gray-500 text-sm mb-8">Daftar pesan masuk dari halaman Hubungi Kami.</p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           @forelse($contacts as $msg)
@@ -592,7 +457,7 @@
             <h3 class="font-bold text-gray-900 mb-1">{{ $msg->subject }}</h3>
             <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Dari: {{ $msg->name }} ({{ $msg->email }})</p>
             <p class="text-gray-600 text-sm mb-4 leading-relaxed">{{ $msg->message }}</p>
-            
+
             @if($msg->status == 'unread')
             <div class="pt-4 border-t border-gray-100">
                <form action="{{ route('admin.resolve_contact', $msg->id) }}" method="POST" class="resolve-form">
@@ -612,83 +477,6 @@
             Belum ada pesan aspirasi masuk.
           </div>
           @endforelse
-        </div>
-      </section>
-
-      <!-- SECTION: FORM LAYANAN -->
-      <section id="section-layanan-form" class="content-section hidden">
-        <div class="flex items-center gap-4 mb-8">
-          <button onclick="showSection('section-layanan')" class="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors text-gray-600">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-          </button>
-          <h1 class="text-3xl font-black text-gray-900">Tambah Layanan</h1>
-        </div>
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 max-w-4xl">
-          <form action="{{ route('admin.store_service') }}" method="POST" class="space-y-6">
-            @csrf
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div class="space-y-2">
-                <label class="text-sm font-bold text-gray-700">Nama Layanan</label>
-                <input type="text" name="name" required class="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none">
-              </div>
-              <div class="space-y-2">
-                <label class="text-sm font-bold text-gray-700">Icon (Identifier)</label>
-                <select name="icon" class="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none">
-                  <option value="document-report">Document Report</option>
-                  <option value="chart-bar">Chart Bar</option>
-                  <option value="office-building">Office Building</option>
-                </select>
-              </div>
-            </div>
-            <div class="space-y-2">
-              <label class="text-sm font-bold text-gray-700">URL / Link</label>
-              <input type="text" name="url" required placeholder="https://..." class="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none">
-            </div>
-            <div class="space-y-2">
-              <label class="text-sm font-bold text-gray-700">Deskripsi Singkat</label>
-              <textarea name="description" required rows="3" class="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none"></textarea>
-            </div>
-            <button type="submit" class="px-8 py-3 rounded-xl font-bold bg-blue-600 text-white hover:bg-blue-700 transition-all">Simpan Layanan</button>
-          </form>
-        </div>
-      </section>
-
-      <!-- SECTION: LAYANAN FORM (EDIT) -->
-      <section id="section-layanan-edit" class="content-section hidden">
-        <div class="flex items-center gap-4 mb-8">
-          <button onclick="showSection('section-layanan')" class="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors text-gray-600">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-          </button>
-          <h1 class="text-3xl font-black text-gray-900">Edit Layanan</h1>
-        </div>
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 max-w-4xl">
-          <form id="form-edit-layanan" action="" method="POST" class="space-y-6">
-            @csrf
-            @method('PUT')
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div class="space-y-2">
-                <label class="text-sm font-bold text-gray-700">Nama Layanan</label>
-                <input type="text" name="name" id="edit-sv-name" required class="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all">
-              </div>
-              <div class="space-y-2">
-                <label class="text-sm font-bold text-gray-700">Icon (Identifier)</label>
-                <select name="icon" id="edit-sv-icon" class="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none">
-                  <option value="document-report">Document Report</option>
-                  <option value="chart-bar">Chart Bar</option>
-                  <option value="office-building">Office Building</option>
-                </select>
-              </div>
-            </div>
-            <div class="space-y-2">
-              <label class="text-sm font-bold text-gray-700">URL / Link</label>
-              <input type="text" name="url" id="edit-sv-url" required placeholder="https://..." class="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all">
-            </div>
-            <div class="space-y-2">
-              <label class="text-sm font-bold text-gray-700">Deskripsi Singkat</label>
-              <textarea name="description" id="edit-sv-description" required rows="3" class="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all"></textarea>
-            </div>
-            <button type="submit" class="px-8 py-3 rounded-xl font-bold bg-blue-600 text-white hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20">Update Layanan</button>
-          </form>
         </div>
       </section>
 
@@ -1512,17 +1300,6 @@
     showSection('section-berita-edit');
   }
 
-  function editLayanan(sv) {
-    const form = document.getElementById('form-edit-layanan');
-    form.action = `/admin/layanan/${sv.id}`;
-
-    document.getElementById('edit-sv-name').value        = sv.name;
-    document.getElementById('edit-sv-url').value         = sv.url;
-    document.getElementById('edit-sv-icon').value        = sv.icon;
-    document.getElementById('edit-sv-description').value = sv.description;
-
-    showSection('section-layanan-edit');
-  }
 
   function editUser(user) {
     const form = document.getElementById('form-edit-user');

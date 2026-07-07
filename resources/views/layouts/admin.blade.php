@@ -50,10 +50,6 @@
         <span class="font-medium text-sm">Manajemen Berita</span>
       </button>
 
-      <button data-target="section-layanan" class="nav-btn flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 hover:text-white rounded-lg transition-all w-full text-left mt-2">
-        <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path></svg>
-        <span class="font-medium text-sm">Katalog Layanan</span>
-      </button>
 
       <button data-target="section-capaian" class="nav-btn flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 hover:text-white rounded-lg transition-all w-full text-left mt-2">
         <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
@@ -299,15 +295,15 @@
         });
       }
 
-      // ─── goToAspirasi: navigasi ke section layanan lalu scroll ke tiket ────
+      // ─── goToAspirasi: navigasi ke section aspirasi lalu scroll ke tiket ────
       window.goToAspirasi = function() {
         // Tutup dropdown
         if (notifDropdown) notifDropdown.classList.add('hidden');
-        // Navigasi ke section-layanan
-        showSection('section-layanan');
-        // Scroll ke heading Tiket Aspirasi setelah section muncul
+        // Navigasi ke section-aspirasi
+        showSection('section-aspirasi');
+        // Scroll ke heading setelah section muncul
         setTimeout(() => {
-          const target = document.querySelector('#section-layanan h1.text-2xl');
+          const target = document.querySelector('#section-aspirasi h1');
           if (target) {
             target.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }

@@ -26,13 +26,7 @@
         <priority>0.9</priority>
     </url>
     
-    <!-- Layanan -->
-    <url>
-        <loc>{{ route('layanan') }}</loc>
-        <lastmod>{{ now()->toAtomString() }}</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
+
     
     <!-- Kontak -->
     <url>

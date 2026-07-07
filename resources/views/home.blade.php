@@ -27,9 +27,9 @@
               Portal resmi Layanan Informasi Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah (Bapperida) Kabupaten Pasuruan. Akses data perencanaan, target pembangunan, dan capaian kinerja daerah secara transparan.
             </p>
             <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 hero-reveal shrink-0 lg:ml-auto w-full sm:w-auto mt-6 lg:mt-0" style="animation-delay: 0.7s; opacity: 0;">
-              <a href="{{ route('layanan') }}"
+              <a href="{{ route('capaian') }}"
                 class="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 rounded-full text-blue-900 font-bold bg-white hover:bg-yellow-400 shadow-lg transition-all hover:-translate-y-1 text-center whitespace-nowrap text-sm sm:text-base">
-                Akses Layanan Bapperida
+                Lihat Capaian Kinerja
               </a>
               <a href="{{ route('berita') }}"
                 class="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 rounded-full text-white font-semibold bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 transition-all text-center whitespace-nowrap text-sm sm:text-base">

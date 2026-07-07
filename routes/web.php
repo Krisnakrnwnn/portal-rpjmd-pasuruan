@@ -11,7 +11,7 @@ Route::get('/', [PortalController::class, 'home'])->name('home');
 Route::get('/profil', [PortalController::class, 'profil'])->name('profil');
 Route::get('/berita', [PortalController::class, 'berita'])->name('berita');
 Route::get('/berita/{slug}', [PortalController::class, 'beritaDetail'])->name('berita.detail');
-Route::get('/layanan', [PortalController::class, 'layanan'])->name('layanan');
+
 Route::get('/capaian', [PortalController::class, 'capaian'])->name('capaian');
 Route::get('/kontak', [PortalController::class, 'kontak'])->name('kontak');
 Route::post('/kontak', [PortalController::class, 'storeContact'])->name('kontak.store');
@@ -58,10 +58,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.role'])->grou
     Route::put('/berita/{id}', [AdminController::class, 'updateNews'])->name('update_news');
     Route::delete('/berita/{id}', [AdminController::class, 'deleteNews'])->name('delete_news');
 
-    // Layanan (Admin & Super Admin)
-    Route::post('/layanan', [AdminController::class, 'storeService'])->name('store_service');
-    Route::put('/layanan/{id}', [AdminController::class, 'updateService'])->name('update_service');
-    Route::delete('/layanan/{id}', [AdminController::class, 'deleteService'])->name('delete_service');
 
     // Capaian Sektor & Indikator (Admin & Super Admin)
     Route::post('/sectormake', [AdminController::class, 'storeSector'])->name('store_sector');
