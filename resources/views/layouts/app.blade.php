@@ -595,6 +595,15 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
     // Menanamkan elemen HTML chatbot ini langsung ke ujung tag <body>
     document.body.insertAdjacentHTML('beforeend', chatbotHTML);
 
+    // Hapus session chat lama di backend setiap kali halaman direfresh
+    fetch('/api/chat/new-session', {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        'Accept': 'application/json'
+      }
+    }).catch(err => console.log('Reset session error:', err));
+
     // Logika Fungsional Vanilla JS Buka/Tutup
     const chatToggle = document.getElementById('chat-toggle');
     const chatWindow = document.getElementById('chat-window');
@@ -729,8 +738,7 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
         chatToggle.classList.add('scale-75', 'opacity-60');
         if (notifDot) notifDot.classList.add('hidden');
         
-        // Load history from database when opening
-        loadChatHistory();
+        // Removed loadChatHistory to ensure fresh chat on reload and prevent duplication
         
         setTimeout(() => chatInput?.focus(), 350);
       } else {
@@ -746,62 +754,7 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
       }
     }
     
-    // Load chat history from database
-    async function loadChatHistory() {
-      try {
-        const response = await fetch('/api/chat/history');
-        const data = await response.json();
-        
-        if (data.messages && data.messages.length > 0) {
-          // Clear current messages except the greeting
-          const quickOptions = document.getElementById('chat-quick-options');
-          if (quickOptions) quickOptions.style.display = 'none';
-          
-          // Add loaded messages
-          data.messages.forEach(msg => {
-            if (msg.role === 'user') {
-              messages.innerHTML += `
-                <div class="flex justify-end animate-chat-msg opacity-0">
-                  <div class="bg-blue-600 text-white rounded-2xl rounded-tr-sm px-5 py-3 max-w-[80%] shadow-sm font-medium leading-relaxed text-sm">${msg.text}</div>
-                </div>`;
-            } else {
-              messageCount++;
-              const msgId = 'msg-' + messageCount;
-              const formattedReply = typeof marked !== 'undefined' ? marked.parse(msg.message) : msg.message.replace(/\n/g, '<br>');
-              
-              messages.innerHTML += `
-                <div class="flex justify-start animate-chat-msg opacity-0 group" id="${msgId}">
-                  <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 mr-2 mt-1 hidden sm:flex">
-                    <span class="text-blue-600 font-bold text-xs">AI</span>
-                  </div>
-                  <div class="flex-1 max-w-[95%] sm:max-w-[85%]">
-                    <div class="bg-white border border-gray-100 text-gray-800 rounded-2xl rounded-tl-sm px-4 sm:px-5 py-3 sm:py-3.5 shadow-sm leading-relaxed text-[13px] sm:text-sm prose prose-sm max-w-none">${formattedReply}</div>
-                    <div class="flex items-center gap-2 mt-1 ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button onclick="speakMessage('${msgId}')" class="text-gray-400 hover:text-blue-600 p-1 rounded transition-colors" title="Dengarkan">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
-                      </button>
-                      <button onclick="copyMessage('${msgId}')" class="text-gray-400 hover:text-blue-600 p-1 rounded transition-colors" title="Salin">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                      </button>
-                      <button onclick="feedbackMessage('${msgId}', 'like')" class="text-gray-400 hover:text-green-600 p-1 rounded transition-colors" title="Berguna">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path></svg>
-                      </button>
-                      <button onclick="feedbackMessage('${msgId}', 'dislike')" class="text-gray-400 hover:text-red-600 p-1 rounded transition-colors" title="Kurang Berguna">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5"></path></svg>
-                      </button>
-                    </div>
-                  </div>
-                </div>`;
-            }
-          });
-          
-          messages.scrollTop = messages.scrollHeight;
-        }
-      } catch (error) {
-        console.error('Failed to load history:', error);
-        // Silent fail, show default greeting
-      }
-    }
+
 
     chatToggle.addEventListener('click', handleToggle);
     closeChat.addEventListener('click', handleToggle);
