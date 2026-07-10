@@ -321,8 +321,6 @@
             @if(request()->routeIs('berita.detail'))
               <a href="{{ route('home') }}" class="text-gray-600 font-medium hover:text-blue-600 px-2 py-2 transition-colors">Beranda</a>
               <a href="{{ route('berita') }}" class="text-blue-600 font-semibold border-b-2 border-blue-600 px-2 py-2 transition-colors">Informasi</a>
-            @elseif(request()->routeIs('capaian'))
-              <a href="{{ route('home') }}" class="text-gray-600 font-medium hover:text-blue-600 px-2 py-2 transition-colors">Beranda</a>
             @else
               <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors">Beranda</a>
               <a href="{{ route('profil') }}" class="{{ request()->routeIs('profil') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors">Profil</a>
