@@ -77,7 +77,7 @@
         </div>
 
         {{-- Summary Stats Cards --}}
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8 print:hidden">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 print:hidden">
           {{-- Total Berita --}}
           <div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
             <div class="flex items-center gap-4">
@@ -116,19 +116,7 @@
           </div>
         </div>
 
-        {{-- Stats Editors (Separated) + Activity Log --}}
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-          {{-- LEFT COLUMN: Two separate stat editors stacked --}}
-          <div class="lg:col-span-2 space-y-6">
-
-
-
-
-
-          </div>{{-- end left column --}}
-
-          {{-- Activity Log --}}
+        {{-- Activity Log --}}
           <div class="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
             <h2 class="text-xl font-black text-gray-900 mb-5">Log Aktivitas</h2>
             <div class="space-y-3 overflow-y-auto" style="max-height: 480px;">
@@ -157,7 +145,6 @@
               @endforelse
             </div>
           </div>
-        </div>
       </section>
 
 
