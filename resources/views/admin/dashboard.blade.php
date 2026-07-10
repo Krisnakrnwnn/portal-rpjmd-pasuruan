@@ -77,7 +77,7 @@
         </div>
 
         {{-- Summary Stats Cards --}}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 print:hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 print:hidden">
           {{-- Total Berita --}}
           <div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
             <div class="flex items-center gap-4">
