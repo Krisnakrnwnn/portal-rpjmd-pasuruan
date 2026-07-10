@@ -123,43 +123,7 @@
           <div class="lg:col-span-2 space-y-6">
 
 
-            {{-- CARD 2: Statistik Capaian RPJMD --}}
-            <div class="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
-              <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-                <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                  </div>
-                  <div>
-                    <h2 class="text-lg font-black text-gray-900">Statistik Capaian RPJMD</h2>
-                    <p class="text-xs text-gray-400">Angka yang tampil di halaman Capaian & grafik progres.</p>
-                  </div>
-                </div>
-                <button type="button" onclick="window.print()" class="print:hidden bg-green-50 hover:bg-green-100 text-green-700 font-bold py-2 px-4 flex items-center gap-2 rounded-xl border border-green-200 transition-colors shadow-sm text-sm">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2-2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                  Cetak PDF Laporan
-                </button>
-              </div>
-              <form action="{{ route('admin.update_stats') }}" method="POST" class="grid grid-cols-1 sm:grid-cols-3 gap-6 print:hidden">
-                @csrf
-                @foreach($capaianStats as $st)
-                @if(!in_array($st->key, ['gemini_model', 'total_progress', 'program_berjalan', 'target_terlampaui']))
-                <div class="space-y-2">
-                  <label class="text-xs font-black text-gray-400 uppercase tracking-widest">{{ $st->label }}</label>
-                  <div class="relative">
-                    <input type="text" name="stats[{{ $st->key }}]" value="{{ $st->value }}"
-                      class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all font-bold text-gray-900">
-                  </div>
-                </div>
-                @endif
-                @endforeach
-                <div class="sm:col-span-3 pt-4 border-t border-gray-100 flex justify-end">
-                  <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-blue-500/20 transition-all active:scale-95">
-                    Simpan Capaian RPJMD &rarr;
-                  </button>
-                </div>
-              </form>
-            </div>
+
 
 
           </div>{{-- end left column --}}
