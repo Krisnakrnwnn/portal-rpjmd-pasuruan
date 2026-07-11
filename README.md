@@ -1,114 +1,50 @@
-# Portal RPJMD Kabupaten Pasuruan
+# Setup Proyek Portal RPJMD Kabupaten Pasuruan
 
-Portal informasi RPJMD (Rencana Pembangunan Jangka Menengah Daerah) Kabupaten Pasuruan dengan AI Chatbot.
+Berikut adalah langkah-langkah untuk melakukan instalasi dan setup proyek secara lokal.
 
-## 🚀 Fitur Utama
-
-### Chatbot AI (Enhanced)
-- ✅ RAG-based responses menggunakan Google Gemini
-- ✅ Export chat (PDF/TXT)
-- ✅ Voice input & output
-- ✅ Multi-language (Indonesian/English)
-- ✅ Persistent chat history
-- ✅ Time-based greetings
-
-### Portal Features
-- Profil Instansi
-- Berita & Informasi
-- Layanan Publik
-- Capaian Pembangunan
-- Kontak & Aspirasi
-
-## 📦 Tech Stack
-
-- **Backend:** Laravel 11, PHP 8.1+
-- **Database:** SQLite
-- **AI:** Google Gemini API
-- **Frontend:** Blade, Tailwind CSS, Vanilla JS
-- **PDF:** DomPDF
-
-## 🔧 Setup
-
-### 1. Clone & Install
+## 1. Clone & Install Dependencies
+Pastikan Anda sudah menginstal PHP (8.1+), Composer, dan Node.js.
 ```bash
 git clone <repo-url>
-cd PBLS6
+cd portal-rpjmd-pasuruan
 composer install
 npm install && npm run build
 ```
 
-### 2. Environment
+## 2. Setup Environment Variables
+Gandakan file `.env.example` menjadi `.env`, lalu *generate application key*.
 ```bash
 cp .env.example .env
 php artisan key:generate
 ```
 
-Edit `.env`:
+Buka file `.env` dan pastikan konfigurasi untuk database SQLite dan API Key Gemini sudah sesuai:
 ```env
-GEMINI_API_KEY=your_gemini_api_key_here
 DB_CONNECTION=sqlite
-DB_DATABASE=/full/path/to/database.sqlite
-```
+DB_DATABASE=/absolute/path/to/database.sqlite
 
-### 3. Database
+# Masukkan API Key dari Google Gemini AI
+GEMINI_API_KEY=your_gemini_api_key_here
+```
+*(Catatan: Sesuaikan path `DB_DATABASE` dengan lokasi absolut komputer Anda atau cukup set ke lokasi default).*
+
+## 3. Setup Database
+Buat file database kosong dan jalankan migrasi database.
 ```bash
 touch database/database.sqlite
 php artisan migrate
 ```
+*(Opsional: Jalankan `php artisan db:seed` jika ada data seeder bawaan).*
 
-### 4. Ingest PDF Documents
+## 4. Ingest Dokumen PDF untuk Chatbot AI
+Agar Chatbot dapat menjawab pertanyaan seputar RPJMD, Anda perlu melakukan *ingest* (memasukkan data) dokumen PDF ke dalam sistem.
 ```bash
-php artisan rag:ingest "path/to/document.pdf"
+php artisan rag:ingest "storage/app/path_to_document.pdf"
 ```
 
-## 🚀 Deploy ke Production
-
-### Via Git Pull (Recommended)
+## 5. Menjalankan Server Lokal
+Setelah semua langkah di atas selesai, jalankan server pengembangan lokal.
 ```bash
-# Di server
-cd /path/to/project
-git pull origin main
-php artisan migrate
-php artisan optimize
+php artisan serve
 ```
-
-### Via SCP (Manual)
-```bash
-# Di lokal
-cd PBLS6
-deploy-to-server.bat  # Windows
-# atau
-bash deploy-to-server.sh  # Linux/Mac
-```
-
-## 📝 Maintenance
-
-### Clear Cache
-```bash
-php artisan cache:clear
-php artisan config:clear
-php artisan view:clear
-php artisan route:clear
-```
-
-### Optimize
-```bash
-php artisan optimize
-```
-
-## 🔐 Security
-
-- ✅ CSRF protection
-- ✅ Rate limiting (20 req/min chat, 10 req/min export)
-- ✅ Input validation & sanitization
-- ✅ Secure cookies (HttpOnly)
-- ⚠️ HTTPS required for voice features
-
-## 📞 Support
-
-Website: https://portal-rpjmd-kabpasuruan.artdevata.net/
-
----
-
-**Version:** 2.0 (Chatbot Enhanced)  
-**Last Updated:** May 2026
+Buka browser dan akses aplikasi melalui `http://localhost:8000`.
