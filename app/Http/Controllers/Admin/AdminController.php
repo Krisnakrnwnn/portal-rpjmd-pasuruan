@@ -39,7 +39,7 @@ class AdminController extends Controller
             'sectors' => $sectors->count(),
         ];
 
-        $activities = Activity::with('user')->orderBy('created_at', 'desc')->take(10)->get();
+        $activities = Activity::with('user')->orderBy('created_at', 'desc')->get();
 
         return view('admin.dashboard', compact('news', 'contacts', 'services', 'heroStats', 'capaianStats', 'profiles', 'users', 'counts', 'activities', 'sectors'));
     }

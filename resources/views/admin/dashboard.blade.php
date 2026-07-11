@@ -118,10 +118,15 @@
 
         {{-- Activity Log --}}
           <div class="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
-            <h2 class="text-xl font-black text-gray-900 mb-5">Log Aktivitas</h2>
-            <div class="space-y-3 overflow-y-auto" style="max-height: 480px;">
+            <div class="flex flex-wrap gap-2 items-center justify-between mb-5">
+              <h2 class="text-xl font-black text-gray-900">Log Aktivitas</h2>
+              {{-- Date Filter --}}
+              <input type="date" id="activity-date-filter" oninput="filterActivityByDate(this.value)" onchange="filterActivityByDate(this.value)" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-50 text-gray-600 transition-all cursor-pointer">
+            </div>
+            
+            <div id="activity-list" class="space-y-3 overflow-y-auto pr-2" style="max-height: 480px;">
               @forelse($activities as $act)
-              <div class="flex gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors border border-gray-100">
+              <div class="activity-item flex gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors border border-gray-100" data-date="{{ $act->created_at->setTimezone('Asia/Jakarta')->format('Y-m-d') }}">
                 <div class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center font-black text-[10px]
                   {{ $act->action == 'Hapus' ? 'bg-red-50 text-red-600' : ($act->action == 'Buat' ? 'bg-green-50 text-green-600' : 'bg-blue-50 text-blue-600') }}">
                   {{ strtoupper(substr($act->type, 0, 1)) }}
@@ -138,9 +143,9 @@
                 </div>
               </div>
               @empty
-              <div class="py-10 flex flex-col items-center justify-center text-gray-400">
-                <svg class="w-10 h-10 mb-3 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <p class="font-bold text-sm">Belum ada aktivitas</p>
+              {{-- Elemen empty state yang akan muncul kalau data kosong sejak awal atau setelah difilter --}}
+              <div id="activity-empty-state" class="text-center py-8 text-gray-400 text-xs">
+                  Tidak ada aktivitas pada tanggal ini.
               </div>
               @endforelse
             </div>
@@ -163,8 +168,25 @@
         </div>
 
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          <div class="p-6 border-b border-gray-200 flex flex-wrap gap-4 items-center justify-between">
+          <div class="p-4 border-b border-gray-200 flex flex-wrap gap-3 items-center justify-between">
             <h2 class="text-lg font-bold text-gray-900">Daftar Publikasi Harian</h2>
+            <div class="flex flex-wrap gap-2 items-center">
+              {{-- Search --}}
+             
+              {{-- Filter Status --}}
+              <select id="berita-filter-status" class="text-sm border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-50 text-gray-600 transition-all">
+                <option value="">Semua Status</option>
+                <option value="publik">Publik</option>
+                <option value="draft">Draft</option>
+              </select>
+              {{-- Filter Kategori --}}
+              <select id="berita-filter-kategori" class="text-sm border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-50 text-gray-600 transition-all">
+                <option value="">Semua Kategori</option>
+                @foreach($news->pluck('category')->unique()->filter()->values() as $cat)
+                  <option value="{{ strtolower($cat) }}">{{ $cat }}</option>
+                @endforeach
+              </select>
+            </div>
           </div>
           
           <div class="w-full overflow-x-auto">
@@ -178,7 +200,7 @@
                   <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Aksi</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-gray-100 whitespace-nowrap">
+              <tbody id="berita-tbody" class="divide-y divide-gray-100 whitespace-nowrap">
                 @foreach($news as $post)
                 <tr class="hover:bg-blue-50/50 transition-colors">
                   {{-- Thumbnail --}}
@@ -240,6 +262,8 @@
               </tbody>
             </table>
           </div>
+          {{-- Pagination Berita --}}
+          <div id="berita-pagination" class="flex items-center justify-between px-6 py-4 border-t border-gray-100 bg-gray-50/50"></div>
         </div>
       </section>
 
@@ -391,12 +415,22 @@
       <!-- SECTION: ASPIRASI & PESAN       -->
       <!-- ============================== -->
       <section id="section-aspirasi" class="content-section hidden">
-        <div class="mb-8">
-          <h1 class="text-3xl font-black text-gray-900 mb-1">Aspirasi &amp; Pesan</h1>
-          <p class="text-gray-500 text-sm">Daftar pesan masuk dari halaman Hubungi Kami.</p>
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-6 gap-4">
+          <div>
+            <h1 class="text-3xl font-black text-gray-900 mb-1">Aspirasi &amp; Pesan</h1>
+            <p class="text-gray-500 text-sm">Daftar pesan masuk dari halaman Hubungi Kami.</p>
+          </div>
+          {{-- Search & Filter Aspirasi --}}
+          <div class="flex flex-wrap gap-2 items-center">
+            <div class="flex gap-1 bg-gray-100 rounded-lg p-1">
+              <button id="aspirasi-filter-all" onclick="filterAspirasi('all')" class="aspirasi-filter-btn px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-white text-blue-600 shadow-sm">Semua</button>
+              <button id="aspirasi-filter-unread" onclick="filterAspirasi('unread')" class="aspirasi-filter-btn px-3 py-1.5 rounded-md text-xs font-bold transition-all text-gray-500 hover:text-gray-700">Belum Selesai</button>
+              <button id="aspirasi-filter-resolved" onclick="filterAspirasi('resolved')" class="aspirasi-filter-btn px-3 py-1.5 rounded-md text-xs font-bold transition-all text-gray-500 hover:text-gray-700">Selesai</button>
+            </div>
+          </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div id="aspirasi-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
           @forelse($contacts as $msg)
           <div class="bg-white border-l-4 {{ $msg->status == 'resolved' ? 'border-l-green-500 opacity-75' : 'border-l-red-500' }} rounded-xl p-6 shadow-sm border border-gray-200 transition-all">
             <div class="flex justify-between items-start mb-4">
@@ -429,18 +463,24 @@
           </div>
           @endforelse
         </div>
+        {{-- Pagination Aspirasi --}}
+        <div id="aspirasi-pagination" class="flex items-center justify-between mt-6 pt-4 border-t border-gray-200"></div>
       </section>
 
       <!-- ============================== -->
       <!-- SECTION: MANAJEMEN CAPAIAN     -->
       <!-- ============================== -->
       <section id="section-capaian" class="content-section hidden">
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-6 gap-4">
           <div>
             <h1 class="text-3xl font-black text-gray-900 mb-1">Manajemen Capaian & Indikator</h1>
             <p class="text-gray-500 text-sm">Kelola metrik capaian RPJMD yang akan ditampilkan secara otomatis di portal publik.</p>
           </div>
-          <div class="flex gap-2">
+          <div class="flex flex-wrap gap-2 items-center">
+            {{-- Search Capaian --}}
+            <div class="relative">
+              <input id="capaian-search" type="text" placeholder="Cari sektor/indikator..." class="pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-50 w-52 transition-all">
+            </div>
             <button onclick="showSection('section-sector-form')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow transition-colors text-sm">
               + Sektor Baru
             </button>
@@ -450,7 +490,7 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 gap-8">
+        <div id="capaian-grid" class="grid grid-cols-1 gap-8">
           @foreach($sectors as $sector)
           <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <!-- Sector Header -->
@@ -518,6 +558,8 @@
           </div>
           @endforeach
         </div>
+        {{-- Pagination Capaian --}}
+        <div id="capaian-pagination" class="flex items-center justify-between mt-6 pt-4 border-t border-gray-200"></div>
 
         {{-- Chart Ringkas — hanya di dalam section-capaian --}}
         @if($sectors->count() > 0)
@@ -731,7 +773,7 @@
                 <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100 italic font-medium">
+            <tbody id="pengguna-tbody" class="divide-y divide-gray-100 italic font-medium">
               @foreach($users as $u)
               <tr class="hover:bg-gray-50 transition-colors">
                 <td class="px-6 py-4">
@@ -757,6 +799,8 @@
               @endforeach
             </tbody>
           </table>
+          {{-- Pagination Pengguna --}}
+          <div id="pengguna-pagination" class="flex items-center justify-between px-6 py-4 border-t border-gray-100 bg-gray-50/50"></div>
         </div>
       </section>
 
@@ -1108,7 +1152,7 @@
                      </tr>
                    </thead>
                    <tbody id="ingest-history-body" class="divide-y divide-gray-50">
-                     @php $ingestions = \App\Models\DocumentIngestion::latest()->take(10)->get(); @endphp
+                     @php $ingestions = \App\Models\DocumentIngestion::latest()->get(); @endphp
                      @forelse($ingestions as $ing)
                      <tr class="hover:bg-gray-50 transition-colors">
                        <td class="px-6 py-4">
@@ -1143,8 +1187,9 @@
                      </tr>
                      @endforelse
                    </tbody>
-                 </table>
                </div>
+               {{-- Pagination Ingest --}}
+               <div id="ingest-pagination" class="flex items-center justify-between px-6 py-4 border-t border-gray-100 bg-gray-50/50"></div>
             </div>
           </div>
         </div>
@@ -1787,5 +1832,342 @@
     });
   });
 
+  // ===== SEARCH + FILTER + PAGINATION ENGINE =====
+  (function() {
+    const DEFAULT_PER_PAGE = 5;
+
+    /* ---- Shared: build pagination bar HTML ---- */
+    function buildPaginationHTML(currentPage, totalPages, start, end, total) {
+      if (totalPages <= 1) return '';
+      const btnBase     = 'inline-flex items-center justify-center w-8 h-8 rounded-lg text-xs font-bold transition-all duration-150';
+      const btnActive   = 'bg-blue-600 text-white shadow-sm';
+      const btnInactive = 'bg-white border border-gray-200 text-gray-600 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200';
+      const btnDisabled = 'bg-gray-50 border border-gray-100 text-gray-300 cursor-not-allowed';
+      let pages = '';
+      let startPg = Math.max(1, currentPage - 2);
+      let endPg   = Math.min(totalPages, startPg + 4);
+      if (endPg - startPg < 4) startPg = Math.max(1, endPg - 4);
+      for (let p = startPg; p <= endPg; p++) {
+        pages += `<button data-pg="${p}" class="${btnBase} ${p === currentPage ? btnActive : btnInactive}">${p}</button>`;
+      }
+      const prevDis = currentPage === 1;
+      const nextDis = currentPage === totalPages;
+      const info = total === 0
+        ? `<span class="text-xs text-gray-400 font-medium">Tidak ada data ditemukan</span>`
+        : `<span class="text-xs text-gray-400 font-medium">Menampilkan <span class="font-bold text-gray-700">${start}–${end}</span> dari <span class="font-bold text-gray-700">${total}</span> data</span>`;
+      return `
+        ${info}
+        <div class="flex items-center gap-1">
+          <button data-pg="${currentPage-1}" ${prevDis?'disabled':''} class="${btnBase} ${prevDis?btnDisabled:btnInactive}">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          ${pages}
+          <button data-pg="${currentPage+1}" ${nextDis?'disabled':''} class="${btnBase} ${nextDis?btnDisabled:btnInactive}">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>`;
+    }
+
+    /* ---- Generic row paginator that operates on a visible subset ---- */
+    function createRowPaginator(tbodyId, paginationId, getVisibleRows, perPage = DEFAULT_PER_PAGE) {
+      const tbody = document.getElementById(tbodyId);
+      const paginationEl = document.getElementById(paginationId);
+      if (!tbody || !paginationEl) return { refresh: ()=>{} };
+      let currentPage = 1;
+
+      function refresh() {
+        const visible = getVisibleRows();
+        const total   = visible.length;
+        const totalPages = Math.max(1, Math.ceil(total / perPage));
+        if (currentPage > totalPages) currentPage = 1;
+        // hide all rows first
+        Array.from(tbody.querySelectorAll('tr')).forEach(r => r.style.display = 'none');
+        // show slice
+        visible.forEach((row, i) => {
+          row.style.display = (i >= (currentPage-1)*perPage && i < currentPage*perPage) ? '' : 'none';
+        });
+        const start = total === 0 ? 0 : (currentPage-1)*perPage + 1;
+        const end   = Math.min(currentPage*perPage, total);
+        paginationEl.innerHTML = buildPaginationHTML(currentPage, totalPages, start, end, total);
+      }
+
+      paginationEl.addEventListener('click', e => {
+        const btn = e.target.closest('[data-pg]');
+        if (!btn || btn.disabled) return;
+        const pg = parseInt(btn.dataset.pg);
+        if (!isNaN(pg)) { currentPage = pg; refresh(); }
+      });
+
+      return { refresh: () => { currentPage = 1; refresh(); }, go: () => refresh() };
+    }
+
+    /* ---- Generic card paginator that operates on a visible subset ---- */
+    function createCardPaginator(gridId, paginationId, getVisibleCards, perPage = DEFAULT_PER_PAGE) {
+      const grid = document.getElementById(gridId);
+      const paginationEl = document.getElementById(paginationId);
+      if (!grid || !paginationEl) return { refresh: ()=>{} };
+      let currentPage = 1;
+      const allCards = Array.from(grid.querySelectorAll(':scope > div'));
+
+      function refresh() {
+        const visible = getVisibleCards();
+        const total   = visible.length;
+        const totalPages = Math.max(1, Math.ceil(total / perPage));
+        if (currentPage > totalPages) currentPage = 1;
+        allCards.forEach(c => c.style.display = 'none');
+        visible.forEach((card, i) => {
+          card.style.display = (i >= (currentPage-1)*perPage && i < currentPage*perPage) ? '' : 'none';
+        });
+        const start = total === 0 ? 0 : (currentPage-1)*perPage + 1;
+        const end   = Math.min(currentPage*perPage, total);
+        paginationEl.innerHTML = buildPaginationHTML(currentPage, totalPages, start, end, total);
+      }
+
+      paginationEl.addEventListener('click', e => {
+        const btn = e.target.closest('[data-pg]');
+        if (!btn || btn.disabled) return;
+        const pg = parseInt(btn.dataset.pg);
+        if (!isNaN(pg)) { currentPage = pg; refresh(); }
+      });
+
+      return { refresh: () => { currentPage = 1; refresh(); }, go: () => refresh() };
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+      /* ======================================================
+         1. BERITA — search by title, filter status & kategori
+         ====================================================== */
+      (function() {
+        const tbody      = document.getElementById('berita-tbody');
+        if (!tbody) return;
+        const allRows    = Array.from(tbody.querySelectorAll('tr'));
+        const searchEl   = document.getElementById('berita-search');
+        const statusEl   = document.getElementById('berita-filter-status');
+        const kategoriEl = document.getElementById('berita-filter-kategori');
+
+        function getVisible() {
+          const q   = (searchEl?.value  || '').toLowerCase().trim();
+          const st  = (statusEl?.value  || '').toLowerCase().trim();
+          const kat = (kategoriEl?.value || '').toLowerCase().trim();
+          return allRows.filter(row => {
+            const title   = (row.querySelector('td:nth-child(2) .font-bold')?.textContent || '').toLowerCase();
+            const katCell = (row.querySelector('td:nth-child(3)')?.textContent || '').toLowerCase().trim();
+            // status badge text: "Publik" or "Draft"
+            const statusBadge = (row.querySelector('td:nth-child(4) span')?.textContent || '').toLowerCase().trim();
+            const matchQ   = !q   || title.includes(q);
+            const matchSt  = !st  || statusBadge.includes(st);
+            const matchKat = !kat || katCell.includes(kat);
+            return matchQ && matchSt && matchKat;
+          });
+        }
+
+        const paginator = createRowPaginator('berita-tbody', 'berita-pagination', getVisible);
+        paginator.refresh();
+
+        [searchEl, statusEl, kategoriEl].forEach(el => {
+          el?.addEventListener('input',  () => paginator.refresh());
+          el?.addEventListener('change', () => paginator.refresh());
+        });
+      })();
+
+      /* ======================================================
+         2. PENGGUNA — simple pagination (no search needed here)
+         ====================================================== */
+      (function() {
+        const tbody = document.getElementById('pengguna-tbody');
+        const paginationEl = document.getElementById('pengguna-pagination');
+        if (!tbody || !paginationEl) return;
+        const allRows = Array.from(tbody.querySelectorAll('tr'));
+        let currentPage = 1;
+
+        function refresh() {
+          const total = allRows.length;
+          const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
+          if (currentPage > totalPages) currentPage = 1;
+          allRows.forEach((row, i) => {
+            row.style.display = (i >= (currentPage-1)*PER_PAGE && i < currentPage*PER_PAGE) ? '' : 'none';
+          });
+          const start = total === 0 ? 0 : (currentPage-1)*PER_PAGE + 1;
+          const end   = Math.min(currentPage*PER_PAGE, total);
+          paginationEl.innerHTML = buildPaginationHTML(currentPage, totalPages, start, end, total);
+        }
+        paginationEl.addEventListener('click', e => {
+          const btn = e.target.closest('[data-pg]');
+          if (!btn || btn.disabled) return;
+          const pg = parseInt(btn.dataset.pg);
+          if (!isNaN(pg)) { currentPage = pg; refresh(); }
+        });
+        refresh();
+      })();
+
+      /* ======================================================
+         3. ASPIRASI — search by name/subject, filter by status
+         ====================================================== */
+      (function() {
+        const grid = document.getElementById('aspirasi-grid');
+        if (!grid) return;
+        const allCards  = Array.from(grid.querySelectorAll(':scope > div'));
+        const searchEl  = document.getElementById('aspirasi-search');
+        let activeFilter = 'all';
+
+        function getVisible() {
+          const q = (searchEl?.value || '').toLowerCase().trim();
+          return allCards.filter(card => {
+            const text   = card.textContent.toLowerCase();
+            const isResolved = card.querySelector('span:first-child')?.textContent.trim().toLowerCase().includes('selesai');
+            const matchQ = !q || text.includes(q);
+            const matchF = activeFilter === 'all'
+              || (activeFilter === 'resolved' && isResolved)
+              || (activeFilter === 'unread'   && !isResolved);
+            return matchQ && matchF;
+          });
+        }
+
+        const paginator = createCardPaginator('aspirasi-grid', 'aspirasi-pagination', getVisible);
+        paginator.refresh();
+
+        searchEl?.addEventListener('input', () => paginator.refresh());
+      })();
+
+      // Exposed globally for onclick buttons
+      window.filterAspirasi = function(type) {
+        const grid = document.getElementById('aspirasi-grid');
+        if (!grid) return;
+        const allCards  = Array.from(grid.querySelectorAll(':scope > div'));
+        const searchEl  = document.getElementById('aspirasi-search');
+        let activeFilter = type;
+
+        // Update button styles
+        document.querySelectorAll('.aspirasi-filter-btn').forEach(btn => {
+          btn.className = 'aspirasi-filter-btn px-3 py-1.5 rounded-md text-xs font-bold transition-all text-gray-500 hover:text-gray-700';
+        });
+        const activeBtn = document.getElementById(`aspirasi-filter-${type}`);
+        if (activeBtn) activeBtn.className = 'aspirasi-filter-btn px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-white text-blue-600 shadow-sm';
+
+        // Re-run paginator
+        const q = (searchEl?.value || '').toLowerCase().trim();
+        const visibleCards = allCards.filter(card => {
+          const text = card.textContent.toLowerCase();
+          const isResolved = card.querySelector('span:first-child')?.textContent.trim().toLowerCase().includes('selesai');
+          const matchQ = !q || text.includes(q);
+          const matchF = activeFilter === 'all'
+            || (activeFilter === 'resolved' && isResolved)
+            || (activeFilter === 'unread'   && !isResolved);
+          return matchQ && matchF;
+        });
+
+        const paginationEl = document.getElementById('aspirasi-pagination');
+        const total = visibleCards.length;
+        const totalPages = Math.max(1, Math.ceil(total / DEFAULT_PER_PAGE));
+        // Show page 1
+        allCards.forEach(c => c.style.display = 'none');
+        visibleCards.forEach((card, i) => {
+          card.style.display = i < DEFAULT_PER_PAGE ? '' : 'none';
+        });
+        const start = total === 0 ? 0 : 1;
+        const end   = Math.min(DEFAULT_PER_PAGE, total);
+        if (paginationEl) paginationEl.innerHTML = buildPaginationHTML(1, totalPages, start, end, total);
+      };
+
+      /* ======================================================
+         4. CAPAIAN — search across sector name & indicator names
+         ====================================================== */
+      (function() {
+        const grid = document.getElementById('capaian-grid');
+        if (!grid) return;
+        const allCards = Array.from(grid.querySelectorAll(':scope > div'));
+        const searchEl = document.getElementById('capaian-search');
+
+        function getVisible() {
+          const q = (searchEl?.value || '').toLowerCase().trim();
+          if (!q) return allCards;
+          return allCards.filter(card => {
+            // Sector name
+            const sectorName = (card.querySelector('h2')?.textContent || '').toLowerCase();
+            // Indicator names inside tbody tds
+            const indicators = Array.from(card.querySelectorAll('tbody td:first-child'))
+              .map(td => td.textContent.toLowerCase());
+            return sectorName.includes(q) || indicators.some(ind => ind.includes(q));
+          });
+        }
+
+        const paginator = createCardPaginator('capaian-grid', 'capaian-pagination', getVisible);
+        paginator.refresh();
+
+        searchEl?.addEventListener('input', () => paginator.refresh());
+      })();
+
+      /* ======================================================
+         5. INGEST HISTORY — simple pagination (10 per page)
+         ====================================================== */
+      (function() {
+        const tbody = document.getElementById('ingest-history-body');
+        if (!tbody) return;
+        const allRows = Array.from(tbody.querySelectorAll('tr'));
+        const paginator = createRowPaginator('ingest-history-body', 'ingest-pagination', () => allRows, 10);
+        paginator.refresh();
+      })();
+
+      /* ======================================================
+         6. ACTIVITY LOG — date filter (scrollable list)
+         ====================================================== */
+      // Didefinisikan di global agar bisa dipanggil via onchange inline
+      window.filterActivityByDate = function(selectedDate) {
+        const activityItems = document.querySelectorAll('.activity-item');
+        if (!activityItems.length) return;
+        
+        activityItems.forEach(item => {
+          if (!selectedDate) {
+            // Jika kosong, pastikan terlihat
+            item.style.setProperty('display', 'flex', 'important');
+          } else {
+            // Bandingkan
+            if (item.getAttribute('data-date') === selectedDate) {
+              item.style.setProperty('display', 'flex', 'important');
+            } else {
+              item.style.setProperty('display', 'none', 'important');
+            }
+          }
+        });
+      };
+
+
+    }); // end DOMContentLoaded
+  })();
+
+</script>
+<script>
+function filterActivityByDate(selectedDate) {
+    // Ambil semua elemen activity item
+    const activityItems = document.querySelectorAll('.activity-item');
+    // Ambil elemen pesan kosong jika ada (opsional)
+    const emptyState = document.getElementById('activity-empty-state');
+    
+    let visibleCount = 0;
+
+    activityItems.forEach(item => {
+        // Ambil data-date dari elemen HTML (format: Y-m-d)
+        const itemDate = item.getAttribute('data-date');
+
+        // Jika input dikosongkan (clear), tampilkan semua data.
+        // Jika tidak kosong, cocokkan dengan data-date
+        if (!selectedDate || itemDate === selectedDate) {
+            item.style.display = 'flex'; // Tampilkan kembali
+            visibleCount++;
+        } else {
+            item.style.display = 'none'; // Sembunyikan
+        }
+    });
+
+    // Menampilkan state kosong jika setelah difilter tidak ada data yang cocok
+    if (emptyState) {
+        if (visibleCount === 0) {
+            emptyState.style.display = 'block';
+        } else {
+            emptyState.style.display = 'none';
+        }
+    }
+}
 </script>
 @endpush
