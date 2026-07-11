@@ -1983,13 +1983,13 @@
 
         function refresh() {
           const total = allRows.length;
-          const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
+          const totalPages = Math.max(1, Math.ceil(total / DEFAULT_PER_PAGE));
           if (currentPage > totalPages) currentPage = 1;
           allRows.forEach((row, i) => {
-            row.style.display = (i >= (currentPage-1)*PER_PAGE && i < currentPage*PER_PAGE) ? '' : 'none';
+            row.style.display = (i >= (currentPage-1)*DEFAULT_PER_PAGE && i < currentPage*DEFAULT_PER_PAGE) ? '' : 'none';
           });
-          const start = total === 0 ? 0 : (currentPage-1)*PER_PAGE + 1;
-          const end   = Math.min(currentPage*PER_PAGE, total);
+          const start = total === 0 ? 0 : (currentPage-1)*DEFAULT_PER_PAGE + 1;
+          const end   = Math.min(currentPage*DEFAULT_PER_PAGE, total);
           paginationEl.innerHTML = buildPaginationHTML(currentPage, totalPages, start, end, total);
         }
         paginationEl.addEventListener('click', e => {
@@ -2009,13 +2009,15 @@
         if (!grid) return;
         const allCards  = Array.from(grid.querySelectorAll(':scope > div'));
         const searchEl  = document.getElementById('aspirasi-search');
-        let activeFilter = 'all';
+        let activeFilter = 'all'; // State filter yang sesungguhnya
 
         function getVisible() {
           const q = (searchEl?.value || '').toLowerCase().trim();
           return allCards.filter(card => {
             const text   = card.textContent.toLowerCase();
-            const isResolved = card.querySelector('span:first-child')?.textContent.trim().toLowerCase().includes('selesai');
+            // Sangat akurat: badge status selesai memiliki bg-green-100 di class-nya
+            const isResolved = card.querySelector('.bg-green-100') !== null;
+            
             const matchQ = !q || text.includes(q);
             const matchF = activeFilter === 'all'
               || (activeFilter === 'resolved' && isResolved)
@@ -2024,51 +2026,28 @@
           });
         }
 
-        const paginator = createCardPaginator('aspirasi-grid', 'aspirasi-pagination', getVisible);
+        const paginator = createCardPaginator('aspirasi-grid', 'aspirasi-pagination', getVisible, DEFAULT_PER_PAGE);
         paginator.refresh();
 
         searchEl?.addEventListener('input', () => paginator.refresh());
+
+        // Override the global function so it shares scope with the paginator
+        window.filterAspirasi = function(type) {
+          activeFilter = type; // Update the real state
+          
+          // Update button styles
+          document.querySelectorAll('.aspirasi-filter-btn').forEach(btn => {
+            btn.className = 'aspirasi-filter-btn px-3 py-1.5 rounded-md text-xs font-bold transition-all text-gray-500 hover:text-gray-700';
+          });
+          const activeBtn = document.getElementById(`aspirasi-filter-${type}`);
+          if (activeBtn) {
+            activeBtn.className = 'aspirasi-filter-btn px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-white text-blue-600 shadow-sm';
+          }
+
+          // Let the paginator engine handle everything else
+          paginator.refresh();
+        };
       })();
-
-      // Exposed globally for onclick buttons
-      window.filterAspirasi = function(type) {
-        const grid = document.getElementById('aspirasi-grid');
-        if (!grid) return;
-        const allCards  = Array.from(grid.querySelectorAll(':scope > div'));
-        const searchEl  = document.getElementById('aspirasi-search');
-        let activeFilter = type;
-
-        // Update button styles
-        document.querySelectorAll('.aspirasi-filter-btn').forEach(btn => {
-          btn.className = 'aspirasi-filter-btn px-3 py-1.5 rounded-md text-xs font-bold transition-all text-gray-500 hover:text-gray-700';
-        });
-        const activeBtn = document.getElementById(`aspirasi-filter-${type}`);
-        if (activeBtn) activeBtn.className = 'aspirasi-filter-btn px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-white text-blue-600 shadow-sm';
-
-        // Re-run paginator
-        const q = (searchEl?.value || '').toLowerCase().trim();
-        const visibleCards = allCards.filter(card => {
-          const text = card.textContent.toLowerCase();
-          const isResolved = card.querySelector('span:first-child')?.textContent.trim().toLowerCase().includes('selesai');
-          const matchQ = !q || text.includes(q);
-          const matchF = activeFilter === 'all'
-            || (activeFilter === 'resolved' && isResolved)
-            || (activeFilter === 'unread'   && !isResolved);
-          return matchQ && matchF;
-        });
-
-        const paginationEl = document.getElementById('aspirasi-pagination');
-        const total = visibleCards.length;
-        const totalPages = Math.max(1, Math.ceil(total / DEFAULT_PER_PAGE));
-        // Show page 1
-        allCards.forEach(c => c.style.display = 'none');
-        visibleCards.forEach((card, i) => {
-          card.style.display = i < DEFAULT_PER_PAGE ? '' : 'none';
-        });
-        const start = total === 0 ? 0 : 1;
-        const end   = Math.min(DEFAULT_PER_PAGE, total);
-        if (paginationEl) paginationEl.innerHTML = buildPaginationHTML(1, totalPages, start, end, total);
-      };
 
       /* ======================================================
          4. CAPAIAN — search across sector name & indicator names
@@ -2137,6 +2116,7 @@
   })();
 
 </script>
+
 <script>
 function filterActivityByDate(selectedDate) {
     // Ambil semua elemen activity item
