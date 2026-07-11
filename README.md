@@ -5,7 +5,7 @@ Berikut adalah langkah-langkah untuk melakukan instalasi dan setup proyek secara
 ## 1. Clone & Install Dependencies
 Pastikan Anda sudah menginstal PHP (8.1+), Composer, dan Node.js.
 ```bash
-git clone <repo-url>
+git clone https://github.com/Krisnakrnwnn/portal-rpjmd-pasuruan.git
 cd portal-rpjmd-pasuruan
 composer install
 npm install && npm run build
@@ -18,20 +18,22 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-Buka file `.env` dan pastikan konfigurasi untuk database SQLite dan API Key Gemini sudah sesuai:
+Buka file `.env` dan sesuaikan konfigurasi untuk koneksi database MySQL dan API Key Gemini:
 ```env
-DB_CONNECTION=sqlite
-DB_DATABASE=/absolute/path/to/database.sqlite
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=nama_database_anda
+DB_USERNAME=root
+DB_PASSWORD=
 
 # Masukkan API Key dari Google Gemini AI
 GEMINI_API_KEY=your_gemini_api_key_here
 ```
-*(Catatan: Sesuaikan path `DB_DATABASE` dengan lokasi absolut komputer Anda atau cukup set ke lokasi default).*
 
 ## 3. Setup Database
-Buat file database kosong dan jalankan migrasi database.
+Buat database baru di MySQL (misalnya melalui phpMyAdmin atau command line) dengan nama yang sesuai di `.env`, lalu jalankan perintah migrasi:
 ```bash
-touch database/database.sqlite
 php artisan migrate
 ```
 *(Opsional: Jalankan `php artisan db:seed` jika ada data seeder bawaan).*
