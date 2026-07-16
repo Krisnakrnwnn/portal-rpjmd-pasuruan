@@ -22,6 +22,8 @@ class AdminController extends Controller
         $profiles = \App\Models\Profile::all();
         $users = \App\Models\User::all();
         $sectors = \App\Models\Sector::with('indicators')->get();
+        $publicDocuments = \App\Models\PublicDocument::orderBy('year', 'desc')->orderBy('created_at', 'desc')->get();
+        $documentCategories = \App\Models\DocumentCategory::all();
 
         // Pisahkan: Statistik Hero Beranda vs Statistik Capaian RPJMD
         $heroStats = \App\Models\Stat::where('key', 'like', 'hero_%')->get();
@@ -40,8 +42,59 @@ class AdminController extends Controller
         ];
 
         $activities = Activity::with('user')->orderBy('created_at', 'desc')->get();
+        $galleries = \App\Models\Gallery::orderBy('created_at', 'desc')->get();
 
-        return view('admin.dashboard', compact('news', 'contacts', 'services', 'heroStats', 'capaianStats', 'profiles', 'users', 'counts', 'activities', 'sectors'));
+        return view('admin.dashboard', compact('news', 'contacts', 'services', 'heroStats', 'capaianStats', 'profiles', 'users', 'counts', 'activities', 'sectors', 'publicDocuments', 'documentCategories', 'galleries'));
+    }
+
+    // --- Kategori Dokumen CRUD ---
+    public function storeDocumentCategory(Request $request)
+    {
+        $request->validate([
+            'parent_id' => 'nullable|exists:document_categories,id',
+            'name' => 'required|string|max:255|unique:document_categories',
+            'slug' => 'required|string|max:255|unique:document_categories',
+            'description' => 'nullable|string',
+        ]);
+
+        \App\Models\DocumentCategory::create($request->all());
+
+        Activity::log('Kategori', 'Buat', 'Menambahkan kategori dokumen baru: ' . $request->name);
+
+        return redirect()->back()->with('success', 'Kategori dokumen berhasil ditambahkan!');
+    }
+
+    public function updateDocumentCategory(Request $request, $id)
+    {
+        $request->validate([
+            'parent_id' => 'nullable|exists:document_categories,id',
+            'name' => 'required|string|max:255|unique:document_categories,name,' . $id,
+            'slug' => 'required|string|max:255|unique:document_categories,slug,' . $id,
+            'description' => 'nullable|string',
+        ]);
+
+        $category = \App\Models\DocumentCategory::findOrFail($id);
+        $category->update($request->all());
+
+        Activity::log('Kategori', 'Update', 'Memperbarui kategori dokumen: ' . $request->name);
+
+        return redirect()->back()->with('success', 'Kategori dokumen berhasil diperbarui!');
+    }
+
+    public function destroyDocumentCategory($id)
+    {
+        $category = \App\Models\DocumentCategory::findOrFail($id);
+        
+        // Cek jika kategori masih dipakai
+        if($category->documents()->count() > 0) {
+            return redirect()->back()->with('error', 'Kategori ini tidak dapat dihapus karena masih digunakan oleh dokumen!');
+        }
+
+        $category->delete();
+
+        Activity::log('Kategori', 'Hapus', 'Menghapus kategori dokumen: ' . $category->name);
+
+        return redirect()->back()->with('success', 'Kategori dokumen berhasil dihapus!');
     }
 
     public function storeNews(Request $request)
@@ -513,6 +566,83 @@ class AdminController extends Controller
         ]);
     }
 
+    public function storeDocument(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'document_category_id' => 'required|exists:document_categories,id',
+            'file' => 'required|file|mimes:pdf|max:20480', // 20MB Max
+        ]);
+
+        $fileUrl = null;
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $uploadDir = public_path('uploads/documents');
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            $file->move($uploadDir, $filename);
+            $fileUrl = asset('uploads/documents/' . $filename);
+        }
+
+        $data = $request->except('file');
+        $data['file_url'] = $fileUrl;
+        $data['year'] = date('Y'); // Automatically set the year
+        
+        // Backward compatibility for legacy category column
+        $cat = \App\Models\DocumentCategory::find($data['document_category_id']);
+        $data['category'] = $cat ? $cat->name : '-';
+
+        \App\Models\PublicDocument::create($data);
+
+        Activity::log('Dokumen', 'Buat', 'Menambahkan dokumen publik: ' . $request->title);
+
+        return redirect(route('admin.dashboard') . '#section-dokumen')->with('success', 'Dokumen berhasil ditambahkan!');
+    }
+
+    public function updateDocument(Request $request, $id)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'document_category_id' => 'required|exists:document_categories,id',
+            'file' => 'nullable|file|mimes:pdf|max:20480',
+        ]);
+
+        $document = \App\Models\PublicDocument::findOrFail($id);
+        $data = $request->except('file');
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $uploadDir = public_path('uploads/documents');
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            $file->move($uploadDir, $filename);
+            $data['file_url'] = asset('uploads/documents/' . $filename);
+        }
+
+        // Backward compatibility for legacy category column
+        $cat = \App\Models\DocumentCategory::find($data['document_category_id']);
+        $data['category'] = $cat ? $cat->name : '-';
+
+        $document->update($data);
+
+        Activity::log('Dokumen', 'Update', 'Memperbarui dokumen publik: ' . $document->title);
+
+        return redirect(route('admin.dashboard') . '#section-dokumen')->with('success', 'Dokumen berhasil diperbarui!');
+    }
+
+    public function deleteDocument($id)
+    {
+        $document = \App\Models\PublicDocument::findOrFail($id);
+        Activity::log('Dokumen', 'Hapus', 'Menghapus dokumen publik: ' . $document->title);
+        $document->delete();
+
+        return redirect(route('admin.dashboard') . '#section-dokumen')->with('success', 'Dokumen berhasil dihapus!');
+    }
+
     public function updateSettings(Request $request)
     {
         $request->validate([
@@ -577,5 +707,82 @@ class AdminController extends Controller
             'success' => false,
             'message' => 'Proses tidak dapat dibatalkan karena status: ' . $ingestion->status
         ], 400);
+    }
+
+    // ==========================================
+    // GALLERY MANAGEMENT
+    // ==========================================
+    public function storeGallery(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'location' => 'nullable|string|max:255',
+            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
+        ]);
+
+        $imagePath = '';
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = 'gallery_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            // Pindahkan ke folder public/images/gallery (agar sesuai dengan file yang sudah ada sebelumnya)
+            $file->move(public_path('images/gallery'), $filename);
+            $imagePath = $filename;
+        }
+
+        \App\Models\Gallery::create([
+            'title' => $request->title,
+            'location' => $request->location,
+            'image_path' => $imagePath,
+        ]);
+
+        Activity::log('Galeri', 'Tambah', 'Menambah foto galeri baru: ' . $request->title);
+        return back()->with('success', 'Galeri berhasil ditambahkan!');
+    }
+
+    public function updateGallery(Request $request, $id)
+    {
+        $gallery = \App\Models\Gallery::findOrFail($id);
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'location' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+        ]);
+
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada
+            $oldPath = public_path('images/gallery/' . $gallery->image_path);
+            if (file_exists($oldPath) && is_file($oldPath)) {
+                @unlink($oldPath);
+            }
+
+            $file = $request->file('image');
+            $filename = 'gallery_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('images/gallery'), $filename);
+            $gallery->image_path = $filename;
+        }
+
+        $gallery->title = $request->title;
+        $gallery->location = $request->location;
+        $gallery->save();
+
+        Activity::log('Galeri', 'Ubah', 'Mengubah data galeri: ' . $gallery->title);
+        return back()->with('success', 'Galeri berhasil diubah!');
+    }
+
+    public function deleteGallery($id)
+    {
+        $gallery = \App\Models\Gallery::findOrFail($id);
+
+        $oldPath = public_path('images/gallery/' . $gallery->image_path);
+        if (file_exists($oldPath) && is_file($oldPath)) {
+            @unlink($oldPath);
+        }
+
+        $title = $gallery->title;
+        $gallery->delete();
+
+        Activity::log('Galeri', 'Hapus', 'Menghapus foto galeri: ' . $title);
+        return back()->with('success', 'Galeri berhasil dihapus!');
     }
 }

@@ -1,0 +1,115 @@
+          @empty
+          <div class="col-span-full py-12 text-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 text-gray-400 font-bold">
+            Belum ada pesan aspirasi masuk.
+          </div>
+          @endforelse
+        </div>
+        {{-- Pagination Aspirasi --}}
+        <div id="aspirasi-pagination" class="flex items-center justify-between mt-6 pt-4 border-t border-gray-200"></div>
+      </section>
+
+      <!-- ============================== -->
+      <!-- SECTION: DOKUMEN / BANK DATA -->
+      <!-- ============================== -->
+      <section id="section-dokumen" class="content-section hidden">
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+          <div>
+            <h1 class="text-3xl font-black text-gray-900 mb-1">Bank Data & Dokumen</h1>
+            <p class="text-gray-500 text-sm">Kelola dokumen publik seperti RPJMD, RKPD, Hasil Riset, dll.</p>
+          </div>
+          <button onclick="showSection('section-dokumen-form')" class="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:bg-blue-700 transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            Tambah Dokumen
+          </button>
+        </div>
+
+        <div class="bg-white roun
+          <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl p-6">
+              <div class="flex justify-between items-center mb-4">
+                  <h3 class="text-lg font-black text-gray-900">Edit Kategori</h3>
+                  <button onclick="closeModalKategori()" class="text-gray-400 hover:text-gray-600">
+                      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                  </button>
+              </div>
+              <form id="form-edit-kategori" method="POST" class="space-y-4">
+                  @csrf
+                  @method('PUT')
+                  <div>
+                      <label class="text-xs font-bold text-gray-700 block mb-1">Nama Kategori</label>
+                      <input type="text" name="name" id="edit-kategori-name" required class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none transition-all text-sm" oninput="document.getElementById('edit-kategori-slug').value = this.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')">
+                  </div>
+                  <div>
+                      <label class="text-xs font-bold text-gray-700 block mb-1">Slug</label>
+                      <input type="text" name="slug" id="edit-kategori-slug" required class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-blue-500 outline-none text-sm text-gray-500">
+                  </div>
+                  <div>
+                      <label class="text-xs font-bold text-gray-700 block mb-1">Deskripsi Singkat</label>
+                      <textarea name="description" id="edit-kategori-desc" rows="3" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none transition-all text-sm"></textarea>
+                  </div>
+                  <button type="submit" class="w-full py-2.5 rounded-lg font-bold bg-blue-600 text-white hover:bg-blue-700 shadow-md transition-all text-sm">Update Kategori</button>
+              </form>
+          </div>
+      </div>
+
+      <script>
+        function editKategori(cat) {
+            const form = document.getElementById('form-edit-kategori');
+            form.action = `/admin/document-categories/${cat.id}`;
+            document.getElementById('edit-kategori-name').value = cat.name;
+            document.getElementById('edit-kategori-slug').value = cat.slug;
+            document.getElementById('edit-kategori-desc').value = cat.description;
+            document.getElementById('modal-edit-kategori').classList.remove('hidden');
+        }
+        function closeModalKategori() {
+            document.getElementById('modal-edit-kategori').classList.add('hidden');
+        }
+      </script>
+</section>
+
+      <!-- SECTION: DOKUMEN FORM -->
+      <section id="section-dokumen-form" class="content-section hidden">
+        <div class="flex items-center gap-4 mb-8">
+          <button onclick="showSection('section-dokumen')" class="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors text-gray-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+          </button>
+          <h1 class="text-3xl font-black text-gray-900">Tambah Dokumen</h1>
+        </div>
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 max-w-2xl">
+          <form action="{{ route('admin.store_document') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+            @csrf
+            <div class="space-y-2">
+              <label class="text-sm font-bold text-gray-700">Judul Dokumen</label>
+              <input type="text" name="title" id="add-doc-title" required placeholder="Contoh: Dokumen RPJMD Tahun 2025" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all">
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-2">
+                <label class="text-sm font-bold text-gray-700">Kategori</label>
+        
+                  @endforeach
+                </select>
+              </div>
+              <div class="space-y-2">
+                <label class="text-sm font-bold text-gray-700">Tahun</label>
+                <input type="number" name="year" id="edit-doc-year" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all">
+              </div>
+            </div>
+            <div class="space-y-2">
+              <label class="text-sm font-bold text-gray-700">Upload File PDF Baru (Opsional)</label>
+              <input type="file" name="file" accept=".pdf" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all bg-gray-50">
+              <p class="text-xs text-gray-500">Biarkan kosong jika tidak ingin mengganti file dokumen yang lama.</p>
+            </div>
+            <button type="submit" class="w-full py-3 rounded-xl font-bold bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/20 transition-all">Update Dokumen</button>
+          </form>
+        </div>
+      </section>
+
+      <script>
+        function editDocument(doc) {
+          const form = document.getElementById('form-edit-dokumen');
+          form.action = `/admin/documents/${doc.id}`;
+          
+          document.getElementById('edit-doc-title').value = doc.title;
+          document.getElementById('edit-doc-category').value = doc.document_category_id;
+          document.getElementById('edit-doc-year').value = doc.year;
+          
+          showSection('section-dokumen-edit');

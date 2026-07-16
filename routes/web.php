@@ -11,7 +11,7 @@ Route::get('/', [PortalController::class, 'home'])->name('home');
 Route::get('/profil', [PortalController::class, 'profil'])->name('profil');
 Route::get('/berita', [PortalController::class, 'berita'])->name('berita');
 Route::get('/berita/{slug}', [PortalController::class, 'beritaDetail'])->name('berita.detail');
-
+Route::get('/galeri', [PortalController::class, 'galeri'])->name('galeri');
 Route::get('/capaian', [PortalController::class, 'capaian'])->name('capaian');
 Route::get('/kontak', [PortalController::class, 'kontak'])->name('kontak');
 Route::post('/kontak', [PortalController::class, 'storeContact'])->name('kontak.store');
@@ -58,6 +58,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.role'])->grou
     Route::put('/berita/{id}', [AdminController::class, 'updateNews'])->name('update_news');
     Route::delete('/berita/{id}', [AdminController::class, 'deleteNews'])->name('delete_news');
 
+    // Galeri (Admin & Super Admin)
+    Route::post('/galeri', [AdminController::class, 'storeGallery'])->name('store_gallery');
+    Route::put('/galeri/{id}', [AdminController::class, 'updateGallery'])->name('update_gallery');
+    Route::delete('/galeri/{id}', [AdminController::class, 'deleteGallery'])->name('delete_gallery');
+
 
     // Capaian Sektor & Indikator (Admin & Super Admin)
     Route::post('/sectormake', [AdminController::class, 'storeSector'])->name('store_sector');
@@ -75,6 +80,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.role'])->grou
 
     // Profil Instansi (Admin & Super Admin)
     Route::post('/profile', [AdminController::class, 'updateProfile'])->name('update_profile');
+
+    // Document Categories
+    Route::post('/document-categories', [AdminController::class, 'storeDocumentCategory'])->name('document-categories.store');
+    Route::put('/document-categories/{id}', [AdminController::class, 'updateDocumentCategory'])->name('document-categories.update');
+    Route::delete('/document-categories/{id}', [AdminController::class, 'destroyDocumentCategory'])->name('document-categories.destroy');
+
+    // Public Documents
+    Route::post('/documents', [AdminController::class, 'storeDocument'])->name('store_document');
+    Route::put('/documents/{id}', [AdminController::class, 'updateDocument'])->name('update_document');
+    Route::delete('/documents/{id}', [AdminController::class, 'deleteDocument'])->name('delete_document');
 
     // Setelan (Admin & Super Admin)
     Route::post('/settings', [AdminController::class, 'updateSettings'])->name('update_settings');

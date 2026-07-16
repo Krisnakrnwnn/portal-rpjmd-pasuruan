@@ -13,69 +13,6 @@
         </div>
         @endif
 
-        {{-- Chart Panel — di atas halaman dashboard --}}
-        <div id="chart-panel" class="mb-6 bg-white rounded-2xl border border-gray-200 shadow-sm p-8" style="display:none;">
-          <!-- Hidden for Print Header -->
-          <div class="hidden print:block mb-8 pb-6 border-b border-gray-200">
-             <div class="text-center mb-6">
-               <h1 class="text-2xl font-black text-gray-900 uppercase tracking-widest">Laporan Progres Bapperida Kabupaten Pasuruan</h1>
-               <p class="text-gray-500 text-sm mt-1">Dicetak pada {{ now()->format('d M Y, H:i') }}</p>
-             </div>
-             
-             <!-- Print Only Stats: Hero Stats -->
-             <div class="mb-8 break-inside-avoid text-left">
-               <h3 class="text-[11px] font-black uppercase text-gray-500 tracking-widest mb-3 border-b border-gray-300 pb-2">I. Data Referensi Strategis</h3>
-               <div class="grid grid-cols-4 border-l border-t border-gray-300">
-                 @foreach($heroStats as $st)
-                 <div class="p-3 border-r border-b border-gray-300 text-center">
-                   <p class="text-[9px] font-bold text-gray-500 uppercase">{{ $st->label }}</p>
-                   <p class="text-base font-black text-gray-900 mt-1">{{ $st->value }}</p>
-                 </div>
-                 @endforeach
-               </div>
-             </div>
-
-             <!-- Print Only Stats: Capaian Stats -->
-             <div class="mb-4 break-inside-avoid text-left">
-               <h3 class="text-[11px] font-black uppercase text-gray-800 tracking-widest mb-3 border-b border-gray-300 pb-2">II. Metrik Capaian Kinerja (Bapperida)</h3>
-               <div class="grid grid-cols-4 border-l border-t border-gray-300">
-                 @foreach($capaianStats as $st)
-                 <div class="p-3 border-r border-b border-gray-300 text-center bg-gray-50 print:bg-transparent">
-                   <p class="text-[9px] font-bold text-gray-600 uppercase">{{ $st->label }}</p>
-                   <p class="text-base font-black text-gray-900 mt-1">{{ $st->value }}{{ $st->key == 'total_progress' ? '%' : '' }}</p>
-                 </div>
-                 @endforeach
-               </div>
-             </div>
-          </div>
-          <div class="flex items-center justify-between mb-6 print:hidden">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
-              </div>
-              <div>
-                <h2 class="text-lg font-black text-gray-900">Grafik Progres Capaian Indikator</h2>
-                <p class="text-xs text-gray-400">Visualisasi rata-rata capaian per sektor RPJMD.</p>
-              </div>
-            </div>
-            <!-- <button id="toggle-chart-btn" onclick="toggleChartPanel()" class="text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-4 py-2 rounded-xl transition-colors">
-              Sembunyikan Grafik
-            </button> -->
-          </div>
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div class="flex flex-col items-center">
-              <p class="text-sm font-bold text-gray-500 mb-4 uppercase tracking-widest text-center">Rata-rata Progress per Sektor</p>
-              <div style="max-width: 280px; width: 100%;">
-                <canvas id="chart-doughnut"></canvas>
-              </div>
-            </div>
-            <div>
-              <p class="text-sm font-bold text-gray-500 mb-4 uppercase tracking-widest">Detail Indikator Semua Sektor</p>
-              <canvas id="chart-bar" style="max-height: 300px;"></canvas>
-            </div>
-          </div>
-        </div>
-
         {{-- Summary Stats Cards --}}
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 print:hidden">
           {{-- Total Berita --}}
@@ -466,6 +403,374 @@
         {{-- Pagination Aspirasi --}}
         <div id="aspirasi-pagination" class="flex items-center justify-between mt-6 pt-4 border-t border-gray-200"></div>
       </section>
+
+      <!-- ============================== -->
+      <!-- SECTION: MANAJEMEN GALERI -->
+      <!-- ============================== -->
+      <section id="section-galeri" class="content-section hidden">
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+          <div>
+            <h1 class="text-3xl font-black text-gray-900 mb-1">Manajemen Galeri</h1>
+            <p class="text-gray-500 text-sm">Kelola dokumentasi gambar kegiatan dan galeri portal publik.</p>
+          </div>
+          <button onclick="document.getElementById('modal-tambah-galeri').classList.remove('hidden')" class="px-5 py-2.5 bg-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-200 hover:bg-blue-700 hover:-translate-y-0.5 transition-all flex items-center gap-2 text-sm whitespace-nowrap">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            Tambah Galeri Baru
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          @forelse($galleries as $gallery)
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col group">
+            <div class="relative w-full aspect-[4/3] bg-gray-100">
+              <img src="{{ asset('images/gallery/' . $gallery->image_path) }}" alt="{{ $gallery->title }}" class="w-full h-full object-cover">
+              <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                <button onclick="editGallery({{ $gallery->id }}, '{{ addslashes($gallery->title) }}', '{{ addslashes($gallery->location) }}')" class="w-10 h-10 bg-white/20 hover:bg-white/40 backdrop-blur rounded-full flex items-center justify-center text-white transition-colors" title="Edit">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                </button>
+                <form action="{{ route('admin.delete_gallery', $gallery->id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus galeri ini?')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="w-10 h-10 bg-red-500/80 hover:bg-red-600 backdrop-blur rounded-full flex items-center justify-center text-white transition-colors" title="Hapus">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </form>
+              </div>
+            </div>
+            <div class="p-4 flex-1">
+              <h3 class="font-bold text-gray-900 text-sm mb-1 line-clamp-2" title="{{ $gallery->title }}">{{ $gallery->title }}</h3>
+              @if($gallery->location)
+              <p class="text-xs text-gray-500 flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>{{ $gallery->location }}</p>
+              @endif
+            </div>
+          </div>
+          @empty
+          <div class="col-span-full py-16 text-center border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50">
+            <div class="w-16 h-16 bg-white shadow-sm rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-1">Belum ada Galeri</h3>
+            <p class="text-sm text-gray-500">Tambahkan gambar galeri pertama Anda.</p>
+          </div>
+          @endforelse
+        </div>
+      </section>
+
+      <!-- Modal Tambah Galeri -->
+      <div id="modal-tambah-galeri" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onclick="this.parentElement.classList.add('hidden')"></div>
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+          <div class="relative bg-white rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:max-w-lg w-full border border-gray-100">
+            <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+              <h3 class="text-lg font-black text-gray-900">Tambah Galeri</h3>
+              <button onclick="document.getElementById('modal-tambah-galeri').classList.add('hidden')" class="text-gray-400 hover:text-gray-700 bg-white hover:bg-gray-100 p-2 rounded-xl transition-colors shadow-sm border border-gray-200">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+              </button>
+            </div>
+            <form action="{{ route('admin.store_gallery') }}" method="POST" enctype="multipart/form-data" class="p-6">
+              @csrf
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-1.5">Judul Kegiatan / Gambar <span class="text-red-500">*</span></label>
+                  <input type="text" name="title" required class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-3">
+                </div>
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-1.5">Lokasi <span class="text-xs text-gray-400 font-normal">(opsional)</span></label>
+                  <input type="text" name="location" placeholder="Contoh: Kab. Pasuruan" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-3">
+                </div>
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-1.5">Gambar <span class="text-red-500">*</span></label>
+                  <input type="file" name="image" required accept="image/*" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2">
+                  <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, WEBP. Maks: 5MB.</p>
+                </div>
+              </div>
+              <div class="mt-8 flex justify-end gap-3">
+                <button type="button" onclick="document.getElementById('modal-tambah-galeri').classList.add('hidden')" class="px-5 py-2.5 text-sm font-bold text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors">Batal</button>
+                <button type="submit" class="px-5 py-2.5 text-sm font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200">Simpan Galeri</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Edit Galeri -->
+      <div id="modal-edit-galeri" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onclick="this.parentElement.classList.add('hidden')"></div>
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+          <div class="relative bg-white rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:max-w-lg w-full border border-gray-100">
+            <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+              <h3 class="text-lg font-black text-gray-900">Edit Galeri</h3>
+              <button onclick="document.getElementById('modal-edit-galeri').classList.add('hidden')" class="text-gray-400 hover:text-gray-700 bg-white hover:bg-gray-100 p-2 rounded-xl transition-colors shadow-sm border border-gray-200">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+              </button>
+            </div>
+            <form id="form-edit-galeri" method="POST" enctype="multipart/form-data" class="p-6">
+              @csrf
+              @method('PUT')
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-1.5">Judul Kegiatan / Gambar <span class="text-red-500">*</span></label>
+                  <input type="text" name="title" id="edit-galeri-title" required class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-3">
+                </div>
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-1.5">Lokasi <span class="text-xs text-gray-400 font-normal">(opsional)</span></label>
+                  <input type="text" name="location" id="edit-galeri-location" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-3">
+                </div>
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-1.5">Ganti Gambar <span class="text-xs text-gray-400 font-normal">(Biarkan kosong jika tidak diganti)</span></label>
+                  <input type="file" name="image" accept="image/*" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2">
+                </div>
+              </div>
+              <div class="mt-8 flex justify-end gap-3">
+                <button type="button" onclick="document.getElementById('modal-edit-galeri').classList.add('hidden')" class="px-5 py-2.5 text-sm font-bold text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors">Batal</button>
+                <button type="submit" class="px-5 py-2.5 text-sm font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200">Simpan Perubahan</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        function editGallery(id, title, location) {
+            document.getElementById('edit-galeri-title').value = title;
+            document.getElementById('edit-galeri-location').value = location;
+            document.getElementById('form-edit-galeri').action = `/admin/galeri/${id}`;
+            document.getElementById('modal-edit-galeri').classList.remove('hidden');
+        }
+      </script>
+
+      <!-- ============================== -->
+      <!-- SECTION: DOKUMEN / BANK DATA -->
+      <!-- ============================== -->
+      <section id="section-dokumen" class="content-section hidden">
+        <!-- HEADER KATEGORI -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+          <div>
+            <h1 class="text-3xl font-black text-gray-900 mb-1">Kategori Dokumen</h1>
+            <p class="text-gray-500 text-sm">Kelola kategori dokumen yang akan tampil di Portal Publik.</p>
+          </div>
+        </div>
+
+        <!-- GRID KATEGORI -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+            <!-- Form Tambah Kategori -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-lg font-black text-gray-900 mb-4 border-b pb-3">Tambah Kategori Baru</h3>
+                    <form action="{{ route('admin.document-categories.store') }}" method="POST" class="space-y-4">
+                        @csrf
+                        <div>
+                            <label class="text-xs font-bold text-gray-700 block mb-1">Induk Kategori (Opsional)</label>
+                            <select name="parent_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none transition-all text-sm">
+                                <option value="">-- Tidak Ada (Kategori Utama) --</option>
+                                @foreach($documentCategories as $c)
+                                    <option value="{{ $c->id }}">{{ $c->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-700 block mb-1">Nama Kategori</label>
+                            <input type="text" name="name" id="kategori-name" required placeholder="Contoh: Laporan Kinerja" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none transition-all text-sm" oninput="document.getElementById('kategori-slug').value = this.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-700 block mb-1">Slug (Otomatis)</label>
+                            <input type="text" name="slug" id="kategori-slug" required readonly placeholder="laporan-kinerja" class="w-full px-3 py-2 rounded-lg border border-gray-200 bg-gray-50 outline-none text-sm text-gray-500">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-700 block mb-1">Deskripsi Singkat</label>
+                            <textarea name="description" rows="3" placeholder="Penjelasan singkat untuk menu..." class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none transition-all text-sm"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-2.5 rounded-lg font-bold bg-blue-600 text-white hover:bg-blue-700 shadow-md shadow-blue-500/20 transition-all text-sm">Simpan Kategori</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tabel Kategori -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="overflow-x-auto overflow-y-auto max-h-[450px]">
+                        <table class="w-full text-left relative">
+                        <thead class="bg-gray-50/50 border-b border-gray-100 sticky top-0 z-10">
+                            <tr>
+                            <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Nama Kategori</th>
+                            <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Total Dokumen</th>
+                            <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            @forelse($documentCategories as $cat)
+                            <tr class="hover:bg-blue-50/50 transition-colors">
+                            <td class="px-6 py-4">
+                                <p class="font-bold text-gray-900 text-sm break-words">
+                                    @if($cat->parent)
+                                        <span class="text-gray-400 font-medium">{{ $cat->parent->name }} &raquo;</span>
+                                    @endif
+                                    {{ $cat->name }}
+                                </p>
+                                <p class="text-xs text-gray-500 max-w-xs truncate">{{ $cat->description }}</p>
+                            </td>
+                            <td class="px-6 py-4 text-sm font-bold text-gray-900">
+                                <span class="bg-blue-50 text-blue-600 px-2.5 py-1 rounded-full text-xs whitespace-nowrap">{{ $cat->documents()->count() ?? 0 }} Dokumen</span>
+                            </td>
+                            <td class="px-6 py-4 text-right space-x-2 whitespace-nowrap">
+                                <button onclick="tambahDokumenKategori({{ $cat->id }})" class="text-xs px-3 py-1.5 bg-blue-50 text-blue-600 font-bold rounded hover:bg-blue-600 hover:text-white transition-colors">+ Dokumen</button>
+                                <form action="{{ route('admin.document-categories.destroy', $cat->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" onclick="return confirm('Hapus kategori ini? Pastikan tidak ada dokumen di dalamnya.')" class="text-xs px-3 py-1.5 bg-gray-50 text-gray-600 font-bold rounded hover:text-red-600 transition-colors">Hapus</button>
+                                </form>
+                            </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="3" class="px-6 py-8 text-center text-gray-400 text-sm font-bold">Belum ada kategori.</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="border-gray-200 mb-12">
+
+        <!-- HEADER DOKUMEN -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+          <div>
+            <h1 class="text-3xl font-black text-gray-900 mb-1">Bank Data & Dokumen</h1>
+            <p class="text-gray-500 text-sm">Kelola dokumen publik seperti RPJMD, RKPD, Hasil Riset, dll.</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+          <div class="overflow-x-auto overflow-y-auto max-h-[500px]">
+            <table class="w-full text-left relative">
+              <thead class="bg-gray-50/50 border-b border-gray-100 sticky top-0 z-10">
+                <tr>
+                  <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Judul Dokumen</th>
+                  <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Kategori</th>
+                  <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100 whitespace-nowrap">
+                @forelse($publicDocuments as $doc)
+                <tr class="hover:bg-blue-50/50 transition-colors">
+                  <td class="px-6 py-4 font-bold text-gray-900 text-sm max-w-xs truncate">{{ $doc->title }}</td>
+                  <td class="px-6 py-4 text-sm text-gray-600 font-medium">{{ $doc->documentCategory->name ?? $doc->category }}</td>
+                  <td class="px-6 py-4 text-right space-x-2 whitespace-nowrap">
+                    <button onclick="editDocument({{ json_encode($doc) }})" class="text-xs px-3 py-1 bg-blue-50 text-blue-600 rounded hover:bg-blue-600 hover:text-white transition-colors">Edit</button>
+                    <form action="{{ route('admin.delete_document', $doc->id) }}" method="POST" class="inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" onclick="return confirm('Hapus dokumen ini?')" class="text-xs px-3 py-1 bg-gray-50 text-gray-600 rounded hover:text-red-600 transition-colors">Hapus</button>
+                    </form>
+                  </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="3" class="px-6 py-8 text-center text-gray-400 text-sm">Belum ada dokumen.</td>
+                </tr>
+                @endforelse
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION: DOKUMEN FORM -->
+      <section id="section-dokumen-form" class="content-section hidden">
+        <div class="flex items-center gap-4 mb-8">
+          <button onclick="showSection('section-dokumen')" class="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors text-gray-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+          </button>
+          <h1 class="text-3xl font-black text-gray-900">Tambah Dokumen</h1>
+        </div>
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 max-w-2xl">
+          <form action="{{ route('admin.store_document') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+            @csrf
+            <div class="space-y-2">
+              <label class="text-sm font-bold text-gray-700">Upload File PDF</label>
+              <input type="file" name="file" accept=".pdf" required onchange="document.getElementById('add-doc-title').value = this.files[0].name.replace(/\.[^/.]+$/, '')" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all bg-gray-50">
+            </div>
+            <div class="space-y-2">
+              <label class="text-sm font-bold text-gray-700">Judul Dokumen</label>
+              <input type="text" name="title" id="add-doc-title" required placeholder="Contoh: Dokumen RPJMD Tahun 2025" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all">
+            </div>
+            <div class="space-y-2">
+              <label class="text-sm font-bold text-gray-700">Kategori</label>
+              <select name="document_category_id" id="add-doc-category" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all">
+                @foreach($documentCategories as $cat)
+                  <option value="{{ $cat->id }}">
+                      {{ $cat->parent ? $cat->parent->name . ' » ' : '' }}{{ $cat->name }}
+                  </option>
+                @endforeach
+              </select>
+            </div>
+            <button type="submit" class="w-full py-3 rounded-xl font-bold bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/20 transition-all">Simpan Dokumen</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- SECTION: DOKUMEN EDIT -->
+      <section id="section-dokumen-edit" class="content-section hidden">
+        <div class="flex items-center gap-4 mb-8">
+          <button onclick="showSection('section-dokumen')" class="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors text-gray-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+          </button>
+          <h1 class="text-3xl font-black text-gray-900">Edit Dokumen</h1>
+        </div>
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 max-w-2xl">
+          <form id="form-edit-dokumen" action="" method="POST" enctype="multipart/form-data" class="space-y-6">
+            @csrf
+            @method('PUT')
+            <div class="space-y-2">
+              <label class="text-sm font-bold text-gray-700">Upload File PDF Baru (Opsional)</label>
+              <input type="file" name="file" accept=".pdf" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all bg-gray-50">
+              <p class="text-xs text-gray-500">Biarkan kosong jika tidak ingin mengganti file dokumen yang lama.</p>
+            </div>
+            <div class="space-y-2">
+              <label class="text-sm font-bold text-gray-700">Judul Dokumen</label>
+              <input type="text" name="title" id="edit-doc-title" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all">
+            </div>
+            <div class="space-y-2">
+              <label class="text-sm font-bold text-gray-700">Kategori</label>
+              <select name="document_category_id" id="edit-doc-category" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all">
+                @foreach($documentCategories as $cat)
+                  <option value="{{ $cat->id }}">
+                      {{ $cat->parent ? $cat->parent->name . ' » ' : '' }}{{ $cat->name }}
+                  </option>
+                @endforeach
+              </select>
+            </div>
+            <button type="submit" class="w-full py-3 rounded-xl font-bold bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/20 transition-all">Update Dokumen</button>
+          </form>
+        </div>
+      </section>
+
+      <script>
+        function editDocument(doc) {
+          const form = document.getElementById('form-edit-dokumen');
+          form.action = `/admin/documents/${doc.id}`;
+          
+          document.getElementById('edit-doc-title').value = doc.title;
+          document.getElementById('edit-doc-category').value = doc.document_category_id;
+          
+          showSection('section-dokumen-edit');
+        }
+
+        function tambahDokumenKategori(categoryId) {
+          // Reset form jika perlu
+          document.getElementById('add-doc-title').value = '';
+          // Set kategori dropdown
+          const categorySelect = document.getElementById('add-doc-category');
+          if(categorySelect) {
+              categorySelect.value = categoryId;
+          }
+          showSection('section-dokumen-form');
+        }
+      </script>
+
 
       <!-- ============================== -->
       <!-- SECTION: MANAJEMEN CAPAIAN     -->

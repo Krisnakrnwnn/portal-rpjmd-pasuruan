@@ -41,15 +41,7 @@
 
     <!-- Konten Profil -->
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-      <div class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-shadow border border-gray-100 p-6 md:p-12 mb-10" data-aos="fade-up">
-        <h2 class="text-3xl font-extrabold text-blue-900 mb-6 flex items-center">
-          <svg class="w-8 h-8 mr-3 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-          Sejarah Singkat
-        </h2>
-        <div class="text-gray-600 leading-relaxed mb-6 text-lg prose prose-blue max-w-none">
-          {!! nl2br(e($profiles['sejarah'] ?? '')) !!}
-        </div>
-      </div>
+
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div class="bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-sm hover:shadow-lg transition-shadow border border-blue-100 p-8 md:p-10 border-t-4 border-t-yellow-400" data-aos="fade-right" data-aos-delay="100">

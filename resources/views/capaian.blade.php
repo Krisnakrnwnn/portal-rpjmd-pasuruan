@@ -1,209 +1,394 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard Capaian Modern - RPJMD Kabupaten Pasuruan')
+@section('title', 'Dokumen - Bapperida Kabupaten Pasuruan')
 
 @push('styles')
 <style>
-    .glass-card {
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+    /* ===== GOOGLE DRIVE STYLE ===== */
+    .gdrive-hidden { display: none !important; }
+
+    /* --- Sidebar --- */
+    .gdrive-sidebar {
+        width: 220px;
+        min-width: 220px;
+        flex-shrink: 0;
+        padding: 12px 8px;
     }
-    .text-glow {
-      text-shadow: 0 0 15px rgba(37, 99, 235, 0.3);
+
+    .gdrive-sidebar-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #202124;
+        text-decoration: none;
+        transition: background 0.15s;
+        white-space: nowrap;
+        overflow: hidden;
     }
-    .bento-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-gap: 1.5rem;
+    .gdrive-sidebar-item:hover { background: #e8eaed; }
+    .gdrive-sidebar-item.active { background: #d3e3fd; color: #0842a0; font-weight: 700; }
+    .gdrive-sidebar-section-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: #9aa0a6;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 12px 16px 4px;
     }
-    @media (max-width: 1024px) {
-      .bento-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+
+    /* --- Main Content --- */
+    .gdrive-main { flex: 1; min-width: 0; }
+
+    /* Toolbar */
+    .gdrive-topbar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid #e8eaed;
+        margin-bottom: 16px;
     }
-    @media (max-width: 640px) {
-      .bento-grid {
-        grid-template-columns: 1fr;
-      }
+    .gdrive-search {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #f1f3f4;
+        border: 1px solid transparent;
+        border-radius: 24px;
+        padding: 8px 16px;
+        flex: 1;
+        max-width: 480px;
+        transition: all 0.2s;
+    }
+    .gdrive-search:focus-within {
+        background: #fff;
+        border-color: #1a73e8;
+        box-shadow: 0 2px 8px rgba(26,115,232,0.12);
+    }
+    .gdrive-search input {
+        border: none;
+        background: transparent;
+        outline: none;
+        font-size: 14px;
+        color: #202124;
+        width: 100%;
+    }
+    .gdrive-view-btn {
+        padding: 6px;
+        border-radius: 4px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        color: #5f6368;
+        display: flex;
+        align-items: center;
+        transition: background 0.1s;
+    }
+    .gdrive-view-btn:hover { background: #e8eaed; }
+    .gdrive-view-btn.active { color: #1a73e8; background: #d3e3fd; }
+
+    /* Breadcrumb */
+    .gdrive-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #202124;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+    }
+    .gdrive-breadcrumb a { color: #5f6368; text-decoration: none; font-size: 14px; font-weight: 400; transition: color 0.1s; }
+    .gdrive-breadcrumb a:hover { color: #1a73e8; text-decoration: underline; }
+    .gdrive-breadcrumb .sep { color: #bdc1c6; }
+
+    /* Section label */
+    .gdrive-section-label {
+        font-size: 12px; font-weight: 700; color: #5f6368;
+        text-transform: uppercase; letter-spacing: 0.08em;
+        margin-bottom: 10px; margin-top: 8px;
+    }
+
+    /* Year chips */
+    .year-chip {
+        padding: 4px 14px; border-radius: 999px;
+        border: 1px solid #dadce0; background: #fff;
+        font-size: 12px; font-weight: 600; color: #3c4043;
+        cursor: pointer; transition: all 0.15s;
+        text-decoration: none; display: inline-block;
+    }
+    .year-chip:hover { background: #e8eaed; border-color: #bdc1c6; }
+    .year-chip.active { background: #d3e3fd; border-color: #1a73e8; color: #0842a0; }
+
+    /* === GRID VIEW === */
+    .view-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 8px;
+    }
+    .gdrive-card {
+        background: #fff; border: 1px solid #e0e0e0; border-radius: 8px;
+        padding: 16px 12px; cursor: pointer;
+        transition: box-shadow 0.15s, border-color 0.15s, background 0.1s;
+        text-decoration: none; display: flex; flex-direction: column;
+        align-items: center; gap: 8px; text-align: center; overflow: hidden;
+    }
+    .gdrive-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-color: #bdc1c6; background: #f8f9fa; }
+    .gdrive-card-label { font-size: 12px; color: #202124; font-weight: 500; max-width: 100%; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .gdrive-card-meta { font-size: 11px; color: #9aa0a6; }
+
+    /* === LIST VIEW === */
+    .view-list { display: flex; flex-direction: column; }
+    .view-list-header {
+        display: flex; align-items: center; gap: 12px; padding: 6px 12px;
+        border-bottom: 1px solid #e8eaed; font-size: 11px; font-weight: 700;
+        color: #5f6368; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .gdrive-list-item {
+        display: flex; align-items: center; gap: 12px; padding: 8px 12px;
+        border-radius: 4px; transition: background 0.1s;
+        text-decoration: none; color: #202124; border-bottom: 1px solid #f1f3f4;
+    }
+    .gdrive-list-item:hover { background: #f1f3f4; }
+    .gdrive-list-item .item-name { flex: 1; font-size: 13px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .gdrive-list-item .item-meta { font-size: 12px; color: #9aa0a6; width: 80px; text-align: right; flex-shrink: 0; }
+
+    /* Icons */
+    .icon-folder { color: #fbbf24; }
+    .icon-pdf    { color: #ea4335; }
+
+    /* Empty state */
+    .gdrive-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 20px; color: #9aa0a6; gap: 10px; text-align: center; }
+
+    /* Divider between sidebar and main */
+    .gdrive-layout { display: flex; gap: 0; }
+    .gdrive-divider { width: 1px; background: #e8eaed; flex-shrink: 0; margin: 0 16px; }
+
+    @media (max-width: 768px) {
+        .gdrive-layout { flex-direction: column; }
+        .gdrive-sidebar { width: 100%; min-width: 0; display: flex; flex-wrap: wrap; gap: 4px; padding: 8px 0; }
+        .gdrive-sidebar-section-label { display: none; }
+        .gdrive-divider { display: none; }
     }
 </style>
 @endpush
 
 @section('content')
-  <!-- Background Accents -->
-  <div class="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-400/10 rounded-full blur-[120px] pointer-events-none"></div>
-  <div class="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-yellow-400/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-  <main class="flex-grow pt-24 md:pt-32 pb-24 relative z-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <!-- Header Section -->
-      <div class="mb-8 md:mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8">
-        <div class="text-center md:text-left">
-           <div class="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-[10px] font-black rounded-lg uppercase tracking-widest mb-4">Statistik Real-Time</div>
-           <h1 class="text-3xl md:text-5xl font-black text-slate-900 tracking-tight mb-4">
-             Monitor <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800">Capaian Kota</span>
-           </h1>
-           <p class="text-slate-500 font-medium max-w-xl text-sm md:text-base">Akses visualisasi data integratif mengenai realisasi program prioritas Kabupaten Pasuruan selama periode RPJMD 2025-2029.</p>
+{{-- ========== HERO SECTION ========== --}}
+<div class="relative w-full min-h-[450px] bg-blue-950 overflow-hidden mb-10 flex items-center">
+    <div class="absolute top-0 right-0 w-96 h-96 bg-blue-500/30 rounded-full blur-[100px] animate-pulse"></div>
+    <img src="{{ asset('hero.png') }}" class="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-overlay object-bottom" />
+    <div class="absolute inset-0 bg-gradient-to-b from-[#041a42]/80 via-blue-900/60 to-[#0A3D91]"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-28 pb-24 text-center flex flex-col items-center">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-6 text-sm text-blue-200">
+            <a href="{{ route('home') }}" class="hover:text-white transition-colors text-xs uppercase tracking-wider font-semibold">Beranda</a>
+            <span>/</span>
+            <span class="text-white text-xs uppercase tracking-wider font-bold">Dokumen Bapperida</span>
         </div>
-        <div class="flex flex-col items-center md:items-end">
-           <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Update Terakhir</div>
-           <div class="text-sm md:text-lg font-black text-slate-800 bg-white px-4 py-2 shadow-sm border border-slate-100 rounded-xl flex items-center gap-3">
-              <span class="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></span>
-              {{ $lastUpdate->translatedFormat('d F Y, H:i') }} WIB
-           </div>
-        </div>
-      </div>
-
-      <!-- Bento Grid Statistics -->
-      <div class="bento-grid mb-16">
-        
-        <!-- Big Card: Total Progress -->
-        <div data-aos="fade-up" data-aos-delay="100" class="col-span-1 md:col-span-2 row-span-1 bg-gradient-to-br from-blue-700 to-blue-900 rounded-[2rem] md:rounded-[2.5rem] p-8 md:p-10 text-white shadow-2xl shadow-blue-900/20 relative overflow-hidden group">
-          <div class="absolute top-[-20%] right-[-10%] w-64 h-64 bg-white/10 rounded-full blur-[60px] group-hover:bg-white/20 transition-all duration-700"></div>
-          <div class="relative z-10 h-full flex flex-col justify-between">
-            <div>
-              <div class="text-[10px] font-black text-blue-200 uppercase tracking-[0.2em] mb-2">Total Progress RPJMD</div>
-              <div class="text-5xl md:text-7xl font-black mb-4 tracking-tighter">{{ $stats['total_progress'] ?? '0' }}%</div>
-            </div>
-            <div class="flex items-center gap-4">
-               <div class="flex-grow h-2.5 bg-white/20 rounded-full overflow-hidden">
-                 <div class="h-full bg-white rounded-full transition-all duration-1000" style="width: {{ $stats['total_progress'] ?? '0' }}%"></div>
-               </div>
-               <span class="font-black text-xs md:text-sm">+2.5%</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Square Card: Program -->
-        <div data-aos="fade-up" data-aos-delay="200" class="bg-white rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-white flex flex-col justify-between hover:scale-105 transition-transform duration-300">
-           <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center">
-             <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-           </div>
-           <div class="mt-4 md:mt-0">
-             <div class="text-3xl md:text-4xl font-black text-slate-900 mb-1">{{ $stats['program_berjalan'] ?? '0' }}</div>
-             <div class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest">Program Berjalan</div>
-           </div>
-        </div>
- 
-        <!-- Square Card: Indikator -->
-        <div data-aos="fade-up" data-aos-delay="300" class="bg-white rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-white flex flex-col justify-between hover:scale-105 transition-transform duration-300">
-           <div class="w-10 h-10 md:w-12 md:h-12 bg-yellow-50 text-yellow-600 rounded-2xl flex items-center justify-center">
-             <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-           </div>
-           <div class="mt-4 md:mt-0">
-             <div class="text-3xl md:text-4xl font-black text-slate-900 mb-1">{{ $stats['target_terlampaui'] ?? '0' }}</div>
-             <div class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest font-black text-yellow-600">Terlampaui Target</div>
-           </div>
-        </div>
-
-      </div>
-
-      <!-- Filter Controls -->
-      <div class="flex flex-wrap items-center gap-3 mb-12">
-         <span class="text-xs font-black text-slate-400 uppercase tracking-widest mr-2">Filter Tema:</span>
-         <button onclick="filterSector('all')" id="btn-filter-all" class="filter-btn px-5 py-2 bg-blue-600 text-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg shadow-blue-600/20">Semua</button>
-         @foreach($sectors as $sec)
-           <button onclick="filterSector('sector-{{ $sec->id }}')" id="btn-filter-sector-{{ $sec->id }}" class="filter-btn px-5 py-2 bg-white text-slate-600 hover:bg-slate-100 rounded-full text-[10px] font-black uppercase tracking-widest transition-colors font-bold">{{ $sec->name }}</button>
-         @endforeach
-      </div>
-
-      <!-- Indicators Grid Modern (Dynamic) -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-10" id="sectors-grid">
-        
-        @forelse($sectors as $index => $sector)
-        <div class="sector-card bg-white rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 hover:shadow-2xl hover:shadow-{{ $sector->theme_color }}-500/10 transition-all duration-500 border border-slate-100 group" data-category="sector-{{ $sector->id }}">
-           <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 md:mb-10 gap-4">
-              <div class="flex items-center gap-4">
-                 @php
-                     $safeTheme = $sector->theme_color ?: 'blue';
-                     $shade = $safeTheme == 'yellow' || $safeTheme == 'green' ? '500' : '600';
-                     $defaultIcon = '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>';
-                 @endphp
-                 <div class="w-12 h-12 md:w-14 md:h-14 bg-slate-900 text-white rounded-[1rem] md:rounded-[1.25rem] flex items-center justify-center shadow-xl group-hover:bg-{{ $safeTheme }}-{{ $shade }} transition-colors">
-                    <div class="w-5 h-5 md:w-6 md:h-6">{!! $sector->icon ?: $defaultIcon !!}</div>
-                 </div>
-                 <div>
-                    <h3 class="font-black text-lg md:text-2xl text-slate-900 leading-tight">{{ $sector->name }}</h3>
-                    <p class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest">Sektor {{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</p>
-                 </div>
-              </div>
-              
-              @php
-                  $average = $sector->indicators->count() > 0 ? round($sector->indicators->avg('progress')) : 0;
-                  $status = $average >= 80 ? 'Optimal' : ($average >= 50 ? 'Berjalan' : 'Kritis');
-                  $statusColor = $average >= 80 ? 'text-green-500' : ($average >= 50 ? 'text-yellow-500' : 'text-red-500');
-              @endphp
-              <div class="flex items-center justify-between sm:flex-col sm:items-end bg-slate-50 sm:bg-transparent p-3 sm:p-0 rounded-xl sm:rounded-none">
-                 <div class="text-2xl md:text-3xl font-black text-{{ $safeTheme }}-{{ $shade }}">{{ $average }}%</div>
-                 <div class="text-[9px] font-black {{ $statusColor }} uppercase tracking-tighter">{{ $status }}</div>
-              </div>
-           </div>
-           
-           <div class="space-y-8 md:space-y-10">
-              @forelse($sector->indicators as $ind)
-              <div class="relative">
-                 <div class="flex justify-between items-center mb-3">
-                    <span class="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-wider line-clamp-1 pr-4">{{ $ind->name }}</span>
-                    <span class="text-xs font-black text-slate-900">{{ $ind->progress }}%</span>
-                 </div>
-                 <div class="h-6 md:h-8 bg-slate-50 rounded-2xl p-1 md:p-1.5 flex items-center border border-slate-100">
-                    <div class="h-full bg-{{ $safeTheme }}-{{ $shade }} rounded-xl transition-all duration-1000 shadow-lg shadow-{{ $safeTheme }}-500/40" style="width: {{ $ind->progress }}%"></div>
-                 </div>
-              </div>
-              @empty
-              <div class="text-center text-xs font-bold text-gray-400 py-4">Belum ada indikator.</div>
-              @endforelse
-           </div>
-        </div>
-        @empty
-        <div class="col-span-1 md:col-span-2 text-center py-12">
-            <p class="text-slate-400 font-bold uppercase tracking-widest text-xs">Belum ada data sektor capaian.</p>
-        </div>
-        @endforelse
-
-      </div>
-
-      <!-- Info Footer Dashboard -->
-      <div class="mt-24 p-8 glass-card rounded-[2rem] border border-white/50 text-center">
-         <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.4em] mb-4">Layanan Pengolahan Data Strategis</p>
-         <p class="text-slate-500 text-sm font-medium italic">"Membangun Transparansi Pembangunan Lewat Integrasi Data Berkala Untuk Pasuruan Kota Madani."</p>
-      </div>
-
+        <h1 data-aos="fade-up" class="text-4xl md:text-6xl font-black text-white mb-6 drop-shadow-2xl">
+            Repositori <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500">Publik</span>
+        </h1>
+        <p data-aos="fade-up" data-aos-delay="100" class="text-blue-100 text-lg md:text-xl max-w-3xl font-light leading-relaxed">
+            Akses kumpulan dokumen resmi dan laporan publikasi Bapperida Kabupaten Pasuruan secara mudah dan transparan.
+        </p>
     </div>
-  </main>
-@endsection
+
+    <!-- Bottom Curve Divider -->
+    <div class="absolute bottom-0 w-full overflow-hidden leading-none z-20 translate-y-[2px]">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="relative block w-full h-[50px] lg:h-[80px]">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C54,82.47,110.15,77.58,168.22,76.54,219.64,75.64,271.86,65.68,321.39,56.44Z" fill="#F9FAFB"></path>
+        </svg>
+    </div>
+</div>
+
+{{-- ========== DRIVE CONTENT ========== --}}
+<section class="bg-white pb-24 min-h-[50vh]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        {{-- Topbar: search + view toggle --}}
+        <div class="gdrive-topbar">
+            <div class="gdrive-search">
+                <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1111 5a6 6 0 016 6z"/>
+                </svg>
+                <input id="search-docs" type="text" placeholder="Cari dokumen...">
+            </div>
+            <div style="display:flex;gap:4px;margin-left:auto;">
+                <button class="gdrive-view-btn active" id="btn-grid" onclick="setView('grid')" title="Tampilan Grid">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                    </svg>
+                </button>
+                <button class="gdrive-view-btn" id="btn-list" onclick="setView('list')" title="Tampilan List">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        {{-- Layout: Sidebar + Main --}}
+        <div class="gdrive-layout">
+
+            {{-- ========== SIDEBAR ========== --}}
+            <aside class="gdrive-sidebar">
+                <a href="{{ route('capaian') }}" class="gdrive-sidebar-item {{ !$currentCategoryModel ? 'active' : '' }}">
+                    <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                    Semua Dokumen
+                </a>
+                <div class="gdrive-sidebar-section-label">Kategori</div>
+                @php $rootCats = \App\Models\DocumentCategory::whereNull('parent_id')->orderBy('name')->get(); @endphp
+                @foreach($rootCats as $rc)
+                <a href="{{ route('capaian', ['kategori' => $rc->slug]) }}"
+                   class="gdrive-sidebar-item {{ ($currentCategoryModel && ($currentCategoryModel->id === $rc->id || optional($currentCategoryModel->parent)->id === $rc->id || optional(optional($currentCategoryModel->parent)->parent)->id === $rc->id)) ? 'active' : '' }}">
+                    <svg class="w-5 h-5 flex-shrink-0 icon-folder" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                    {{ $rc->name }}
+                </a>
+                @endforeach
+            </aside>
+
+            <div class="gdrive-divider"></div>
+
+            {{-- ========== MAIN ========== --}}
+            <div class="gdrive-main">
+
+                {{-- Breadcrumb --}}
+                <div class="gdrive-breadcrumb">
+                    <a href="{{ route('capaian') }}">Dokumen Bapperida</a>
+                    @if($currentCategoryModel)
+                        @foreach($breadcrumb as $crumb)
+                            <span class="sep">›</span>
+                            @if(!$loop->last)
+                                <a href="{{ route('capaian', ['kategori' => $crumb->slug]) }}">{{ $crumb->name }}</a>
+                            @else
+                                <span>{{ $crumb->name }}</span>
+                            @endif
+                        @endforeach
+                    @endif
+                </div>
+
+                {{-- Filter Tahun --}}
+                @if($currentCategoryModel && count($years) > 0)
+                <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:16px;">
+                    <span style="font-size:12px;color:#5f6368;font-weight:600;white-space:nowrap;">Tahun:</span>
+                    @php $catSlug = $currentCategoryModel->slug; @endphp
+                    <a href="{{ route('capaian', ['kategori' => $catSlug]) }}" class="year-chip {{ !$tahun ? 'active' : '' }}">Semua</a>
+                    @foreach($years as $yr)
+                    <a href="{{ route('capaian', ['kategori' => $catSlug, 'tahun' => $yr]) }}" class="year-chip {{ $tahun == $yr ? 'active' : '' }}">{{ $yr }}</a>
+                    @endforeach
+                </div>
+                @endif
+
+                {{-- ---- FOLDERS ---- --}}
+                @if(isset($subCategories) && $subCategories->count() > 0)
+                <div class="gdrive-section-label">Folder</div>
+
+                <div id="folder-grid" class="view-grid" style="margin-bottom:24px;" data-view-target="folder">
+                    @foreach($subCategories as $cat)
+                    <a href="{{ route('capaian', ['kategori' => $cat->slug]) }}" class="gdrive-card folder-card" data-name="{{ strtolower($cat->name) }}">
+                        <svg class="w-12 h-12 icon-folder" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                        <span class="gdrive-card-label" title="{{ $cat->name }}">{{ $cat->name }}</span>
+                    </a>
+                    @endforeach
+                </div>
+
+                <div id="folder-list" class="view-list gdrive-hidden" style="margin-bottom:24px;" data-view-target="folder">
+                    @foreach($subCategories as $cat)
+                    <a href="{{ route('capaian', ['kategori' => $cat->slug]) }}" class="gdrive-list-item folder-card" data-name="{{ strtolower($cat->name) }}">
+                        <svg class="w-5 h-5 icon-folder flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                        <span class="item-name">{{ $cat->name }}</span>
+                        <span class="item-meta">Folder</span>
+                    </a>
+                    @endforeach
+                </div>
+                @endif
+
+                {{-- ---- DOCUMENTS ---- --}}
+                @if($currentCategoryModel)
+                <div class="gdrive-section-label">File</div>
+
+                <div id="docs-grid" class="view-grid" data-view-target="docs">
+                    @foreach($dokumen as $doc)
+                    <a href="{{ $doc->file_url }}" target="_blank" rel="noopener" class="gdrive-card doc-card" data-name="{{ strtolower($doc->title) }}">
+                        <svg class="w-12 h-12 icon-pdf" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/></svg>
+                        <span class="gdrive-card-label" title="{{ $doc->title }}">{{ $doc->title }}</span>
+                        <span class="gdrive-card-meta">{{ $doc->year }}</span>
+                    </a>
+                    @endforeach
+                </div>
+
+                <div id="docs-list" class="view-list gdrive-hidden" data-view-target="docs">
+                    @if($dokumen->count() > 0)
+                    <div class="view-list-header">
+                        <svg class="w-4 h-4 opacity-0 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/></svg>
+                        <span style="flex:1;">Nama</span>
+                        <span style="width:60px;text-align:center;">Tahun</span>
+                        <span style="width:130px;text-align:right;">Terakhir Diubah</span>
+                    </div>
+                    @endif
+                    @foreach($dokumen as $doc)
+                    <a href="{{ $doc->file_url }}" target="_blank" rel="noopener" class="gdrive-list-item doc-card" data-name="{{ strtolower($doc->title) }}">
+                        <svg class="w-5 h-5 icon-pdf flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/></svg>
+                        <span class="item-name">{{ $doc->title }}</span>
+                        <span style="width:60px;text-align:center;font-size:12px;color:#9aa0a6;flex-shrink:0;">{{ $doc->year }}</span>
+                        <span style="width:130px;text-align:right;font-size:11px;color:#9aa0a6;flex-shrink:0;">{{ $doc->updated_at->diffForHumans() }}</span>
+                    </a>
+                    @endforeach
+                </div>
+
+                @if($dokumen->count() === 0)
+                <div class="gdrive-empty">
+                    <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:#e0e0e0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    <p style="font-size:14px;font-weight:500;">Folder ini masih kosong</p>
+                </div>
+                @endif
+
+                @if($dokumen->hasPages())
+                <div style="margin-top:24px;">{{ $dokumen->links() }}</div>
+                @endif
+                @endif
+
+                {{-- Root empty --}}
+                @if(!$currentCategoryModel && (!isset($subCategories) || $subCategories->count() === 0))
+                <div class="gdrive-empty" style="padding:80px 20px;">
+                    <svg class="w-20 h-20 icon-folder" viewBox="0 0 24 24" fill="currentColor" style="opacity:0.15;"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                    <p style="font-size:15px;font-weight:500;color:#5f6368;">Pilih folder dari sidebar kiri</p>
+                </div>
+                @endif
+
+            </div>{{-- /gdrive-main --}}
+        </div>{{-- /gdrive-layout --}}
+    </div>
+</section>
 
 @push('scripts')
 <script>
-    function filterSector(category) {
-        // Reset button styles
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.className = "filter-btn px-5 py-2 bg-white text-slate-600 hover:bg-slate-100 rounded-full text-[10px] font-black uppercase tracking-widest transition-colors font-bold";
-        });
-        
-        // Set active button style
-        const activeBtn = document.getElementById('btn-filter-' + category);
-        if (activeBtn) {
-            activeBtn.className = "filter-btn px-5 py-2 bg-blue-600 text-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg shadow-blue-600/20";
-        }
+function setView(mode) {
+    const isGrid = mode === 'grid';
+    ['folder', 'docs'].forEach(type => {
+        const g = document.getElementById(type + '-grid');
+        const l = document.getElementById(type + '-list');
+        if (g) g.classList.toggle('gdrive-hidden', !isGrid);
+        if (l) l.classList.toggle('gdrive-hidden', isGrid);
+    });
+    document.getElementById('btn-grid')?.classList.toggle('active', isGrid);
+    document.getElementById('btn-list')?.classList.toggle('active', !isGrid);
+    localStorage.setItem('docView', mode);
+}
+document.addEventListener('DOMContentLoaded', () => setView(localStorage.getItem('docView') || 'grid'));
 
-        // Filter cards
-        document.querySelectorAll('.sector-card').forEach(card => {
-            if (category === 'all' || card.dataset.category === category) {
-                card.style.display = 'block';
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, 50);
-            } else {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                setTimeout(() => { card.style.display = 'none'; }, 300);
-            }
-        });
-    }
+document.getElementById('search-docs')?.addEventListener('input', function () {
+    const q = this.value.toLowerCase().trim();
+    document.querySelectorAll('.folder-card, .doc-card').forEach(card => {
+        card.style.display = (!q || (card.dataset.name || '').includes(q)) ? '' : 'none';
+    });
+});
 </script>
 @endpush
+@endsection

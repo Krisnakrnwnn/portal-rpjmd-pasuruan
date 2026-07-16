@@ -38,6 +38,18 @@
     .animate-chat-msg {
       animation: chatSlideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
+    
+    /* Custom Scrollbar for Chat */
+    #chat-messages::-webkit-scrollbar {
+      width: 6px;
+    }
+    #chat-messages::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    #chat-messages::-webkit-scrollbar-thumb {
+      background-color: #cbd5e1;
+      border-radius: 20px;
+    }
     @keyframes shimmer {
       0% { background-position: -200% 0; }
       100% { background-position: 200% 0; }
@@ -309,11 +321,7 @@
       <div class="flex items-center justify-between h-20">
         <div class="flex items-center gap-3">
           <a href="{{ route('home') }}" class="flex items-center gap-3">
-            <img src="{{ asset('logo.png') }}" class="w-10 h-10 object-contain" alt="Logo Bapperida" />
-            <div>
-              <div class="font-black text-xl tracking-tight text-blue-900 leading-tight">BAPPERIDA</div>
-              <div class="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Kabupaten Pasuruan</div>
-            </div>
+            <img src="{{ asset('Logo Bapperida Kab Pasuruan.png') }}" class="h-10 md:h-12 w-auto object-contain" alt="Logo Bapperida" />
           </a>
         </div>
         <div class="hidden lg:block">
@@ -325,8 +333,23 @@
               <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors">Beranda</a>
               <a href="{{ route('profil') }}" class="{{ request()->routeIs('profil') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors">Profil</a>
               <a href="{{ route('berita') }}" class="{{ request()->routeIs('berita') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors">Informasi</a>
+              <a href="{{ route('galeri') }}" class="{{ request()->routeIs('galeri') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors">Galeri</a>
 
-              <a href="{{ route('capaian') }}" class="{{ request()->routeIs('capaian') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors">Capaian</a>
+              <div class="relative group">
+                <a href="{{ route('capaian') }}" class="{{ request()->routeIs('capaian') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors flex items-center gap-1">
+                  Dokumen
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </a>
+                <div class="absolute left-0 mt-2 w-56 rounded-xl bg-white shadow-lg ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden">
+                  @php $docCats = \App\Models\DocumentCategory::whereNull('parent_id')->get(); @endphp
+                  @foreach($docCats as $cat)
+                  <a href="{{ route('capaian', ['kategori' => $cat->slug]) }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium transition-colors">{{ $cat->name }}</a>
+                  @endforeach
+                  <div class="border-t border-gray-100"></div>
+                  <a href="{{ route('capaian') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium transition-colors font-bold">Semua Dokumen</a>
+                </div>
+              </div>
+
               <a href="{{ route('kontak') }}" class="bg-blue-600 text-white px-4 py-2.5 rounded-full text-sm font-semibold hover:bg-blue-700 shadow-md hover:shadow-lg transition-all ml-2">Hubungi Kami</a>
             @endif
             
@@ -358,8 +381,21 @@
           <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }} block px-3 py-3 rounded-md text-base font-bold transition-colors">Beranda</a>
           <a href="{{ route('profil') }}" class="{{ request()->routeIs('profil') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }} block px-3 py-3 rounded-md text-base font-bold transition-colors">Profil</a>
           <a href="{{ route('berita') }}" class="{{ request()->routeIs('berita') || request()->routeIs('berita.detail') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }} block px-3 py-3 rounded-md text-base font-bold transition-colors">Informasi & Berita</a>
+          <a href="{{ route('galeri') }}" class="{{ request()->routeIs('galeri') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }} block px-3 py-3 rounded-md text-base font-bold transition-colors">Galeri</a>
+          <div class="space-y-1">
+              <a href="{{ route('capaian') }}" class="{{ request()->routeIs('capaian') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }} block px-3 py-3 rounded-md text-base font-bold transition-colors flex justify-between items-center">
+                  Dokumen
+                  <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+              </a>
+              <div class="pl-4 space-y-1 bg-gray-50/50 rounded-b-md pb-2">
+                  @php $docCatsMobile = \App\Models\DocumentCategory::whereNull('parent_id')->get(); @endphp
+                  @foreach($docCatsMobile as $cat)
+                  <a href="{{ route('capaian', ['kategori' => $cat->slug]) }}" class="block px-3 py-2 rounded-md text-sm font-semibold text-gray-600 hover:text-blue-600 hover:bg-blue-50">- {{ $cat->name }}</a>
+                  @endforeach
+                  <a href="{{ route('capaian') }}" class="block px-3 py-2 rounded-md text-sm font-semibold text-blue-600 hover:bg-blue-50">- Semua Dokumen</a>
+              </div>
+          </div>
 
-          <a href="{{ route('capaian') }}" class="{{ request()->routeIs('capaian') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }} block px-3 py-3 rounded-md text-base font-bold transition-colors">Capaian</a>
           <a href="{{ route('kontak') }}" class="mt-4 text-center bg-blue-600 text-white px-5 py-3 rounded-xl text-base font-bold hover:bg-blue-700 shadow-md">Hubungi Kami</a>
           
           @auth
@@ -378,54 +414,55 @@
   </main>
 
   <!-- Footer -->
-  <footer class="bg-[#041a42] text-gray-300 pt-16 pb-8 border-t border-blue-900 w-full mt-auto relative z-10">
+  <footer class="bg-[#041a42] text-blue-200 pt-16 pb-8 border-t border-blue-900 w-full mt-auto relative z-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
         <div class="col-span-1 md:col-span-2">
           <div class="flex items-center gap-3 mb-6">
-            <img src="{{ asset('logo.png') }}" class="w-8 h-8 object-contain" alt="Logo Bapperida" />
-            <div class="font-black text-lg tracking-tight text-white leading-none">Bapperida Kabupaten Pasuruan</div>
+            <img src="{{ asset('Logo Bapperida Kab Pasuruan Putih.png') }}" class="h-20 sm:h-24 w-auto object-contain" alt="Logo Bapperida" />
           </div>
-          <p class="text-gray-400 text-sm leading-relaxed max-w-sm mb-6 font-light">Portal Layanan Informasi Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah (Bapperida) Kabupaten Pasuruan — menyajikan data perencanaan, capaian kinerja, dan inovasi pembangunan daerah secara transparan.</p>
+          <p class="text-blue-200/80 text-sm leading-relaxed max-w-sm mb-6 font-light">Portal Layanan Informasi Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah (Bapperida) Kabupaten Pasuruan — menyajikan data perencanaan, capaian kinerja, dan inovasi pembangunan daerah secara transparan.</p>
           <div class="flex gap-4">
-            <a href="{{ $socials['ig_link'] ?? '#' }}" target="_blank" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-gradient-to-tr hover:from-purple-500 hover:to-pink-500 hover:text-white transition-all shadow-sm">
+            <a href="{{ $socials['ig_link'] ?? '#' }}" target="_blank" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-blue-200 hover:border-transparent hover:bg-gradient-to-tr hover:from-purple-500 hover:to-pink-500 hover:text-white transition-all shadow-sm">
                 <i class="fab fa-instagram"></i>
             </a>
-            <a href="{{ $socials['fb_link'] ?? '#' }}" target="_blank" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white transition-all shadow-sm">
+            <a href="{{ $socials['fb_link'] ?? '#' }}" target="_blank" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-blue-200 hover:border-transparent hover:bg-blue-500 hover:text-white transition-all shadow-sm">
                 <i class="fab fa-facebook-f"></i>
             </a>
-            <a href="https://wa.me/{{ $socials['wa_number'] ?? '' }}" target="_blank" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-green-500 hover:text-white transition-all shadow-sm">
+            <a href="https://wa.me/{{ $socials['wa_number'] ?? '' }}" target="_blank" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-blue-200 hover:border-transparent hover:bg-green-500 hover:text-white transition-all shadow-sm">
                 <i class="fab fa-whatsapp"></i>
             </a>
           </div>
         </div>
         <div>
           <h4 class="text-white font-bold mb-4 tracking-wide">Tautan Cepat</h4>
-          <ul class="space-y-3 text-sm text-gray-400 flex flex-col">
+          <ul class="space-y-3 text-sm text-blue-200 flex flex-col">
+            <li><a href="{{ route('home') }}" class="hover:text-blue-400 transition-colors">Beranda</a></li>
             <li><a href="{{ route('profil') }}" class="hover:text-blue-400 transition-colors">Profil Instansi</a></li>
-            <li><a href="{{ route('capaian') }}" class="hover:text-blue-400 transition-colors">Capaian Kinerja</a></li>
-            <li><a href="{{ route('berita') }}" class="hover:text-blue-400 transition-colors">Berita Terkini</a></li>
+            <li><a href="{{ route('berita') }}" class="hover:text-blue-400 transition-colors">Informasi & Berita</a></li>
+            <li><a href="{{ route('galeri') }}" class="hover:text-blue-400 transition-colors">Galeri</a></li>
+            <li><a href="{{ route('capaian') }}" class="hover:text-blue-400 transition-colors">Dokumen Bapperida</a></li>
           </ul>
         </div>
         <div>
           <h4 class="text-white font-bold mb-4 tracking-wide">Kontak Kami</h4>
-          <ul class="space-y-4 text-sm text-gray-400 flex flex-col">
+          <ul class="space-y-4 text-sm text-blue-200 flex flex-col">
             <li class="flex items-start group">
-              <a href="{{ route('kontak') }}" class="hover:text-yellow-400 transition-colors">Kompleks Perkantoran Pemerintah Kabupaten Pasuruan
+              <a href="{{ route('kontak') }}" class="hover:text-blue-400 transition-colors">Kompleks Perkantoran Pemerintah Kabupaten Pasuruan
 Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
 </a>
             </li>
             <li class="flex items-center group">
-              <a href="mailto:bapperida@pasuruankab.go.id" class="hover:text-yellow-400 transition-colors">bapperida@pasuruankab.go.id</a>
+              <a href="mailto:bapperida@pasuruankab.go.id" class="hover:text-blue-400 transition-colors">bapperida@pasuruankab.go.id</a>
             </li>
           </ul>
         </div>
       </div>
-      <div class="pt-8 border-t border-blue-900/50 flex flex-col md:flex-row justify-between items-center auto-cols-auto gap-4 text-sm text-gray-500 text-center md:text-left transition-all">
+      <div class="pt-8 border-t border-blue-900/50 flex flex-col md:flex-row justify-between items-center auto-cols-auto gap-4 text-sm text-blue-300 text-center md:text-left transition-all">
         <p>&copy; {{ date('Y') }} RPJMD Kabupaten Pasuruan. Hak Cipta Dilindungi.</p>
         <div class="flex gap-4">
-          <a href="#" class="hover:text-blue-400 transition-colors">Kebijakan Privasi</a>
-          <a href="#" class="hover:text-blue-400 transition-colors">Syarat & Ketentuan</a>
+          <a href="#" class="hover:text-blue-100 transition-colors">Kebijakan Privasi</a>
+          <a href="#" class="hover:text-blue-100 transition-colors">Syarat & Ketentuan</a>
         </div>
       </div>
     </div>
@@ -526,14 +563,14 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
                 <!-- Status Dot: Now strictly absolute to the logo container -->
                 <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-[#041a42] rounded-full shadow-lg translate-x-1/4 translate-y-1/4"></span>
               </div>
-              <div class="flex flex-col">
+              <div class="flex flex-col min-w-0">
                 <div class="flex items-center gap-1.5">
-                  <h4 class="font-black text-sm sm:text-base tracking-tight leading-tight">
-                    RPJMD Pasuruan AI
+                  <h4 class="font-black text-[13px] sm:text-[14px] tracking-tight leading-tight truncate">
+                    Layanan Informasi Bapperida
                   </h4>
-                  <svg class="w-3.5 h-3.5 text-blue-400" fill="currentColor" viewBox="0 0 20 20"><path d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
+                  <svg class="w-3.5 h-3.5 text-blue-400 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
                 </div>
-                <span class="text-[10px] sm:text-[11px] font-medium text-blue-200/80 tracking-wide">Asisten Virtual RPJMD</span>
+                <span class="text-[10px] sm:text-[11px] font-medium text-blue-200/80 tracking-wide truncate">Asisten Virtual Bapperida</span>
               </div>
             </div>
             <div class="flex items-center gap-1">
@@ -559,7 +596,7 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
                 <span class="text-blue-600 font-bold text-xs">AI</span>
               </div>
               <div class="bg-white border border-gray-100 text-gray-800 rounded-2xl rounded-tl-sm px-4 sm:px-5 py-3 sm:py-3.5 max-w-[95%] sm:max-w-[85%] shadow-sm font-medium leading-relaxed text-[13px] sm:text-sm">
-                ${greeting}! 🙏 <br>Saya asisten AI Layanan Informasi RPJMD Kabupaten Pasuruan. Ada yang ingin Anda ketahui tentang program prioritas, capaian pembangunan, atau dokumen RPJMD 2025-2029?
+                ${greeting}! 🙏 <br>Saya asisten AI Layanan Informasi Bapperida Kabupaten Pasuruan. Ada yang ingin Anda ketahui tentang program prioritas, capaian pembangunan, atau dokumen RPJMD 2025-2029?
               </div>
             </div>
 
@@ -824,7 +861,7 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
 
       // Hardcode Quick Options untuk hemat kuota API
       const quickResponses = {
-        "Apa Visi dan Misi Kabupaten Pasuruan?": "Pemerintah Kabupaten Pasuruan memiliki **Visi**:<br>\"Mewujudkan Kabupaten Pasuruan Kota Madinah (Maju Ekonominya, Indah Kotanya, Harmoni Warganya).\"<br><br>**Misi Utama**:<br>1. Mempercepat pertumbuhan ekonomi<br>2. Meningkatkan tata kelola pemerintahan yang baik<br>3. Pemerataan pembangunan infrastruktur<br>4. Membangun SDM unggul dan berdaya saing.",
+        "Apa Visi dan Misi Kabupaten Pasuruan?": "Pemerintah Kabupaten Pasuruan memiliki **Visi**:<br>\"Menuju Kabupaten Pasuruan Maju, Sejahtera dan Berkadilan.\"<br><br>**Misi Utama**:<br>1. Mempercepat pertumbuhan ekonomi<br>2. Meningkatkan tata kelola pemerintahan yang baik<br>3. Pemerataan pembangunan infrastruktur<br>4. Membangun SDM unggul dan berdaya saing.",
         "Berapa jumlah Program Prioritas saat ini?": "Berdasarkan data RPJMD terbaru, Pemerintah Kabupaten Pasuruan saat ini menargetkan lebih dari **78+ Program Prioritas** yang dieksekusi secara berkesinambungan di berbagai sektor (Infrastruktur, Pelayanan Publik, Pendidikan, dll) selama periode 5 tahun ke depan.",
         "Tolong jelaskan apa itu RPJMD secara singkat.": "**RPJMD** (Rencana Pembangunan Jangka Menengah Daerah) adalah pedoman perencanaan resmi daerah untuk periode 5 tahun. Dokumen ini menjabarkan arah kebijakan, visi, misi, dan program kerja Kepala Daerah yang dijaga transparansinya untuk publik."
       };

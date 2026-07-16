@@ -61,49 +61,76 @@ class PortalController extends Controller
         return view('layanan', compact('services'));
     }
 
+    // The standalone dokumen route is removed.
+
+    public function galeri()
+    {
+        $galleries = \App\Models\Gallery::orderBy('created_at', 'desc')->paginate(24);
+        return view('galeri', compact('galleries'));
+    }
+
     public function kontak()
     {
         return view('kontak');
     }
 
-    public function capaian()
+    public function capaian(Request $request)
     {
-        $statsRaw = \App\Models\Stat::all();
-        $stats = [];
-        foreach ($statsRaw as $s) {
-            $stats[$s->key] = $s->value;
-        }
+        $kategoriSlug = $request->query('kategori');
+        $tahun        = $request->query('tahun');
 
-        $sectors = \App\Models\Sector::with('indicators')->get();
+        $query = \App\Models\PublicDocument::query();
+        $kategori = null;
+        $currentCategoryModel = null;
+        $subCategories = collect();
+        $breadcrumb = [];
 
-        // Kalkulasi dinamis total_progress dari rata-rata seluruh sektor
-        if ($sectors->count() > 0) {
-            $totalSectorProgress = 0;
-            foreach ($sectors as $sector) {
-                $sectorAvg = $sector->indicators->count() > 0 ? $sector->indicators->avg('progress') : 0;
-                $totalSectorProgress += $sectorAvg;
+        if ($kategoriSlug) {
+            $kategoriModel = \App\Models\DocumentCategory::where('slug', $kategoriSlug)->first();
+            if ($kategoriModel) {
+                $query->where('document_category_id', $kategoriModel->id);
+                $kategori = $kategoriModel->name;
+                $currentCategoryModel = $kategoriModel;
+                $subCategories = $kategoriModel->children()->orderBy('name')->get();
+
+                // Build breadcrumb
+                $curr = $kategoriModel;
+                while ($curr) {
+                    array_unshift($breadcrumb, $curr);
+                    $curr = $curr->parent;
+                }
+            } else {
+                $query->where('category', $kategoriSlug);
+                $kategori = strtoupper($kategoriSlug);
             }
-            $stats['total_progress'] = round($totalSectorProgress / $sectors->count());
         } else {
-            $stats['total_progress'] = 0;
+            // Root categories
+            $subCategories = \App\Models\DocumentCategory::whereNull('parent_id')->orderBy('name')->get();
         }
 
-        // Kalkulasi dinamis Program Berjalan & Target Terlampaui
-        $stats['program_berjalan'] = \App\Models\Indicator::count();
-        $stats['target_terlampaui'] = \App\Models\Indicator::where('progress', '>=', 100)->count();
+        if ($tahun) {
+            $query->where('year', $tahun);
+        }
 
-        // Ambil waktu update terakhir dari tabel terkait
-        $lastUpdate = collect([
-            \App\Models\Indicator::max('updated_at'),
-            \App\Models\Sector::max('updated_at'),
-            \App\Models\Stat::max('updated_at'),
-            \App\Models\Activity::max('created_at'),
-        ])->filter()->max();
+        $dokumen = $query->orderBy('year', 'desc')->orderBy('created_at', 'desc')->paginate(12)->withQueryString();
 
+        // Tahun hanya dari kategori aktif (bukan semua dokumen)
+        $yearsQuery = \App\Models\PublicDocument::select('year')->distinct()->orderBy('year', 'desc');
+        if ($currentCategoryModel) {
+            $yearsQuery->where('document_category_id', $currentCategoryModel->id);
+        }
+        $years = $yearsQuery->pluck('year');
+
+        $lastUpdate = \App\Models\PublicDocument::max('updated_at');
         $lastUpdate = $lastUpdate ? \Carbon\Carbon::parse($lastUpdate) : now();
 
-        return view('capaian', compact('stats', 'sectors', 'lastUpdate'));
+        return view('capaian', compact(
+            'dokumen', 'kategori', 'tahun',
+            'years', 'lastUpdate',
+            'subCategories', 'breadcrumb', 'currentCategoryModel'
+        ));
     }
+
 
     public function storeContact(Request $request)
     {
