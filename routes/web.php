@@ -12,7 +12,7 @@ Route::get('/profil', [PortalController::class, 'profil'])->name('profil');
 Route::get('/berita', [PortalController::class, 'berita'])->name('berita');
 Route::get('/berita/{slug}', [PortalController::class, 'beritaDetail'])->name('berita.detail');
 Route::get('/galeri', [PortalController::class, 'galeri'])->name('galeri');
-Route::get('/capaian', [PortalController::class, 'capaian'])->name('capaian');
+Route::get('/dokumen', [PortalController::class, 'dokumen'])->name('dokumen');
 Route::get('/kontak', [PortalController::class, 'kontak'])->name('kontak');
 Route::post('/kontak', [PortalController::class, 'storeContact'])->name('kontak.store');
 

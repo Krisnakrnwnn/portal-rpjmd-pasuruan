@@ -336,17 +336,17 @@
               <a href="{{ route('galeri') }}" class="{{ request()->routeIs('galeri') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors">Galeri</a>
 
               <div class="relative group">
-                <a href="{{ route('capaian') }}" class="{{ request()->routeIs('capaian') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors flex items-center gap-1">
+                <a href="{{ route('dokumen') }}" class="{{ request()->routeIs('dokumen') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors flex items-center gap-1">
                   Dokumen
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </a>
                 <div class="absolute left-0 mt-2 w-56 rounded-xl bg-white shadow-lg ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden">
                   @php $docCats = \App\Models\DocumentCategory::whereNull('parent_id')->get(); @endphp
                   @foreach($docCats as $cat)
-                  <a href="{{ route('capaian', ['kategori' => $cat->slug]) }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium transition-colors">{{ $cat->name }}</a>
+                  <a href="{{ route('dokumen', ['kategori' => $cat->slug]) }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium transition-colors">{{ $cat->name }}</a>
                   @endforeach
                   <div class="border-t border-gray-100"></div>
-                  <a href="{{ route('capaian') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium transition-colors font-bold">Semua Dokumen</a>
+                  <a href="{{ route('dokumen') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium transition-colors font-bold">Semua Dokumen</a>
                 </div>
               </div>
 
@@ -383,16 +383,16 @@
           <a href="{{ route('berita') }}" class="{{ request()->routeIs('berita') || request()->routeIs('berita.detail') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }} block px-3 py-3 rounded-md text-base font-bold transition-colors">Informasi & Berita</a>
           <a href="{{ route('galeri') }}" class="{{ request()->routeIs('galeri') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }} block px-3 py-3 rounded-md text-base font-bold transition-colors">Galeri</a>
           <div class="space-y-1">
-              <a href="{{ route('capaian') }}" class="{{ request()->routeIs('capaian') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }} block px-3 py-3 rounded-md text-base font-bold transition-colors flex justify-between items-center">
+              <a href="{{ route('dokumen') }}" class="{{ request()->routeIs('dokumen') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }} block px-3 py-3 rounded-md text-base font-bold transition-colors flex justify-between items-center">
                   Dokumen
                   <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
               </a>
               <div class="pl-4 space-y-1 bg-gray-50/50 rounded-b-md pb-2">
                   @php $docCatsMobile = \App\Models\DocumentCategory::whereNull('parent_id')->get(); @endphp
                   @foreach($docCatsMobile as $cat)
-                  <a href="{{ route('capaian', ['kategori' => $cat->slug]) }}" class="block px-3 py-2 rounded-md text-sm font-semibold text-gray-600 hover:text-blue-600 hover:bg-blue-50">- {{ $cat->name }}</a>
+                  <a href="{{ route('dokumen', ['kategori' => $cat->slug]) }}" class="block px-3 py-2 rounded-md text-sm font-semibold text-gray-600 hover:text-blue-600 hover:bg-blue-50">- {{ $cat->name }}</a>
                   @endforeach
-                  <a href="{{ route('capaian') }}" class="block px-3 py-2 rounded-md text-sm font-semibold text-blue-600 hover:bg-blue-50">- Semua Dokumen</a>
+                  <a href="{{ route('dokumen') }}" class="block px-3 py-2 rounded-md text-sm font-semibold text-blue-600 hover:bg-blue-50">- Semua Dokumen</a>
               </div>
           </div>
 
@@ -441,7 +441,7 @@
             <li><a href="{{ route('profil') }}" class="hover:text-blue-400 transition-colors">Profil Instansi</a></li>
             <li><a href="{{ route('berita') }}" class="hover:text-blue-400 transition-colors">Informasi & Berita</a></li>
             <li><a href="{{ route('galeri') }}" class="hover:text-blue-400 transition-colors">Galeri</a></li>
-            <li><a href="{{ route('capaian') }}" class="hover:text-blue-400 transition-colors">Dokumen Bapperida</a></li>
+            <li><a href="{{ route('dokumen') }}" class="hover:text-blue-400 transition-colors">Dokumen Bapperida</a></li>
           </ul>
         </div>
         <div>

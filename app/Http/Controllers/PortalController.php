@@ -74,7 +74,7 @@ class PortalController extends Controller
         return view('kontak');
     }
 
-    public function capaian(Request $request)
+    public function dokumen(Request $request)
     {
         $kategoriSlug = $request->query('kategori');
         $tahun        = $request->query('tahun');
@@ -124,7 +124,7 @@ class PortalController extends Controller
         $lastUpdate = \App\Models\PublicDocument::max('updated_at');
         $lastUpdate = $lastUpdate ? \Carbon\Carbon::parse($lastUpdate) : now();
 
-        return view('capaian', compact(
+        return view('dokumen', compact(
             'dokumen', 'kategori', 'tahun',
             'years', 'lastUpdate',
             'subCategories', 'breadcrumb', 'currentCategoryModel'

@@ -238,14 +238,14 @@
 
             {{-- ========== SIDEBAR ========== --}}
             <aside class="gdrive-sidebar">
-                <a href="{{ route('capaian') }}" class="gdrive-sidebar-item {{ !$currentCategoryModel ? 'active' : '' }}">
+                <a href="{{ route('dokumen') }}" class="gdrive-sidebar-item {{ !$currentCategoryModel ? 'active' : '' }}">
                     <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
                     Semua Dokumen
                 </a>
                 <div class="gdrive-sidebar-section-label">Kategori</div>
                 @php $rootCats = \App\Models\DocumentCategory::whereNull('parent_id')->orderBy('name')->get(); @endphp
                 @foreach($rootCats as $rc)
-                <a href="{{ route('capaian', ['kategori' => $rc->slug]) }}"
+                <a href="{{ route('dokumen', ['kategori' => $rc->slug]) }}"
                    class="gdrive-sidebar-item {{ ($currentCategoryModel && ($currentCategoryModel->id === $rc->id || optional($currentCategoryModel->parent)->id === $rc->id || optional(optional($currentCategoryModel->parent)->parent)->id === $rc->id)) ? 'active' : '' }}">
                     <svg class="w-5 h-5 flex-shrink-0 icon-folder" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
                     {{ $rc->name }}
@@ -260,12 +260,12 @@
 
                 {{-- Breadcrumb --}}
                 <div class="gdrive-breadcrumb">
-                    <a href="{{ route('capaian') }}">Dokumen Bapperida</a>
+                    <a href="{{ route('dokumen') }}">Dokumen Bapperida</a>
                     @if($currentCategoryModel)
                         @foreach($breadcrumb as $crumb)
                             <span class="sep">›</span>
                             @if(!$loop->last)
-                                <a href="{{ route('capaian', ['kategori' => $crumb->slug]) }}">{{ $crumb->name }}</a>
+                                <a href="{{ route('dokumen', ['kategori' => $crumb->slug]) }}">{{ $crumb->name }}</a>
                             @else
                                 <span>{{ $crumb->name }}</span>
                             @endif
@@ -278,9 +278,9 @@
                 <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:16px;">
                     <span style="font-size:12px;color:#5f6368;font-weight:600;white-space:nowrap;">Tahun:</span>
                     @php $catSlug = $currentCategoryModel->slug; @endphp
-                    <a href="{{ route('capaian', ['kategori' => $catSlug]) }}" class="year-chip {{ !$tahun ? 'active' : '' }}">Semua</a>
+                    <a href="{{ route('dokumen', ['kategori' => $catSlug]) }}" class="year-chip {{ !$tahun ? 'active' : '' }}">Semua</a>
                     @foreach($years as $yr)
-                    <a href="{{ route('capaian', ['kategori' => $catSlug, 'tahun' => $yr]) }}" class="year-chip {{ $tahun == $yr ? 'active' : '' }}">{{ $yr }}</a>
+                    <a href="{{ route('dokumen', ['kategori' => $catSlug, 'tahun' => $yr]) }}" class="year-chip {{ $tahun == $yr ? 'active' : '' }}">{{ $yr }}</a>
                     @endforeach
                 </div>
                 @endif
@@ -291,7 +291,7 @@
 
                 <div id="folder-grid" class="view-grid" style="margin-bottom:24px;" data-view-target="folder">
                     @foreach($subCategories as $cat)
-                    <a href="{{ route('capaian', ['kategori' => $cat->slug]) }}" class="gdrive-card folder-card" data-name="{{ strtolower($cat->name) }}">
+                    <a href="{{ route('dokumen', ['kategori' => $cat->slug]) }}" class="gdrive-card folder-card" data-name="{{ strtolower($cat->name) }}">
                         <svg class="w-12 h-12 icon-folder" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
                         <span class="gdrive-card-label" title="{{ $cat->name }}">{{ $cat->name }}</span>
                     </a>
@@ -300,7 +300,7 @@
 
                 <div id="folder-list" class="view-list gdrive-hidden" style="margin-bottom:24px;" data-view-target="folder">
                     @foreach($subCategories as $cat)
-                    <a href="{{ route('capaian', ['kategori' => $cat->slug]) }}" class="gdrive-list-item folder-card" data-name="{{ strtolower($cat->name) }}">
+                    <a href="{{ route('dokumen', ['kategori' => $cat->slug]) }}" class="gdrive-list-item folder-card" data-name="{{ strtolower($cat->name) }}">
                         <svg class="w-5 h-5 icon-folder flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
                         <span class="item-name">{{ $cat->name }}</span>
                         <span class="item-meta">Folder</span>
