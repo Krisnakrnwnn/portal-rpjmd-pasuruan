@@ -74,6 +74,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.role'])->grou
 
     // Aspirasi/Kontak (Admin & Super Admin)
     Route::post('/kontak/{id}/resolve', [AdminController::class, 'resolveContact'])->name('resolve_contact');
+    Route::delete('/kontak/{id}', [AdminController::class, 'deleteContact'])->name('delete_contact');
 
     // Toggle Publik/Draft (Admin & Super Admin)
     Route::post('/berita/{id}/toggle', [AdminController::class, 'togglePublish'])->name('toggle_publish');

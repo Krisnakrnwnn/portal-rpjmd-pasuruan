@@ -437,7 +437,16 @@ class AdminController extends Controller
         $contact = \App\Models\Contact::findOrFail($id);
         $contact->update(['status' => 'resolved']);
         Activity::log('Aspirasi', 'Selesai', 'Menandai selesai pesan dari: ' . $contact->name);
-        return redirect(route('admin.dashboard') . '#section-layanan')->with('success', 'Aspirasi dari "' . $contact->name . '" ditandai selesai!');
+        return redirect(route('admin.dashboard') . '#section-aspirasi')->with('success', 'Aspirasi dari "' . $contact->name . '" ditandai selesai!');
+    }
+
+    public function deleteContact($id)
+    {
+        $contact = \App\Models\Contact::findOrFail($id);
+        $name = $contact->name;
+        $contact->delete();
+        Activity::log('Aspirasi', 'Hapus', 'Menghapus pesan dari: ' . $name);
+        return redirect(route('admin.dashboard') . '#section-aspirasi')->with('success', 'Aspirasi dari "' . $name . '" berhasil dihapus!');
     }
 
     public function storeUser(Request $request)
@@ -569,36 +578,48 @@ class AdminController extends Controller
     public function storeDocument(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
             'document_category_id' => 'required|exists:document_categories,id',
-            'file' => 'required|file|mimes:pdf|max:20480', // 20MB Max
+            'files' => 'required|array',
+            'files.*' => 'file|mimes:pdf|max:20480', // 20MB Max per file
         ]);
 
-        $fileUrl = null;
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $uploadDir = public_path('uploads/documents');
-            if (!file_exists($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
+        $cat = \App\Models\DocumentCategory::find($request->document_category_id);
+        $categoryName = $cat ? $cat->name : '-';
+        $uploadedCount = 0;
+
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $uploadDir = public_path('uploads/documents');
+                if (!file_exists($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+                $file->move($uploadDir, $filename);
+                $fileUrl = asset('uploads/documents/' . $filename);
+
+                $title = $request->title;
+                // Use original filename if title is empty or if multiple files are uploaded
+                if (empty($title) || count($request->file('files')) > 1) {
+                    $title = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                }
+
+                $data = $request->except(['files', 'title', 'file']);
+                $data['title'] = $title;
+                $data['file_url'] = $fileUrl;
+                $data['year'] = date('Y');
+                $data['category'] = $categoryName;
+                $data['document_category_id'] = $request->document_category_id;
+
+                \App\Models\PublicDocument::create($data);
+                $uploadedCount++;
             }
-            $file->move($uploadDir, $filename);
-            $fileUrl = asset('uploads/documents/' . $filename);
         }
 
-        $data = $request->except('file');
-        $data['file_url'] = $fileUrl;
-        $data['year'] = date('Y'); // Automatically set the year
-        
-        // Backward compatibility for legacy category column
-        $cat = \App\Models\DocumentCategory::find($data['document_category_id']);
-        $data['category'] = $cat ? $cat->name : '-';
+        $msg = $uploadedCount > 1 ? "$uploadedCount dokumen publik." : 'dokumen publik: ' . ($request->title ?: 'Tanpa Judul');
+        Activity::log('Dokumen', 'Buat', 'Menambahkan ' . $msg);
 
-        \App\Models\PublicDocument::create($data);
-
-        Activity::log('Dokumen', 'Buat', 'Menambahkan dokumen publik: ' . $request->title);
-
-        return redirect(route('admin.dashboard') . '#section-dokumen')->with('success', 'Dokumen berhasil ditambahkan!');
+        return redirect(route('admin.dashboard') . '#section-dokumen')->with('success', "$uploadedCount Dokumen berhasil ditambahkan!");
     }
 
     public function updateDocument(Request $request, $id)

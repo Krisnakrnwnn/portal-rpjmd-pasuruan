@@ -380,8 +380,8 @@
             <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Dari: {{ $msg->name }} ({{ $msg->email }})</p>
             <p class="text-gray-600 text-sm mb-4 leading-relaxed">{{ $msg->message }}</p>
 
-            @if($msg->status == 'unread')
-            <div class="pt-4 border-t border-gray-100">
+            <div class="pt-4 border-t border-gray-100 flex items-center justify-between gap-4">
+               @if($msg->status == 'unread')
                <form action="{{ route('admin.resolve_contact', $msg->id) }}" method="POST" class="resolve-form">
                  @csrf
                  <button type="button"
@@ -391,8 +391,18 @@
                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                  </button>
                </form>
+               @else
+                 <div></div>
+               @endif
+               <form action="{{ route('admin.delete_contact', $msg->id) }}" method="POST" class="inline">
+                 @csrf
+                 @method('DELETE')
+                 <button type="button" onclick="confirmDelete(this.closest('form'), 'Yakin ingin menghapus pesan dari {{ addslashes($msg->name) }}?')" class="text-[11px] font-black text-gray-400 hover:text-red-600 uppercase tracking-tighter flex items-center gap-1 transition-colors">
+                   Hapus
+                   <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                 </button>
+               </form>
             </div>
-            @endif
           </div>
           @empty
           <div class="col-span-full py-12 text-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 text-gray-400 font-bold">
@@ -691,11 +701,11 @@
             @csrf
             <div class="space-y-2">
               <label class="text-sm font-bold text-gray-700">Upload File PDF</label>
-              <input type="file" name="file" accept=".pdf" required onchange="document.getElementById('add-doc-title').value = this.files[0].name.replace(/\.[^/.]+$/, '')" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all bg-gray-50">
+              <input type="file" name="files[]" multiple accept=".pdf" required onchange="document.getElementById('add-doc-title').value = this.files.length === 1 ? this.files[0].name.replace(/\.[^/.]+$/, '') : ''" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all bg-gray-50">
             </div>
             <div class="space-y-2">
               <label class="text-sm font-bold text-gray-700">Judul Dokumen</label>
-              <input type="text" name="title" id="add-doc-title" required placeholder="Contoh: Dokumen RPJMD Tahun 2025" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all">
+              <input type="text" name="title" id="add-doc-title" placeholder="Opsional (Otomatis pakai nama file jika kosong/upload banyak)" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all">
             </div>
             <div class="space-y-2">
               <label class="text-sm font-bold text-gray-700">Kategori</label>
