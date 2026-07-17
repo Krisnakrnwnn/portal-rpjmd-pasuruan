@@ -581,7 +581,11 @@ class AdminController extends Controller
             'title' => 'nullable|string|max:255',
             'document_category_id' => 'required|exists:document_categories,id',
             'files' => 'required|array',
-            'files.*' => 'file|mimes:pdf|max:20480', // 20MB Max per file
+            'files.*' => 'file|mimes:pdf|max:102400', // 100MB Max per file
+        ], [
+            'files.*.max' => 'Ukuran salah satu file PDF melebihi batas maksimal 100 MB.',
+            'files.*.mimes' => 'Semua file harus berformat PDF.',
+            'files.required' => 'Pilih setidaknya satu file PDF untuk diunggah.',
         ]);
 
         $cat = \App\Models\DocumentCategory::find($request->document_category_id);
@@ -627,7 +631,10 @@ class AdminController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'document_category_id' => 'required|exists:document_categories,id',
-            'file' => 'nullable|file|mimes:pdf|max:20480',
+            'file' => 'nullable|file|mimes:pdf|max:102400',
+        ], [
+            'file.max' => 'Ukuran file PDF tidak boleh lebih dari 100 MB.',
+            'file.mimes' => 'File harus berformat PDF.',
         ]);
 
         $document = \App\Models\PublicDocument::findOrFail($id);
