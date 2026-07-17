@@ -581,9 +581,9 @@ class AdminController extends Controller
             'title' => 'nullable|string|max:255',
             'document_category_id' => 'required|exists:document_categories,id',
             'files' => 'required|array',
-            'files.*' => 'file|mimes:pdf|max:102400', // 100MB Max per file
+            'files.*' => 'file|mimes:pdf|max:256000', // 250MB Max per file
         ], [
-            'files.*.max' => 'Ukuran salah satu file PDF melebihi batas maksimal 100 MB.',
+            'files.*.max' => 'Ukuran salah satu file PDF melebihi batas maksimal 250 MB.',
             'files.*.mimes' => 'Semua file harus berformat PDF.',
             'files.required' => 'Pilih setidaknya satu file PDF untuk diunggah.',
         ]);
@@ -631,9 +631,9 @@ class AdminController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'document_category_id' => 'required|exists:document_categories,id',
-            'file' => 'nullable|file|mimes:pdf|max:102400',
+            'file' => 'nullable|file|mimes:pdf|max:256000',
         ], [
-            'file.max' => 'Ukuran file PDF tidak boleh lebih dari 100 MB.',
+            'file.max' => 'Ukuran file PDF tidak boleh lebih dari 250 MB.',
             'file.mimes' => 'File harus berformat PDF.',
         ]);
 
