@@ -129,10 +129,9 @@
                 <div class="prose prose-blue max-w-none text-gray-700 leading-relaxed space-y-6">
                    {!! nl2br(e($news->content)) !!}
                 </div>
-                </div>
 
                 <!-- Tombol Kembali & Bagikan -->
-                <div class="mt-12 pt-8 pb-8 sm:mt-16 sm:pt-10 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-6 md:px-12 lg:px-16">
+                <div class="mt-10 pt-8 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-6">
                    <a href="{{ route('berita') }}" class="group flex items-center justify-center gap-3 w-full sm:w-auto px-6 py-3.5 bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white rounded-full font-bold transition-all shadow-sm">
                       <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                       <span class="uppercase tracking-wider text-xs">Kembali ke Daftar Berita</span>

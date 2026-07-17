@@ -191,7 +191,7 @@
                     <form action="{{ route('admin.delete_news', $post->id) }}" method="POST" class="inline">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" onclick="return confirm('Hapus berita ini?')" class="text-xs px-3 py-1 bg-gray-50 text-gray-600 rounded hover:text-red-600 transition-colors">Hapus</button>
+                        <button type="button" onclick="confirmDelete(this.closest('form'), 'Hapus berita ini?')" class="text-xs px-3 py-1 bg-gray-50 text-gray-600 rounded hover:text-red-600 transition-colors">Hapus</button>
                     </form>
                   </td>
                 </tr>
@@ -428,7 +428,7 @@
                 <button onclick="editGallery({{ $gallery->id }}, '{{ addslashes($gallery->title) }}', '{{ addslashes($gallery->location) }}')" class="w-10 h-10 bg-white/20 hover:bg-white/40 backdrop-blur rounded-full flex items-center justify-center text-white transition-colors" title="Edit">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                 </button>
-                <form action="{{ route('admin.delete_gallery', $gallery->id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus galeri ini?')">
+                <form action="{{ route('admin.delete_gallery', $gallery->id) }}" method="POST" class="inline" onsubmit="event.preventDefault(); confirmDelete(this, 'Yakin ingin menghapus galeri ini?')">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="w-10 h-10 bg-red-500/80 hover:bg-red-600 backdrop-blur rounded-full flex items-center justify-center text-white transition-colors" title="Hapus">
@@ -617,7 +617,7 @@
                                 <form action="{{ route('admin.document-categories.destroy', $cat->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" onclick="return confirm('Hapus kategori ini? Pastikan tidak ada dokumen di dalamnya.')" class="text-xs px-3 py-1.5 bg-gray-50 text-gray-600 font-bold rounded hover:text-red-600 transition-colors">Hapus</button>
+                                    <button type="button" onclick="confirmDelete(this.closest('form'), 'Hapus kategori ini? Pastikan tidak ada dokumen di dalamnya.')" class="text-xs px-3 py-1.5 bg-gray-50 text-gray-600 font-bold rounded hover:text-red-600 transition-colors">Hapus</button>
                                 </form>
                             </td>
                             </tr>
@@ -663,7 +663,7 @@
                     <form action="{{ route('admin.delete_document', $doc->id) }}" method="POST" class="inline">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" onclick="return confirm('Hapus dokumen ini?')" class="text-xs px-3 py-1 bg-gray-50 text-gray-600 rounded hover:text-red-600 transition-colors">Hapus</button>
+                        <button type="button" onclick="confirmDelete(this.closest('form'), 'Hapus dokumen ini?')" class="text-xs px-3 py-1 bg-gray-50 text-gray-600 rounded hover:text-red-600 transition-colors">Hapus</button>
                     </form>
                   </td>
                 </tr>
@@ -813,7 +813,7 @@
                 <button type="button" onclick="editSector({{ $sector->id }}, '{{ addslashes($sector->name) }}', '{{ $sector->theme_color }}', '{{ base64_encode($sector->icon) }}')" class="cursor-pointer text-xs px-3 py-1 bg-indigo-50 text-indigo-600 font-bold rounded hover:bg-indigo-100 transition-colors">Edit Sektor</button>
                 <form action="{{ route('admin.delete_sector', $sector->id) }}" method="POST">
                   @csrf @method('DELETE')
-                  <button type="submit" onclick="return confirm('AMARAN: Menghapus Sektor ini AKAN menghapus seluruh indikator di dalamnya. Pastikan?')" class="cursor-pointer text-xs px-3 py-1 bg-red-100 text-red-600 rounded hover:bg-red-600 hover:text-white transition-colors">
+                  <button type="button" onclick="confirmDelete(this.closest('form'), 'AMARAN: Menghapus Sektor ini AKAN menghapus seluruh indikator di dalamnya. Pastikan?')" class="cursor-pointer text-xs px-3 py-1 bg-red-100 text-red-600 rounded hover:bg-red-600 hover:text-white transition-colors">
                     Hapus Sektor
                   </button>
                 </form>
@@ -847,7 +847,7 @@
                         <button type="button" onclick="editIndicator({{ $ind->id }}, {{ $ind->sector_id }}, '{{ addslashes($ind->name) }}', {{ $ind->progress }})" class="cursor-pointer text-xs px-2 py-1 text-blue-600 hover:bg-blue-50 rounded transition-colors font-bold">Edit</button>
                         <form action="{{ route('admin.delete_indicator', $ind->id) }}" method="POST" class="inline">
                           @csrf @method('DELETE')
-                          <button type="submit" onclick="return confirm('Hapus indikator ini?')" class="cursor-pointer text-xs px-2 py-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors">Hapus</button>
+                          <button type="button" onclick="confirmDelete(this.closest('form'), 'Hapus indikator ini?')" class="cursor-pointer text-xs px-2 py-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors">Hapus</button>
                         </form>
                       </div>
                     </td>
@@ -1096,7 +1096,7 @@
                   <form action="{{ route('admin.delete_user', $u->id) }}" method="POST" class="inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" onclick="return confirm('Hapus pengguna ini?')" class="text-xs px-3 py-1 bg-red-50 text-red-600 rounded hover:bg-red-600 hover:text-white transition-colors">Hapus</button>
+                    <button type="button" onclick="confirmDelete(this.closest('form'), 'Hapus pengguna ini?')" class="text-xs px-3 py-1 bg-red-50 text-red-600 rounded hover:bg-red-600 hover:text-white transition-colors">Hapus</button>
                   </form>
                   @endif
                 </td>

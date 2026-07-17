@@ -61,7 +61,7 @@ class AdminController extends Controller
 
         Activity::log('Kategori', 'Buat', 'Menambahkan kategori dokumen baru: ' . $request->name);
 
-        return redirect()->back()->with('success', 'Kategori dokumen berhasil ditambahkan!');
+        return redirect(route('admin.dashboard') . '#section-dokumen')->with('success', 'Kategori dokumen berhasil ditambahkan!');
     }
 
     public function updateDocumentCategory(Request $request, $id)
@@ -78,7 +78,7 @@ class AdminController extends Controller
 
         Activity::log('Kategori', 'Update', 'Memperbarui kategori dokumen: ' . $request->name);
 
-        return redirect()->back()->with('success', 'Kategori dokumen berhasil diperbarui!');
+        return redirect(route('admin.dashboard') . '#section-dokumen')->with('success', 'Kategori dokumen berhasil diperbarui!');
     }
 
     public function destroyDocumentCategory($id)
@@ -87,14 +87,14 @@ class AdminController extends Controller
         
         // Cek jika kategori masih dipakai
         if($category->documents()->count() > 0) {
-            return redirect()->back()->with('error', 'Kategori ini tidak dapat dihapus karena masih digunakan oleh dokumen!');
+            return redirect(route('admin.dashboard') . '#section-dokumen')->with('error', 'Kategori ini tidak dapat dihapus karena masih digunakan oleh dokumen!');
         }
 
         $category->delete();
 
         Activity::log('Kategori', 'Hapus', 'Menghapus kategori dokumen: ' . $category->name);
 
-        return redirect()->back()->with('success', 'Kategori dokumen berhasil dihapus!');
+        return redirect(route('admin.dashboard') . '#section-dokumen')->with('success', 'Kategori dokumen berhasil dihapus!');
     }
 
     public function storeNews(Request $request)
@@ -736,7 +736,7 @@ class AdminController extends Controller
         ]);
 
         Activity::log('Galeri', 'Tambah', 'Menambah foto galeri baru: ' . $request->title);
-        return back()->with('success', 'Galeri berhasil ditambahkan!');
+        return redirect(route('admin.dashboard') . '#section-galeri')->with('success', 'Galeri berhasil ditambahkan!');
     }
 
     public function updateGallery(Request $request, $id)
@@ -767,7 +767,7 @@ class AdminController extends Controller
         $gallery->save();
 
         Activity::log('Galeri', 'Ubah', 'Mengubah data galeri: ' . $gallery->title);
-        return back()->with('success', 'Galeri berhasil diubah!');
+        return redirect(route('admin.dashboard') . '#section-galeri')->with('success', 'Galeri berhasil diubah!');
     }
 
     public function deleteGallery($id)
@@ -783,6 +783,6 @@ class AdminController extends Controller
         $gallery->delete();
 
         Activity::log('Galeri', 'Hapus', 'Menghapus foto galeri: ' . $title);
-        return back()->with('success', 'Galeri berhasil dihapus!');
+        return redirect(route('admin.dashboard') . '#section-galeri')->with('success', 'Galeri berhasil dihapus!');
     }
 }

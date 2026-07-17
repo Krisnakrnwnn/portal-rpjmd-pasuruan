@@ -325,7 +325,7 @@
           </a>
         </div>
         <div class="hidden lg:block">
-          <div class="ml-10 flex items-baseline space-x-4">
+          <div class="ml-10 flex items-center space-x-4">
             @if(request()->routeIs('berita.detail'))
               <a href="{{ route('home') }}" class="text-gray-600 font-medium hover:text-blue-600 px-2 py-2 transition-colors">Beranda</a>
               <a href="{{ route('berita') }}" class="text-blue-600 font-semibold border-b-2 border-blue-600 px-2 py-2 transition-colors">Informasi</a>
@@ -334,19 +334,58 @@
               <a href="{{ route('profil') }}" class="{{ request()->routeIs('profil') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors">Profil</a>
               <a href="{{ route('berita') }}" class="{{ request()->routeIs('berita') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors">Informasi</a>
               <a href="{{ route('galeri') }}" class="{{ request()->routeIs('galeri') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors">Galeri</a>
-
               <a href="{{ route('dokumen') }}" class="{{ request()->routeIs('dokumen') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors">Dokumen</a>
-
-              <a href="{{ route('kontak') }}" class="bg-blue-600 text-white px-4 py-2.5 rounded-full text-sm font-semibold hover:bg-blue-700 shadow-md hover:shadow-lg transition-all ml-2">Hubungi Kami</a>
             @endif
-            
-            @auth
-              <a href="{{ route('admin.dashboard') }}" class="text-blue-600 font-bold px-2 py-2">Dashboard</a>
-              <form method="POST" action="{{ route('logout') }}" class="inline">
-                @csrf
-                <button type="submit" class="text-red-500 font-medium px-2 py-2">Logout</button>
-              </form>
-            @endauth
+
+            <div class="flex items-center space-x-4 ml-6">
+              @if(!request()->routeIs('berita.detail'))
+                <a href="{{ route('kontak') }}" class="bg-blue-600 text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-blue-700 shadow-md hover:shadow-lg transition-all">Hubungi Kami</a>
+              @endif
+              
+              @auth
+                <div class="relative ml-2">
+                  <button type="button" class="flex items-center gap-3 text-left focus:outline-none hover:opacity-80 transition-opacity" id="user-menu-button" aria-expanded="false" onclick="document.getElementById('user-dropdown').classList.toggle('hidden')">
+                    <span class="sr-only">Open user menu</span>
+                    <div class="hidden md:block text-right">
+                      <p class="text-sm font-bold text-gray-900 leading-none mb-1">{{ Auth::user()->name ?? 'Super Admin' }}</p>
+                      <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wide">{{ Auth::user()->role ?? 'Super Admin' }}</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold text-sm shadow-sm ring-2 ring-white">
+                      @php
+                          $name = Auth::user()->name ?? 'Super Admin';
+                          $initials = collect(explode(' ', $name))->map(function($segment) {
+                              return strtoupper(substr($segment, 0, 1));
+                          })->take(2)->join('');
+                      @endphp
+                      {{ $initials }}
+                    </div>
+                  </button>
+                  <div class="hidden absolute right-0 mt-2 w-40 text-base list-none bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden" id="user-dropdown">
+                    <ul class="py-1" aria-labelledby="user-menu-button">
+                      <li>
+                        <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 font-medium text-left transition-colors"><i class="fas fa-tachometer-alt w-5 text-center mr-1 text-gray-400"></i> Dashboard</a>
+                      </li>
+                      <li>
+                        <form method="POST" action="{{ route('logout') }}" class="m-0">
+                          @csrf
+                          <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-bold transition-colors"><i class="fas fa-sign-out-alt w-5 text-center mr-1 text-red-400"></i> Logout</button>
+                        </form>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                
+                <script>
+                    document.addEventListener('click', function(event) {
+                        var dropdown = document.getElementById('user-dropdown');
+                        var button = document.getElementById('user-menu-button');
+                        if (dropdown && !dropdown.contains(event.target) && !button.contains(event.target)) {
+                            dropdown.classList.add('hidden');
+                        }
+                    });
+                </script>
+              @endauth
+            </div>
           </div>
         </div>
 
