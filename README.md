@@ -31,6 +31,25 @@ DB_PASSWORD=
 GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
+Konfigurasikan pengiriman email administrator melalui variabel `MAIL_*` Laravel. Fitur OTP aktif secara default dan dapat dikendalikan untuk kebutuhan rollback operasional:
+
+```env
+ADMIN_OTP_ENABLED=true
+ADMIN_OTP_EXPIRES_MINUTES=5
+ADMIN_OTP_MAX_ATTEMPTS=5
+ADMIN_OTP_RESEND_COOLDOWN_SECONDS=60
+ADMIN_OTP_MAX_DELIVERIES=3
+ADMIN_OTP_DELIVERY_WINDOW_SECONDS=900
+ADMIN_OTP_IP_MAX_DELIVERIES=10
+ADMIN_OTP_RETENTION_HOURS=24
+ADMIN_SUPPORT_EMAIL=
+MAIL_TIMEOUT=10
+```
+
+Untuk Gmail pada port 587 gunakan `MAIL_SCHEME=smtp`; STARTTLS dinegosiasikan otomatis oleh mailer. Jangan menggunakan `MAIL_SCHEME=tls` karena `tls` bukan scheme transport Symfony Mailer yang valid.
+
+Jalankan scheduler dan queue worker pada production. Pengiriman OTP saat ini dilakukan langsung agar kegagalan provider dapat dikembalikan dengan aman pada alur login; timeout mail mencegah request menunggu tanpa batas.
+
 ## 3. Setup Database
 Buat database baru di MySQL (misalnya melalui phpMyAdmin atau command line) dengan nama yang sesuai di `.env`, lalu jalankan perintah migrasi:
 ```bash

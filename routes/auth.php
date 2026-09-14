@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AdminOtpController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
@@ -21,6 +22,20 @@ Route::middleware('guest')->group(function () {
         ->name('login');
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
+
+    Route::get('login/verifikasi', [AdminOtpController::class, 'show'])
+        ->name('otp.show');
+
+    Route::post('login/verifikasi', [AdminOtpController::class, 'verify'])
+        ->middleware('throttle:10,1')
+        ->name('otp.verify');
+
+    Route::post('login/verifikasi/kirim-ulang', [AdminOtpController::class, 'resend'])
+        ->middleware('throttle:10,15')
+        ->name('otp.resend');
+
+    Route::post('login/verifikasi/batal', [AdminOtpController::class, 'cancel'])
+        ->name('otp.cancel');
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');

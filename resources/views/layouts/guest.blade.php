@@ -31,7 +31,7 @@
             }
         </style>
     </head>
-    <body class="font-sans text-gray-900 antialiased overflow-hidden">
+    <body class="font-sans text-gray-900 antialiased overflow-x-hidden">
         <div class="min-h-screen relative flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <!-- Cinematic Background -->
             <div class="absolute inset-0 z-0">

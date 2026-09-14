@@ -35,6 +35,7 @@ Thumbs.db
 # Documentation (keep only essential)
 *.md
 !README.md
+!docs/RUNBOOK-OTP-ADMIN.md
 
 # Kiro AI files
 .kiro/

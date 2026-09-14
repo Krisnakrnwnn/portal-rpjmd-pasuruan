@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
+use App\Services\AuthSecurityEventRecorder;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -38,19 +40,27 @@ class LoginRequest extends FormRequest
      *
      * @throws ValidationException
      */
-    public function authenticate(): void
+    public function authenticate(AuthSecurityEventRecorder $events): User
     {
-        $this->ensureIsNotRateLimited();
+        $this->ensureIsNotRateLimited($events);
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        $credentials = $this->only('email', 'password');
+        $provider = Auth::guard('web')->getProvider();
+        $user = $provider->retrieveByCredentials($credentials);
+        $validRole = $user instanceof User && in_array($user->role, ['Admin', 'Super Admin'], true);
+
+        if (! $validRole || ! $provider->validateCredentials($user, $credentials)) {
             RateLimiter::hit($this->throttleKey());
+            $events->record($this, 'credentials_failed', 'denied', $validRole ? $user : null);
 
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                'email' => 'Email atau kata sandi tidak sesuai.',
             ]);
         }
 
         RateLimiter::clear($this->throttleKey());
+
+        return $user;
     }
 
     /**
@@ -58,7 +68,7 @@ class LoginRequest extends FormRequest
      *
      * @throws ValidationException
      */
-    public function ensureIsNotRateLimited(): void
+    public function ensureIsNotRateLimited(AuthSecurityEventRecorder $events): void
     {
         if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
@@ -67,6 +77,9 @@ class LoginRequest extends FormRequest
         event(new Lockout($this));
 
         $seconds = RateLimiter::availableIn($this->throttleKey());
+        $events->record($this, 'credentials_rate_limited', 'denied', metadata: [
+            'retry_after' => $seconds,
+        ]);
 
         throw ValidationException::withMessages([
             'email' => trans('auth.throttle', [
