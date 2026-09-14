@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AdminOtpController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\ClientLoginController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
@@ -13,6 +14,12 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
+    Route::get('client/login', [ClientLoginController::class, 'create'])
+        ->name('client.login');
+
+    Route::post('client/login', [ClientLoginController::class, 'store'])
+        ->name('client.login.store');
+
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
 
@@ -71,4 +78,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+
+    Route::post('client/logout', [ClientLoginController::class, 'destroy'])
+        ->name('client.logout');
 });

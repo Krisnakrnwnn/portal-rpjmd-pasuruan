@@ -3,18 +3,21 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PortalController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AdminPageController;
 use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 
-// Public Portal Routes
-Route::get('/', [PortalController::class, 'home'])->name('home');
-Route::get('/profil', [PortalController::class, 'profil'])->name('profil');
-Route::get('/berita', [PortalController::class, 'berita'])->name('berita');
-Route::get('/berita/{slug}', [PortalController::class, 'beritaDetail'])->name('berita.detail');
-Route::get('/galeri', [PortalController::class, 'galeri'])->name('galeri');
-Route::get('/dokumen', [PortalController::class, 'dokumen'])->name('dokumen');
-Route::get('/kontak', [PortalController::class, 'kontak'])->name('kontak');
-Route::post('/kontak', [PortalController::class, 'storeContact'])->name('kontak.store');
+// Protected Portal Routes (Wajib Login)
+Route::middleware('auth')->group(function () {
+    Route::get('/', [PortalController::class, 'home'])->name('home');
+    Route::get('/profil', [PortalController::class, 'profil'])->name('profil');
+    Route::get('/berita', [PortalController::class, 'berita'])->name('berita');
+    Route::get('/berita/{slug}', [PortalController::class, 'beritaDetail'])->name('berita.detail');
+    Route::get('/galeri', [PortalController::class, 'galeri'])->name('galeri');
+    Route::get('/dokumen', [PortalController::class, 'dokumen'])->name('dokumen');
+    Route::get('/kontak', [PortalController::class, 'kontak'])->name('kontak');
+    Route::post('/kontak', [PortalController::class, 'storeContact'])->name('kontak.store');
+});
 
 // API Chatbot (with rate limiting)
 Route::post('/api/chat', [\App\Http\Controllers\ChatbotController::class, 'chat'])
@@ -47,7 +50,17 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap')
 
 // Admin Routes (Protected by Auth + Admin Role)
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.role'])->group(function () {
-    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/', [AdminPageController::class, 'dashboard'])->name('dashboard');
+    Route::get('/berita', [AdminPageController::class, 'berita'])->name('berita.index');
+    Route::get('/berita/tambah', [AdminPageController::class, 'createBerita'])->name('berita.create');
+    Route::get('/berita/{news}/edit', [AdminPageController::class, 'editBerita'])->name('berita.edit');
+    Route::get('/dokumen', [AdminPageController::class, 'dokumen'])->name('dokumen.index');
+    Route::get('/dokumen/tambah', [AdminPageController::class, 'createDokumen'])->name('dokumen.create');
+    Route::get('/dokumen/{document}/edit', [AdminPageController::class, 'editDokumen'])->name('dokumen.edit');
+    Route::get('/galeri', [AdminPageController::class, 'galeri'])->name('galeri.index');
+    Route::get('/aspirasi', [AdminPageController::class, 'aspirasi'])->name('aspirasi.index');
+    Route::get('/ingest', [AdminPageController::class, 'ingest'])->name('ingest.index');
+    Route::get('/setelan', [AdminPageController::class, 'setelan'])->name('setelan.index');
     Route::post('/stats', [AdminController::class, 'updateStats'])->name('update_stats');
     Route::post('/hero-stats', [AdminController::class, 'updateHeroStats'])->name('update_hero_stats');
     Route::post('/hero-stats/add', [AdminController::class, 'storeHeroStat'])->name('store_hero_stat');
@@ -62,15 +75,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.role'])->grou
     Route::post('/galeri', [AdminController::class, 'storeGallery'])->name('store_gallery');
     Route::put('/galeri/{id}', [AdminController::class, 'updateGallery'])->name('update_gallery');
     Route::delete('/galeri/{id}', [AdminController::class, 'deleteGallery'])->name('delete_gallery');
-
-
-    // Capaian Sektor & Indikator (Admin & Super Admin)
-    Route::post('/sectormake', [AdminController::class, 'storeSector'])->name('store_sector');
-    Route::put('/sector/{id}', [AdminController::class, 'updateSector'])->name('update_sector');
-    Route::delete('/sector/{id}', [AdminController::class, 'deleteSector'])->name('delete_sector');
-    Route::post('/indicator', [AdminController::class, 'storeIndicator'])->name('store_indicator');
-    Route::put('/indicator/{id}', [AdminController::class, 'updateIndicator'])->name('update_indicator');
-    Route::delete('/indicator/{id}', [AdminController::class, 'deleteIndicator'])->name('delete_indicator');
 
     // Aspirasi/Kontak (Admin & Super Admin)
     Route::post('/kontak/{id}/resolve', [AdminController::class, 'resolveContact'])->name('resolve_contact');
@@ -103,6 +107,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.role'])->grou
 
     // Super Admin ONLY
     Route::middleware('super.admin')->group(function () {
+        Route::get('/pengguna', [AdminPageController::class, 'pengguna'])->name('pengguna.index');
+        Route::get('/pengguna/tambah', [AdminPageController::class, 'createPengguna'])->name('pengguna.create');
+        Route::get('/pengguna/{user}/edit', [AdminPageController::class, 'editPengguna'])->name('pengguna.edit');
         Route::post('/users', [AdminController::class, 'storeUser'])->name('store_user');
         Route::put('/users/{id}', [AdminController::class, 'updateUser'])->name('update_user');
         Route::delete('/users/{id}', [AdminController::class, 'deleteUser'])->name('delete_user');

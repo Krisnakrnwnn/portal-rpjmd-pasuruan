@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('document_categories', function (Blueprint $table) {
-            $table->foreignId('parent_id')->nullable()->after('id')->constrained('document_categories')->onDelete('cascade');
-        });
+        if (!Schema::hasColumn('document_categories', 'parent_id')) {
+            Schema::table('document_categories', function (Blueprint $table) {
+                $table->foreignId('parent_id')->nullable()->after('id')->constrained('document_categories')->onDelete('cascade');
+            });
+        }
     }
 
     /**

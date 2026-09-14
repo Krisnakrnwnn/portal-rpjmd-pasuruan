@@ -15,7 +15,7 @@
 
 ## 1. Ringkasan produk
 
-Portal RPJMD Kabupaten Pasuruan adalah pusat informasi publik untuk membantu masyarakat menemukan informasi perencanaan pembangunan daerah, membaca berita, mengakses dokumen resmi, melihat galeri kegiatan, menyampaikan aspirasi, dan bertanya kepada asisten virtual berbasis dokumen RPJMD.
+Portal RPJMD Kabupaten Pasuruan adalah pusat informasi internal dan terbatas bagi pengguna/warga terdaftar untuk menemukan informasi perencanaan pembangunan daerah, membaca berita, mengakses dokumen resmi, melihat galeri kegiatan, menyampaikan aspirasi, dan bertanya kepada asisten virtual berbasis dokumen RPJMD. **Seluruh fitur dan halaman portal memerlukan login pengguna sebelum dapat diakses.**
 
 Di sisi internal, portal menyediakan dashboard bagi Admin dan Super Admin untuk mengelola konten, dokumen, kategori, galeri, aspirasi, basis pengetahuan chatbot, konfigurasi AI, dan akun pengelola.
 
@@ -39,10 +39,11 @@ Menjadi portal resmi RPJMD Kabupaten Pasuruan yang transparan, mudah ditelusuri,
 
 ### 4.1 Tujuan pengguna
 
-- Warga dapat menemukan dokumen RPJMD berdasarkan kategori dan tahun.
-- Warga dapat memahami isi dokumen melalui chatbot dalam Bahasa Indonesia atau Inggris.
-- Warga dapat memperoleh kabar pembangunan terbaru dari sumber resmi.
-- Warga dapat mengirim aspirasi atau pertanyaan kepada pengelola.
+- Warga/Pengguna harus melakukan login terdaftar terlebih dahulu untuk mengakses portal.
+- Pengguna yang telah login dapat menemukan dokumen RPJMD berdasarkan kategori dan tahun.
+- Pengguna yang telah login dapat memahami isi dokumen melalui chatbot dalam Bahasa Indonesia atau Inggris.
+- Pengguna yang telah login dapat memperoleh kabar pembangunan terbaru dari sumber resmi.
+- Pengguna yang telah login dapat mengirim aspirasi atau pertanyaan kepada pengelola.
 - Pengelola dapat memperbarui konten tanpa bantuan pengembang.
 
 ### 4.2 Tujuan organisasi
@@ -269,6 +270,8 @@ Prioritas menggunakan MoSCoW: Must (wajib), Should (penting), Could (opsional).
 | STA-06 | **Gap** | Method CRUD layanan tersedia di controller, tetapi route admin-nya belum terdaftar. Tentukan apakah modul Layanan dipertahankan dan sambungkan route/UI yang diperlukan. |
 
 ### 9.10 Dashboard dan audit
+
+Rencana pemisahan dashboard menjadi halaman berbasis route dijelaskan dalam [PRD Admin Multipage](PRD-ADMIN-MULTIPAGE.md). Pada baseline, ADM-02 masih menggunakan hash. Target pemisahan menggantinya dengan URL per halaman sambil mempertahankan kompatibilitas `#section-*`, fungsi, dan desain dashboard existing; target ini belum diimplementasikan.
 
 | ID | Prioritas | Kebutuhan |
 |---|---|---|
@@ -514,4 +517,3 @@ Sebuah kebutuhan dianggap selesai jika:
 - PRD ini bersifat *as-built plus hardening*: fitur yang sudah tampak di kode dicatat sebagai baseline, sedangkan ketidaksambungan dicatat sebagai Gap.
 - Tidak ada wawancara stakeholder, data trafik produksi, regulasi internal, desain final, atau lampiran brief khusus yang tersedia saat penyusunan.
 - Target metrik dan kebijakan operasional belum final sampai dikonfirmasi pemilik produk.
-

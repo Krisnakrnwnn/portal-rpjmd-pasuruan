@@ -42,7 +42,7 @@ class AdminProfileTest extends TestCase
             ]
         ]);
 
-        $response->assertRedirect(route('admin.dashboard') . '#section-setelan');
+        $response->assertRedirect(route('admin.setelan.index'));
         $response->assertSessionHas('success', 'Profil instansi berhasil diperbarui!');
 
         $this->assertDatabaseHas('profiles', [
