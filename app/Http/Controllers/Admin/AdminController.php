@@ -14,39 +14,6 @@ use App\Jobs\IngestDocumentJob;
 
 class AdminController extends Controller
 {
-    public function dashboard()
-    {
-        $news = News::with('author')->orderBy('published_at', 'desc')->get();
-        $contacts = \App\Models\Contact::orderBy('created_at', 'desc')->get();
-        $services = \App\Models\Service::all();
-        $profiles = \App\Models\Profile::all();
-        $users = \App\Models\User::all();
-        $sectors = \App\Models\Sector::with('indicators')->get();
-        $publicDocuments = \App\Models\PublicDocument::orderBy('year', 'desc')->orderBy('created_at', 'desc')->get();
-        $documentCategories = \App\Models\DocumentCategory::all();
-
-        // Pisahkan: Statistik Hero Beranda vs Statistik Capaian RPJMD
-        $heroStats = \App\Models\Stat::where('key', 'like', 'hero_%')->get();
-
-        $capaianStats = \App\Models\Stat::where('key', 'not like', 'hero_%')
-            ->where('key', '!=', 'gemini_model')
-            ->get();
-
-        // Real Statistics for Cards
-        $counts = [
-            'news' => $news->count(),
-            'unread_contacts' => \App\Models\Contact::where('status', 'unread')->count(),
-            'services' => $services->count(),
-            'users' => $users->count(),
-            'sectors' => $sectors->count(),
-        ];
-
-        $activities = Activity::with('user')->orderBy('created_at', 'desc')->get();
-        $galleries = \App\Models\Gallery::orderBy('created_at', 'desc')->get();
-
-        return view('admin.dashboard', compact('news', 'contacts', 'services', 'heroStats', 'capaianStats', 'profiles', 'users', 'counts', 'activities', 'sectors', 'publicDocuments', 'documentCategories', 'galleries'));
-    }
-
     // --- Kategori Dokumen CRUD ---
     public function storeDocumentCategory(Request $request)
     {
@@ -61,7 +28,7 @@ class AdminController extends Controller
 
         Activity::log('Kategori', 'Buat', 'Menambahkan kategori dokumen baru: ' . $request->name);
 
-        return redirect(route('admin.dashboard') . '#section-dokumen')->with('success', 'Kategori dokumen berhasil ditambahkan!');
+        return redirect(\App\Support\AdminNavigation::url('admin.dokumen.index'))->with('success', 'Kategori dokumen berhasil ditambahkan!');
     }
 
     public function updateDocumentCategory(Request $request, $id)
@@ -78,7 +45,7 @@ class AdminController extends Controller
 
         Activity::log('Kategori', 'Update', 'Memperbarui kategori dokumen: ' . $request->name);
 
-        return redirect(route('admin.dashboard') . '#section-dokumen')->with('success', 'Kategori dokumen berhasil diperbarui!');
+        return redirect(\App\Support\AdminNavigation::url('admin.dokumen.index'))->with('success', 'Kategori dokumen berhasil diperbarui!');
     }
 
     public function destroyDocumentCategory($id)
@@ -87,14 +54,14 @@ class AdminController extends Controller
         
         // Cek jika kategori masih dipakai
         if($category->documents()->count() > 0) {
-            return redirect(route('admin.dashboard') . '#section-dokumen')->with('error', 'Kategori ini tidak dapat dihapus karena masih digunakan oleh dokumen!');
+            return redirect(\App\Support\AdminNavigation::url('admin.dokumen.index'))->with('error', 'Kategori ini tidak dapat dihapus karena masih digunakan oleh dokumen!');
         }
 
         $category->delete();
 
         Activity::log('Kategori', 'Hapus', 'Menghapus kategori dokumen: ' . $category->name);
 
-        return redirect(route('admin.dashboard') . '#section-dokumen')->with('success', 'Kategori dokumen berhasil dihapus!');
+        return redirect(\App\Support\AdminNavigation::url('admin.dokumen.index'))->with('success', 'Kategori dokumen berhasil dihapus!');
     }
 
     public function storeNews(Request $request)
@@ -132,7 +99,7 @@ class AdminController extends Controller
         $status = $request->boolean('is_published', true) ? 'publik' : 'draft';
         Activity::log('Berita', 'Buat', 'Menerbitkan berita baru (' . $status . '): ' . $request->title);
 
-        return redirect(route('admin.dashboard') . '#section-berita')->with('success', 'Berita berhasil disimpan!');
+        return redirect(\App\Support\AdminNavigation::url('admin.berita.index'))->with('success', 'Berita berhasil disimpan!');
     }
 
     public function updateNews(Request $request, $id)
@@ -181,7 +148,7 @@ class AdminController extends Controller
 
         Activity::log('Berita', 'Update', 'Memperbarui berita: ' . $news->title);
 
-        return redirect(route('admin.dashboard') . '#section-berita')->with('success', 'Berita berhasil diperbarui!');
+        return redirect(\App\Support\AdminNavigation::url('admin.berita.index'))->with('success', 'Berita berhasil diperbarui!');
     }
 
     public function deleteNews($id)
@@ -203,7 +170,7 @@ class AdminController extends Controller
 
         Activity::log('Berita', 'Hapus', 'Menghapus berita: ' . $news->title);
         $news->delete();
-        return redirect(route('admin.dashboard') . '#section-berita')->with('success', 'Berita berhasil dihapus!');
+        return redirect(\App\Support\AdminNavigation::url('admin.berita.index'))->with('success', 'Berita berhasil dihapus!');
     }
 
     public function togglePublish($id)
@@ -215,7 +182,7 @@ class AdminController extends Controller
         $status = $news->is_published ? 'Dipublikasikan' : 'Dijadikan Draft';
         Activity::log('Berita', 'Toggle', $status . ': ' . $news->title);
 
-        return redirect(route('admin.dashboard') . '#section-berita')
+        return redirect(\App\Support\AdminNavigation::url('admin.berita.index'))
                ->with('success', 'Berita "' . $news->title . '" berhasil ' . strtolower($status) . '!');
     }
 
@@ -260,71 +227,6 @@ class AdminController extends Controller
         return redirect(route('admin.dashboard') . '#section-layanan')->with('success', 'Layanan berhasil dihapus!');
     }
 
-    public function storeSector(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'theme_color' => 'required',
-            'icon' => 'required'
-        ]);
-        \App\Models\Sector::create($request->all());
-        Activity::log('Capaian', 'Buat', 'Menambah sektor: ' . $request->name);
-        return redirect(route('admin.dashboard') . '#section-capaian')->with('success', 'Sektor berhasil ditambahkan!');
-    }
-
-    public function updateSector(Request $request, $id)
-    {
-        $sector = \App\Models\Sector::findOrFail($id);
-        $request->validate([
-            'name' => 'required',
-            'theme_color' => 'required',
-            'icon' => 'required'
-        ]);
-        $sector->update($request->all());
-        Activity::log('Capaian', 'Update', 'Memperbarui sektor: ' . $sector->name);
-        return redirect(route('admin.dashboard') . '#section-capaian')->with('success', 'Sektor berhasil diperbarui!');
-    }
-
-    public function deleteSector($id)
-    {
-        $sector = \App\Models\Sector::findOrFail($id);
-        Activity::log('Capaian', 'Hapus', 'Menghapus sektor: ' . $sector->name);
-        $sector->delete();
-        return redirect(route('admin.dashboard') . '#section-capaian')->with('success', 'Sektor berhasil dihapus!');
-    }
-
-    public function storeIndicator(Request $request)
-    {
-        $request->validate([
-            'sector_id' => 'required|exists:sectors,id',
-            'name' => 'required',
-            'progress' => 'required|integer|min:0|max:100'
-        ]);
-        \App\Models\Indicator::create($request->all());
-        Activity::log('Capaian', 'Buat', 'Menambah indikator: ' . $request->name);
-        return redirect(route('admin.dashboard') . '#section-capaian')->with('success', 'Indikator berhasil ditambahkan!');
-    }
-
-    public function updateIndicator(Request $request, $id)
-    {
-        $indicator = \App\Models\Indicator::findOrFail($id);
-        $request->validate([
-            'sector_id' => 'required|exists:sectors,id',
-            'name' => 'required',
-            'progress' => 'required|integer|min:0|max:100'
-        ]);
-        $indicator->update($request->all());
-        Activity::log('Capaian', 'Update', 'Memperbarui indikator: ' . $indicator->name);
-        return redirect(route('admin.dashboard') . '#section-capaian')->with('success', 'Indikator berhasil diperbarui!');
-    }
-
-    public function deleteIndicator($id)
-    {
-        $indicator = \App\Models\Indicator::findOrFail($id);
-        Activity::log('Capaian', 'Hapus', 'Menghapus indikator: ' . $indicator->name);
-        $indicator->delete();
-        return redirect(route('admin.dashboard') . '#section-capaian')->with('success', 'Indikator berhasil dihapus!');
-    }
 
     public function updateStats(Request $request)
     {
@@ -332,7 +234,7 @@ class AdminController extends Controller
             \App\Models\Stat::where('key', $key)->update(['value' => $value]);
         }
         Activity::log('Statistik', 'Update', 'Memperbarui statistik capaian RPJMD.');
-        return redirect(route('admin.dashboard') . '#section-dashboard')->with('success', 'Statistik capaian RPJMD berhasil diperbarui!');
+        return redirect(\App\Support\AdminNavigation::url('admin.dashboard'))->with('success', 'Statistik capaian RPJMD berhasil diperbarui!');
     }
 
     public function updateHeroStats(Request $request)
@@ -341,7 +243,7 @@ class AdminController extends Controller
             \App\Models\Stat::where('key', $key)->update(['value' => $value]);
         }
         Activity::log('Statistik', 'Update', 'Memperbarui statistik utama halaman beranda.');
-        return redirect(route('admin.dashboard') . '#section-dashboard')->with('success', 'Statistik utama beranda berhasil diperbarui!');
+        return redirect(\App\Support\AdminNavigation::url('admin.dashboard'))->with('success', 'Statistik utama beranda berhasil diperbarui!');
     }
 
     public function storeHeroStat(Request $request)
@@ -369,7 +271,7 @@ class AdminController extends Controller
         ]);
 
         Activity::log('Statistik', 'Buat', 'Menambah statistik beranda: ' . $request->label);
-        return redirect(route('admin.dashboard') . '#section-dashboard')->with('success', 'Statistik beranda "' . $request->label . '" berhasil ditambahkan!');
+        return redirect(\App\Support\AdminNavigation::url('admin.dashboard'))->with('success', 'Statistik beranda "' . $request->label . '" berhasil ditambahkan!');
     }
 
     public function deleteHeroStat($id)
@@ -378,12 +280,12 @@ class AdminController extends Controller
 
         // Pastikan hanya hero_ stats yang bisa dihapus dari sini
         if (!str_starts_with($stat->key, 'hero_')) {
-            return redirect(route('admin.dashboard') . '#section-dashboard')->with('error', 'Hanya statistik beranda yang dapat dihapus di sini.');
+            return redirect(\App\Support\AdminNavigation::url('admin.dashboard'))->with('error', 'Hanya statistik beranda yang dapat dihapus di sini.');
         }
 
         Activity::log('Statistik', 'Hapus', 'Menghapus statistik beranda: ' . $stat->label);
         $stat->delete();
-        return redirect(route('admin.dashboard') . '#section-dashboard')->with('success', 'Statistik "' . $stat->label . '" berhasil dihapus!');
+        return redirect(\App\Support\AdminNavigation::url('admin.dashboard'))->with('success', 'Statistik "' . $stat->label . '" berhasil dihapus!');
     }
 
     // public function updateProfile(Request $request)
@@ -397,7 +299,7 @@ class AdminController extends Controller
     //         \Illuminate\Support\Facades\Log::info("Updated key: {$key}, rows affected: {$updated}");
     //     }
     //     Activity::log('Profil', 'Update', 'Memperbarui konten profil instansi.');
-    //     return redirect(route('admin.dashboard') . '#section-setelan')->with('success', 'Profil instansi berhasil diperbarui!');
+    //     return redirect(\App\Support\AdminNavigation::url('admin.setelan.index'))->with('success', 'Profil instansi berhasil diperbarui!');
     // }
     public function updateProfile(Request $request)
 {
@@ -406,7 +308,7 @@ class AdminController extends Controller
     \Illuminate\Support\Facades\Log::info('updateProfile Request inputs: ', $request->all());
     
     if (empty($profiles)) {
-        return redirect(route('admin.dashboard') . '#section-setelan')
+        return redirect(\App\Support\AdminNavigation::url('admin.setelan.index'))
             ->with('error', 'Tidak ada data profil yang dikirim atau diubah.');
     }
     
@@ -428,7 +330,7 @@ class AdminController extends Controller
     
     Activity::log('Profil', 'Update', 'Memperbarui konten profil instansi.');
     
-    return redirect(route('admin.dashboard') . '#section-setelan')
+    return redirect(\App\Support\AdminNavigation::url('admin.setelan.index'))
         ->with('success', 'Profil instansi berhasil diperbarui!');
 }
 
@@ -437,7 +339,7 @@ class AdminController extends Controller
         $contact = \App\Models\Contact::findOrFail($id);
         $contact->update(['status' => 'resolved']);
         Activity::log('Aspirasi', 'Selesai', 'Menandai selesai pesan dari: ' . $contact->name);
-        return redirect(route('admin.dashboard') . '#section-aspirasi')->with('success', 'Aspirasi dari "' . $contact->name . '" ditandai selesai!');
+        return redirect(\App\Support\AdminNavigation::url('admin.aspirasi.index'))->with('success', 'Aspirasi dari "' . $contact->name . '" ditandai selesai!');
     }
 
     public function deleteContact($id)
@@ -446,7 +348,7 @@ class AdminController extends Controller
         $name = $contact->name;
         $contact->delete();
         Activity::log('Aspirasi', 'Hapus', 'Menghapus pesan dari: ' . $name);
-        return redirect(route('admin.dashboard') . '#section-aspirasi')->with('success', 'Aspirasi dari "' . $name . '" berhasil dihapus!');
+        return redirect(\App\Support\AdminNavigation::url('admin.aspirasi.index'))->with('success', 'Aspirasi dari "' . $name . '" berhasil dihapus!');
     }
 
     public function storeUser(Request $request)
@@ -467,7 +369,7 @@ class AdminController extends Controller
 
         Activity::log('Pengguna', 'Buat', 'Mendaftarkan admin baru: ' . $request->name);
 
-        return redirect(route('admin.dashboard') . '#section-pengguna')->with('success', 'Pengguna baru berhasil ditambahkan!');
+        return redirect(\App\Support\AdminNavigation::url('admin.pengguna.index'))->with('success', 'Pengguna baru berhasil ditambahkan!');
     }
 
     public function updateUser(Request $request, $id)
@@ -489,7 +391,7 @@ class AdminController extends Controller
 
         Activity::log('Pengguna', 'Update', 'Memperbarui data admin: ' . $user->name);
 
-        return redirect(route('admin.dashboard') . '#section-pengguna')->with('success', 'Data pengguna berhasil diperbarui!');
+        return redirect(\App\Support\AdminNavigation::url('admin.pengguna.index'))->with('success', 'Data pengguna berhasil diperbarui!');
     }
 
     public function deleteUser($id)
@@ -498,7 +400,7 @@ class AdminController extends Controller
 
         // Cegah hapus akun sendiri
         if ($user->id === auth()->id()) {
-            return redirect(route('admin.dashboard') . '#section-pengguna')
+            return redirect(\App\Support\AdminNavigation::url('admin.pengguna.index'))
                 ->with('error', 'Anda tidak bisa menghapus akun sendiri!');
         }
 
@@ -506,14 +408,14 @@ class AdminController extends Controller
         if ($user->role === 'Super Admin') {
             $superAdminCount = \App\Models\User::where('role', 'Super Admin')->count();
             if ($superAdminCount <= 1) {
-                return redirect(route('admin.dashboard') . '#section-pengguna')
+                return redirect(\App\Support\AdminNavigation::url('admin.pengguna.index'))
                     ->with('error', 'Tidak bisa menghapus Super Admin terakhir! Sistem membutuhkan minimal satu Super Admin.');
             }
         }
 
         Activity::log('Pengguna', 'Hapus', 'Menghapus akun admin: ' . $user->name);
         $user->delete();
-        return redirect(route('admin.dashboard') . '#section-pengguna')->with('success', 'Pengguna berhasil dihapus!');
+        return redirect(\App\Support\AdminNavigation::url('admin.pengguna.index'))->with('success', 'Pengguna berhasil dihapus!');
     }
 
     public function ingestPdf(Request $request)
@@ -623,7 +525,7 @@ class AdminController extends Controller
         $msg = $uploadedCount > 1 ? "$uploadedCount dokumen publik." : 'dokumen publik: ' . ($request->title ?: 'Tanpa Judul');
         Activity::log('Dokumen', 'Buat', 'Menambahkan ' . $msg);
 
-        return redirect(route('admin.dashboard') . '#section-dokumen')->with('success', "$uploadedCount Dokumen berhasil ditambahkan!");
+        return redirect(\App\Support\AdminNavigation::url('admin.dokumen.index'))->with('success', "$uploadedCount Dokumen berhasil ditambahkan!");
     }
 
     public function updateDocument(Request $request, $id)
@@ -659,7 +561,7 @@ class AdminController extends Controller
 
         Activity::log('Dokumen', 'Update', 'Memperbarui dokumen publik: ' . $document->title);
 
-        return redirect(route('admin.dashboard') . '#section-dokumen')->with('success', 'Dokumen berhasil diperbarui!');
+        return redirect(\App\Support\AdminNavigation::url('admin.dokumen.index'))->with('success', 'Dokumen berhasil diperbarui!');
     }
 
     public function deleteDocument($id)
@@ -668,7 +570,7 @@ class AdminController extends Controller
         Activity::log('Dokumen', 'Hapus', 'Menghapus dokumen publik: ' . $document->title);
         $document->delete();
 
-        return redirect(route('admin.dashboard') . '#section-dokumen')->with('success', 'Dokumen berhasil dihapus!');
+        return redirect(\App\Support\AdminNavigation::url('admin.dokumen.index'))->with('success', 'Dokumen berhasil dihapus!');
     }
 
     public function updateSettings(Request $request)
@@ -689,7 +591,7 @@ class AdminController extends Controller
 
         Activity::log('Setelan', 'Update', 'Memperbarui model AI Chatbot menjadi: ' . $model);
 
-        return redirect(route('admin.dashboard') . '#section-setelan')->with('success', 'Setelan model AI berhasil diperbarui!');
+        return redirect(\App\Support\AdminNavigation::url('admin.setelan.index'))->with('success', 'Setelan model AI berhasil diperbarui!');
     }
 
     public function destroyIngest($id)
@@ -764,7 +666,7 @@ class AdminController extends Controller
         ]);
 
         Activity::log('Galeri', 'Tambah', 'Menambah foto galeri baru: ' . $request->title);
-        return redirect(route('admin.dashboard') . '#section-galeri')->with('success', 'Galeri berhasil ditambahkan!');
+        return redirect(\App\Support\AdminNavigation::url('admin.galeri.index'))->with('success', 'Galeri berhasil ditambahkan!');
     }
 
     public function updateGallery(Request $request, $id)
@@ -795,7 +697,7 @@ class AdminController extends Controller
         $gallery->save();
 
         Activity::log('Galeri', 'Ubah', 'Mengubah data galeri: ' . $gallery->title);
-        return redirect(route('admin.dashboard') . '#section-galeri')->with('success', 'Galeri berhasil diubah!');
+        return redirect(\App\Support\AdminNavigation::url('admin.galeri.index'))->with('success', 'Galeri berhasil diubah!');
     }
 
     public function deleteGallery($id)
@@ -811,6 +713,6 @@ class AdminController extends Controller
         $gallery->delete();
 
         Activity::log('Galeri', 'Hapus', 'Menghapus foto galeri: ' . $title);
-        return redirect(route('admin.dashboard') . '#section-galeri')->with('success', 'Galeri berhasil dihapus!');
+        return redirect(\App\Support\AdminNavigation::url('admin.galeri.index'))->with('success', 'Galeri berhasil dihapus!');
     }
 }

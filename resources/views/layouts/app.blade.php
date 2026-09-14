@@ -321,6 +321,7 @@
       <div class="flex items-center justify-between h-20">
         <div class="flex items-center gap-3">
           <a href="{{ route('home') }}" class="flex items-center gap-3">
+            <img src="{{ asset('logo_pasuruan.png') }}" class="h-10 md:h-12 w-auto object-contain" alt="Logo Pemda Kabupaten Pasuruan" />
             <img src="{{ asset('Logo Bapperida Kab Pasuruan.png') }}" class="h-10 md:h-12 w-auto object-contain" alt="Logo Bapperida" />
           </a>
         </div>
@@ -328,12 +329,9 @@
           <div class="ml-10 flex items-center space-x-4">
             @if(request()->routeIs('berita.detail'))
               <a href="{{ route('home') }}" class="text-gray-600 font-medium hover:text-blue-600 px-2 py-2 transition-colors">Beranda</a>
-              <a href="{{ route('berita') }}" class="text-blue-600 font-semibold border-b-2 border-blue-600 px-2 py-2 transition-colors">Informasi</a>
             @else
               <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors">Beranda</a>
               <a href="{{ route('profil') }}" class="{{ request()->routeIs('profil') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors">Profil</a>
-              <a href="{{ route('berita') }}" class="{{ request()->routeIs('berita') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors">Informasi</a>
-              <a href="{{ route('galeri') }}" class="{{ request()->routeIs('galeri') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors">Galeri</a>
               <a href="{{ route('dokumen') }}" class="{{ request()->routeIs('dokumen') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-600 font-medium hover:text-blue-600' }} px-2 py-2 transition-colors">Dokumen</a>
             @endif
 
@@ -406,8 +404,6 @@
       <div class="px-4 pt-2 pb-6 space-y-1 sm:px-3 flex flex-col">
           <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }} block px-3 py-3 rounded-md text-base font-bold transition-colors">Beranda</a>
           <a href="{{ route('profil') }}" class="{{ request()->routeIs('profil') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }} block px-3 py-3 rounded-md text-base font-bold transition-colors">Profil</a>
-          <a href="{{ route('berita') }}" class="{{ request()->routeIs('berita') || request()->routeIs('berita.detail') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }} block px-3 py-3 rounded-md text-base font-bold transition-colors">Informasi & Berita</a>
-          <a href="{{ route('galeri') }}" class="{{ request()->routeIs('galeri') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }} block px-3 py-3 rounded-md text-base font-bold transition-colors">Galeri</a>
           <a href="{{ route('dokumen') }}" class="{{ request()->routeIs('dokumen') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600' }} block px-3 py-3 rounded-md text-base font-bold transition-colors">Dokumen</a>
 
           <a href="{{ route('kontak') }}" class="mt-4 text-center bg-blue-600 text-white px-5 py-3 rounded-xl text-base font-bold hover:bg-blue-700 shadow-md">Hubungi Kami</a>
@@ -435,7 +431,7 @@
           <div class="flex items-center gap-3 mb-6">
             <img src="{{ asset('Logo Bapperida Kab Pasuruan Putih.png') }}" class="h-20 sm:h-24 w-auto object-contain" alt="Logo Bapperida" />
           </div>
-          <p class="text-blue-200/80 text-sm leading-relaxed max-w-sm mb-6 font-light">Portal Layanan Informasi Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah (Bapperida) Kabupaten Pasuruan — menyajikan data perencanaan, capaian kinerja, dan inovasi pembangunan daerah secara transparan.</p>
+          <p class="text-blue-200/80 text-sm leading-relaxed max-w-sm mb-6 font-light">Portal Informasi Perencanaan Daerah, Riset Dan Inovasi — menyajikan data perencanaan, capaian kinerja, dan inovasi pembangunan daerah secara transparan.</p>
           <div class="flex gap-4">
             <a href="{{ $socials['ig_link'] ?? '#' }}" target="_blank" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-blue-200 hover:border-transparent hover:bg-gradient-to-tr hover:from-purple-500 hover:to-pink-500 hover:text-white transition-all shadow-sm">
                 <i class="fab fa-instagram"></i>
@@ -453,8 +449,6 @@
           <ul class="space-y-3 text-sm text-blue-200 flex flex-col">
             <li><a href="{{ route('home') }}" class="hover:text-blue-400 transition-colors">Beranda</a></li>
             <li><a href="{{ route('profil') }}" class="hover:text-blue-400 transition-colors">Profil Instansi</a></li>
-            <li><a href="{{ route('berita') }}" class="hover:text-blue-400 transition-colors">Informasi & Berita</a></li>
-            <li><a href="{{ route('galeri') }}" class="hover:text-blue-400 transition-colors">Galeri</a></li>
             <li><a href="{{ route('dokumen') }}" class="hover:text-blue-400 transition-colors">Dokumen Bapperida</a></li>
           </ul>
         </div>
@@ -553,19 +547,19 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
   // Function to get time-based greeting
   function getTimeBasedGreeting() {
     const hour = new Date().getHours();
-    if (hour >= 0 && hour < 11) return 'Selamat pagi';
-    if (hour >= 11 && hour < 15) return 'Selamat siang';
-    if (hour >= 15 && hour < 18) return 'Selamat sore';
-    return 'Selamat malam';
+    if (hour >= 0 && hour < 11) return 'Semangat pagi';
+    if (hour >= 11 && hour < 15) return 'Semangat siang';
+    if (hour >= 15 && hour < 18) return 'Semangat sore';
+    return 'Semangat malam';
   }
   
   document.addEventListener("DOMContentLoaded", () => {
     const greeting = getTimeBasedGreeting();
     const chatbotHTML = `
-      <div id="ai-chatbot-widget" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end">
+      <div id="ai-chatbot-widget" class="fixed inset-y-0 right-0 z-50 pointer-events-none flex flex-col justify-end items-end">
         
-        <!-- Jendela Chat (Disembunyikan secara default) -->
-        <div id="chat-window" class="hidden w-[calc(100vw-2rem)] sm:w-96 md:w-[400px] bg-white rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.2)] border border-gray-100 mb-3 sm:mb-4 overflow-hidden flex-col h-[calc(100vh-8rem)] sm:h-[500px] max-h-[600px] transform transition-all origin-bottom-right">
+        <!-- Jendela Chat (Half-Screen Panel di sisi kanan pada Desktop) -->
+        <div id="chat-window" class="pointer-events-auto hidden w-full sm:w-[85vw] md:w-[60vw] lg:w-[50vw] xl:w-[45vw] max-w-full h-full bg-white shadow-[-10px_0_40px_rgba(0,0,0,0.15)] border-l border-gray-100 overflow-hidden flex-col transform transition-all duration-300 origin-right">
           
           <!-- Header Chat -->
           <div class="bg-gradient-to-r from-blue-700 to-[#041a42] p-4 sm:p-5 flex justify-between items-center text-white shrink-0 shadow-xl relative z-10">
@@ -580,17 +574,14 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
               <div class="flex flex-col min-w-0">
                 <div class="flex items-center gap-1.5">
                   <h4 class="font-black text-[13px] sm:text-[14px] tracking-tight leading-tight truncate">
-                    Layanan Informasi Bapperida
+                    PRisIA
                   </h4>
                   <svg class="w-3.5 h-3.5 text-blue-400 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
                 </div>
-                <span class="text-[10px] sm:text-[11px] font-medium text-blue-200/80 tracking-wide truncate">Asisten Virtual Bapperida</span>
+                <span class="text-[10px] sm:text-[11px] font-medium text-blue-200/80 tracking-wide truncate">PRisIA (Perencanaan Riset dan Inovasi Artificial Inteligence)</span>
               </div>
             </div>
             <div class="flex items-center gap-1">
-              <button id="expand-chat" class="hidden sm:block text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-xl transition-all cursor-pointer" title="Perbesar/Perkecil">
-                <svg id="expand-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
-              </button>
               <button id="close-chat" class="text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-xl transition-all cursor-pointer" title="Tutup">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
               </button>
@@ -610,7 +601,7 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
                 <span class="text-blue-600 font-bold text-xs">AI</span>
               </div>
               <div class="bg-white border border-gray-100 text-gray-800 rounded-2xl rounded-tl-sm px-4 sm:px-5 py-3 sm:py-3.5 max-w-[95%] sm:max-w-[85%] shadow-sm font-medium leading-relaxed text-[13px] sm:text-sm">
-                ${greeting}! 🙏 <br>Saya asisten AI Layanan Informasi Bapperida Kabupaten Pasuruan. Ada yang ingin Anda ketahui tentang program prioritas, capaian pembangunan, atau dokumen RPJMD 2025-2029?
+                ${greeting}. Saya PRisIA<br>(Asisten AI layanan Informasi Bapperida Kabupaten Pasuruan.
               </div>
             </div>
 
@@ -625,7 +616,7 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
 
           <!-- Area Input Chat -->
           <div class="p-3 sm:p-4 bg-white border-t border-gray-100 flex items-center gap-2 sm:gap-3 shrink-0">
-            <input id="chat-input" type="text" placeholder="Tanyakan seputar RPJMD..." class="flex-1 bg-gray-50 border border-gray-200 rounded-full px-4 sm:px-5 py-2 sm:py-2.5 text-base sm:text-sm focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all font-medium">
+            <input id="chat-input" type="text" placeholder="Temukan yang anda cari.." class="flex-1 bg-gray-50 border border-gray-200 rounded-full px-4 sm:px-5 py-2 sm:py-2.5 text-base sm:text-sm focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all font-medium">
             <button id="chat-send" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 shadow-md hover:shadow-lg transition-transform hover:-translate-y-0.5 shrink-0 focus:outline-none">
               <svg class="w-4 h-4 sm:w-5 sm:h-5 translate-x-[-1px] translate-y-[1px]" fill="currentColor" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
             </button>
@@ -634,7 +625,7 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
         </div>
 
         <!-- Tombol Buka Tutup Chat (Widget Indikator) -->
-        <button id="chat-toggle" class="group relative w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-blue-800 rounded-full shadow-[0_10px_25px_rgba(37,99,235,0.5)] border-[3px] sm:border-4 border-white/20 flex items-center justify-center text-white hover:scale-110 transition-all duration-300 focus:outline-none cursor-pointer mt-2 sm:mt-4">
+        <button id="chat-toggle" class="pointer-events-auto fixed bottom-4 right-4 sm:bottom-6 sm:right-6 group w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-blue-800 rounded-full shadow-[0_10px_25px_rgba(37,99,235,0.5)] border-[3px] sm:border-4 border-white/20 flex items-center justify-center text-white hover:scale-110 transition-all duration-300 focus:outline-none cursor-pointer z-50">
           <svg class="w-7 h-7 sm:w-8 sm:h-8 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
           <!-- Red dot counter alert -->
           <span id="chat-notif-dot" class="absolute top-0 right-0 w-3.5 h-3.5 sm:w-4 sm:h-4 bg-red-500 border-2 border-white rounded-full flex items-center justify-center animate-bounce"></span>
@@ -719,10 +710,10 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
     // ===== SIMPLIFIED LANGUAGE MANAGER (Indonesian Only) =====
     const translations = {
       id: {
-        placeholder: 'Tanyakan seputar RPJMD...',
+        placeholder: 'Temukan yang anda cari..',
         clear: 'Hapus Riwayat',
         export: 'Ekspor Chat',
-        greeting: (time) => `${time}! 🙏 <br>Saya asisten AI Layanan Informasi RPJMD Kabupaten Pasuruan. Ada yang ingin Anda ketahui tentang program prioritas, capaian pembangunan, atau dokumen RPJMD 2025-2029?`,
+        greeting: (time) => `${time}. Saya PRisIA<br>(Asisten AI layanan Informasi Bapperida Kabupaten Pasuruan.`,
         today: 'Hari ini',
         noConversation: 'Tidak Ada Percakapan',
         noConversationText: 'Belum ada percakapan untuk diekspor. Mulai chat terlebih dahulu!',
@@ -783,25 +774,23 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
         chatWindow.classList.remove('hidden');
         chatWindow.classList.add('flex');
         chatWindow.animate([
-          { opacity: 0, transform: 'scale(0.8) translateY(20px)' },
-          { opacity: 1, transform: 'scale(1) translateY(0)' }
-        ], { duration: 300, easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)', fill: 'forwards' });
-        chatToggle.classList.add('scale-75', 'opacity-60');
+          { opacity: 0, transform: 'translateX(100%)' },
+          { opacity: 1, transform: 'translateX(0)' }
+        ], { duration: 300, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', fill: 'forwards' });
+        chatToggle.classList.add('hidden');
         if (notifDot) notifDot.classList.add('hidden');
-        
-        // Removed loadChatHistory to ensure fresh chat on reload and prevent duplication
         
         setTimeout(() => chatInput?.focus(), 350);
       } else {
         // Tutup
         chatWindow.animate([
-          { opacity: 1, transform: 'scale(1) translateY(0)' },
-          { opacity: 0, transform: 'scale(0.8) translateY(20px)' }
-        ], { duration: 200, fill: 'forwards' }).onfinish = () => {
+          { opacity: 1, transform: 'translateX(0)' },
+          { opacity: 0, transform: 'translateX(100%)' }
+        ], { duration: 250, easing: 'ease-in-out', fill: 'forwards' }).onfinish = () => {
           chatWindow.classList.add('hidden');
           chatWindow.classList.remove('flex');
+          chatToggle.classList.remove('hidden');
         };
-        chatToggle.classList.remove('scale-75', 'opacity-60');
       }
     }
     
@@ -809,16 +798,6 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
 
     chatToggle.addEventListener('click', handleToggle);
     closeChat.addEventListener('click', handleToggle);
-
-    expandChat.addEventListener('click', () => {
-      if (chatWindow.classList.contains('chat-expanded')) {
-        chatWindow.classList.remove('chat-expanded');
-        expandIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>';
-      } else {
-        chatWindow.classList.add('chat-expanded');
-        expandIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5v4h-4 M4 9l5-5 M15 5v4h4 M20 9l-5-5 M9 19v-4h-4 M4 15l5 5 M15 19v-4h4 M20 15l-5 5"></path>';
-      }
-    });
 
     // Kirim pesan (IMPROVED)
     function sendMessage() {
@@ -866,7 +845,7 @@ Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
           chatInput.disabled = false;
           chatSend.disabled = false;
           chatSend.classList.remove('opacity-50', 'cursor-not-allowed');
-          chatInput.placeholder = "Tanyakan seputar RPJMD...";
+          chatInput.placeholder = "Temukan yang anda cari..";
           setTimeout(() => chatInput.focus(), 100);
       }
 
