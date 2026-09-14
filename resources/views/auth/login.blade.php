@@ -1,14 +1,15 @@
 <x-guest-layout>
-    <x-slot:pageTitle>Login Administrator | Portal RPJMD Kabupaten Pasuruan</x-slot:pageTitle>
+    <x-slot:pageTitle>Login | Portal Informasi Perencanaan Daerah, Riset Dan Inovasi | Kabupaten Pasuruan</x-slot:pageTitle>
     <x-slot:loginBrand>
         <img class="admin-login__hero" src="{{ asset('hero.png') }}" alt="" aria-hidden="true">
         <div class="admin-login__brand-content">
-            <a href="/" class="admin-login__logo-link">
+            <a href="/" class="admin-login__logo-link admin-login__logo-link--pair">
+                <img class="admin-login__pemda-logo" src="{{ asset('logo_pasuruan.png') }}" alt="Logo Pemda Kabupaten Pasuruan">
                 <img class="admin-login__logo" src="{{ asset('Logo Bapperida Kab Pasuruan Putih.png') }}" alt="Bapperida Kabupaten Pasuruan">
             </a>
             <div class="admin-login__intro">
                 <p class="admin-login__eyebrow">Kabupaten Pasuruan</p>
-                <h2>Portal Manajemen<br> RPJMD</h2>
+                <h2>Portal Informasi Perencanaan Daerah, Riset Dan Inovasi</h2>
                 <p class="admin-login__description">Kelola informasi perencanaan pembangunan daerah secara aman dan terpusat.</p>
             </div>
             <div class="admin-login__security">
@@ -18,9 +19,9 @@
         </div>
     </x-slot:loginBrand>
     <header class="admin-login__heading">
-        <p class="admin-login__eyebrow">Akses Administrator</p>
-        <h1 id="login-title">Masuk ke Portal Manajemen</h1>
-        <p>Masukkan email dan kata sandi untuk melanjutkan ke verifikasi email.</p>
+        <p class="admin-login__eyebrow">Akses Portal</p>
+        <h1 id="login-title">Masuk ke Portal</h1>
+        <p>Masukkan email dan kata sandi Anda. Akun administrator akan melanjutkan ke verifikasi email.</p>
     </header>
 
     <!-- Session Status -->
@@ -75,5 +76,5 @@
             </button>
         </div>
     </form>
-    <a href="/" class="admin-login__back"><span aria-hidden="true">←</span> Kembali ke Portal RPJMD</a>
+    <p class="admin-login__account">Belum punya akun? <a href="{{ route('register') }}">Daftar sekarang</a></p>
 </x-guest-layout>

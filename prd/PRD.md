@@ -82,7 +82,7 @@ Aturan akses:
 - Manajemen pengguna hanya dapat dilakukan `Super Admin`.
 - Pengguna tanpa hak akses dialihkan ke halaman publik dengan pesan penolakan.
 - Super Admin tidak boleh menghapus akunnya sendiri atau Super Admin terakhir.
-- **Gap:** registrasi publik masih tersedia pada route autentikasi. Keputusan bisnis perlu menetapkan apakah registrasi ditutup atau hanya menghasilkan akun non-admin tanpa akses dashboard.
+- Registrasi publik menghasilkan akun `User` dan mengarah ke halaman utama (`/`). Login akun `User` melalui `/login` atau `/client/login` selalu menuju halaman utama, termasuk jika sesi menyimpan tujuan dashboard. Admin dan Super Admin tetap menjalani verifikasi OTP melalui `/login` dan diarahkan ke dashboard admin. Route lama `/dashboard` mengalihkan berdasarkan peran; pengguna biasa tidak memiliki dashboard.
 
 ## 7. Ruang lingkup
 
@@ -287,7 +287,7 @@ Rencana pemisahan dashboard menjadi halaman berbasis route dijelaskan dalam [PRD
 | ID | Prioritas | Kebutuhan |
 |---|---|---|
 | USR-01 | Must | Pengguna dapat login, logout, meminta reset password, mengatur ulang password, dan memverifikasi email. |
-| USR-02 | Must | Super Admin dapat membuat pengguna dengan nama, email unik, password minimal delapan karakter, dan peran. |
+| USR-02 | Must | Super Admin dapat membuat pengguna dengan nama, email unik, password minimal delapan karakter, dan peran `Admin`, `Super Admin`, atau `User`. Pilihan yang sama tersedia saat mengedit pengguna, dengan allowlist di server. Akun `User` hanya mengakses portal utama. |
 | USR-03 | Must | Super Admin dapat mengubah identitas/peran serta mengganti password pengguna secara opsional. |
 | USR-04 | Must | Super Admin dapat menghapus pengguna selain dirinya, dengan syarat minimal satu Super Admin tetap ada. |
 | USR-05 | **Gap** | Nilai peran harus dibatasi melalui enum/allowlist (`Admin`, `Super Admin`, dan bila dibutuhkan `User`) pada seluruh endpoint. |

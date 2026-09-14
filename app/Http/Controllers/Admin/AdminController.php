@@ -357,7 +357,7 @@ class AdminController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8',
-            'role' => 'required',
+            'role' => 'required|string|in:Admin,Super Admin,User',
         ]);
 
         \App\Models\User::create([
@@ -367,7 +367,7 @@ class AdminController extends Controller
             'role' => $request->role,
         ]);
 
-        Activity::log('Pengguna', 'Buat', 'Mendaftarkan admin baru: ' . $request->name);
+        Activity::log('Pengguna', 'Buat', 'Mendaftarkan pengguna baru: ' . $request->name);
 
         return redirect(\App\Support\AdminNavigation::url('admin.pengguna.index'))->with('success', 'Pengguna baru berhasil ditambahkan!');
     }
@@ -379,7 +379,7 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users,email,' . $id,
-            'role' => 'required',
+            'role' => 'required|string|in:Admin,Super Admin,User',
         ]);
 
         $data = $request->only(['name', 'email', 'role']);
@@ -389,7 +389,7 @@ class AdminController extends Controller
 
         $user->update($data);
 
-        Activity::log('Pengguna', 'Update', 'Memperbarui data admin: ' . $user->name);
+        Activity::log('Pengguna', 'Update', 'Memperbarui data pengguna: ' . $user->name);
 
         return redirect(\App\Support\AdminNavigation::url('admin.pengguna.index'))->with('success', 'Data pengguna berhasil diperbarui!');
     }

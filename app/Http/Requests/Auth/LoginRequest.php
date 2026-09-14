@@ -47,7 +47,7 @@ class LoginRequest extends FormRequest
         $credentials = $this->only('email', 'password');
         $provider = Auth::guard('web')->getProvider();
         $user = $provider->retrieveByCredentials($credentials);
-        $validRole = $user instanceof User && in_array($user->role, ['Admin', 'Super Admin'], true);
+        $validRole = $user instanceof User && in_array($user->role, ['User', 'Admin', 'Super Admin'], true);
 
         if (! $validRole || ! $provider->validateCredentials($user, $credentials)) {
             RateLimiter::hit($this->throttleKey());

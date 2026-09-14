@@ -52,7 +52,7 @@ class AdminOtpAuthenticationTest extends TestCase
         ]);
     }
 
-    public function test_invalid_credentials_and_non_admin_roles_do_not_send_otp(): void
+    public function test_invalid_credentials_and_unknown_roles_do_not_send_otp(): void
     {
         Mail::fake();
         $admin = User::factory()->create(['role' => 'Admin']);
@@ -62,7 +62,7 @@ class AdminOtpAuthenticationTest extends TestCase
             'password' => 'wrong-password',
         ])->assertSessionHasErrors(['email' => 'Email atau kata sandi tidak sesuai.']);
 
-        $regularUser = User::factory()->create(['role' => 'User']);
+        $regularUser = User::factory()->create(['role' => 'Unknown']);
 
         $this->post('/login', [
             'email' => $regularUser->email,
