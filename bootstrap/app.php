@@ -20,7 +20,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectUsersTo(function ($request) {
             return in_array($request->user()?->role, ['Admin', 'Super Admin'], true)
                 ? route('admin.dashboard')
-                : route('dashboard');
+                : route('home');
         });
 
         $middleware->alias([

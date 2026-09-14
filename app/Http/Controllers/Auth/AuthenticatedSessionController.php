@@ -30,6 +30,14 @@ class AuthenticatedSessionController extends Controller
     {
         $user = $request->authenticate($events);
 
+        if ($user->role === 'User') {
+            Auth::guard('web')->login($user, $request->boolean('remember'));
+            $request->session()->regenerate();
+            $request->session()->forget(['url.intended', AdminOtpService::SESSION_KEY]);
+
+            return redirect()->route('home');
+        }
+
         if (! config('admin-auth.otp.enabled')) {
             Auth::guard('web')->login($user, $request->boolean('remember'));
             $request->session()->regenerate();

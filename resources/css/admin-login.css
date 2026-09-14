@@ -269,3 +269,16 @@
     .admin-otp__masked-email { word-break: break-all; }
 }
 
+
+.admin-login .admin-login__input--plain { padding-left: 16px; }
+.admin-login__account { margin-top: 24px; text-align: center; font-size: 14px; line-height: 1.7; color: #475569; }
+.admin-login__account a { display: inline-flex; align-items: center; min-height: 44px; color: #1d4ed8; font-weight: 500; }
+
+.admin-login__logo-link--pair { align-items: center; gap: 16px; }
+.admin-login__pemda-logo { flex: 0 0 auto; width: 60px; height: 80px; object-fit: contain; }
+.admin-login__logo-link--pair .admin-login__logo { min-width: 0; width: 260px; flex: 0 1 260px; }
+@media (max-width: 1023px) {
+    .admin-login__logo-link--pair { gap: 12px; }
+    .admin-login__pemda-logo { width: 44px; height: 64px; }
+    .admin-login__logo-link--pair .admin-login__logo { width: 220px; flex-basis: 220px; }
+}

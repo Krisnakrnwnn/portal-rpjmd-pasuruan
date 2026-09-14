@@ -19,7 +19,9 @@ class ClientLoginController extends Controller
     {
         // If already authenticated as a client (role = User), redirect to home
         if (Auth::check() && Auth::user()->role === 'User') {
-            return redirect()->intended(route('home'));
+            $request->session()->forget('url.intended');
+
+            return redirect()->route('home');
         }
 
         return view('auth.client-login');
@@ -36,7 +38,9 @@ class ClientLoginController extends Controller
         Auth::guard('web')->login($user, false);
         $request->session()->regenerate();
 
-        return redirect()->intended(route('home'));
+        $request->session()->forget('url.intended');
+
+        return redirect()->route('home');
     }
 
     /**

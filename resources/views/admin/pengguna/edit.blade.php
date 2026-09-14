@@ -30,6 +30,7 @@
                 <select name="role" id="edit-user-role" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 outline-none transition-all text-slate-800 bg-white">
                   <option value="Admin" @selected((string) old('role', $formDefaults['role'] ?? '') === (string) ('Admin'))>Admin</option>
                   <option value="Super Admin" @selected((string) old('role', $formDefaults['role'] ?? '') === (string) ('Super Admin'))>Super Admin</option>
+                  <option value="User" @selected((string) old('role', $formDefaults['role'] ?? '') === 'User')>User</option>
                 </select>
               </div>
             </div>
