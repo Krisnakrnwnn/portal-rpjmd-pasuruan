@@ -1,0 +1,271 @@
+.admin-login { min-height: 100svh; display: grid; grid-template-columns: 55% 45%; background: #fff; font-family: "Outfit", ui-sans-serif, system-ui, sans-serif; color: #0f172a; }
+.admin-login__brand { position: relative; overflow: hidden; background: #102e56; color: #fff; }
+.admin-login__hero { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .16; }
+.admin-login__brand::after { content: ""; position: absolute; inset: 0; background: linear-gradient(160deg, #102e5699, #102e5622 45%, #102e56); }
+.admin-login__brand-content { position: relative; z-index: 1; min-height: 100%; padding: 48px clamp(32px, 5vw, 88px); display: flex; flex-direction: column; align-items: flex-start; gap: 56px; }
+.admin-login__logo-link { display: inline-flex; max-width: 100%; padding: 8px 0; }
+.admin-login__logo { width: 260px; height: 80px; object-fit: contain; object-position: left center; }
+.admin-login__intro { margin-block: auto; }
+.admin-login__eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+.admin-login__brand .admin-login__eyebrow { color: #a5e2ed; margin-bottom: 20px; }
+.admin-login__intro h2 { font-size: clamp(36px, 3.7vw, 56px); font-weight: 600; letter-spacing: -.035em; line-height: 1.15; }
+.admin-login__description { max-width: 390px; margin-top: 24px; font-size: 17px; line-height: 1.8; color: #d6e3f2; }
+.admin-login__security { display: flex; align-items: center; gap: 16px; padding-top: 24px; border-top: 1px solid #ffffff30; width: 100%; font-size: 13px; line-height: 1.7; color: #d6e3f2; }
+.admin-login__security svg { flex-shrink: 0; color: #a5e2ed; }
+.admin-login__security strong { color: #fff; font-weight: 500; }
+.admin-login__panel { min-width: 0; padding: 64px 40px 24px; display: flex; flex-direction: column; align-items: center; gap: 48px; }
+.admin-login__form { width: 100%; max-width: 440px; margin-block: auto; }
+.admin-login__heading { margin-bottom: 32px; }
+.admin-login__heading .admin-login__eyebrow { color: #1d4ed8; margin-bottom: 14px; }
+.admin-login__heading h1 { font-size: clamp(28px, 2.4vw, 36px); font-weight: 600; line-height: 1.2; letter-spacing: -.025em; }
+.admin-login__heading > p:last-child { margin-top: 14px; font-size: 15px; line-height: 1.7; color: #64748b; }
+.admin-login__fields { display: grid; gap: 22px; }
+.admin-login__field { display: grid; gap: 9px; min-width: 0; }
+.admin-login__field label { font-size: 14px; font-weight: 500; }
+.admin-login__label-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.admin-login__label-row a { color: #1d4ed8; font-size: 13px; font-weight: 500; }
+.admin-login__input-wrap { position: relative; }
+.admin-login__input-icon { position: absolute; left: 16px; top: 16px; color: #64748b; pointer-events: none; }
+.admin-login .admin-login__input { width: 100%; min-width: 0; height: 52px; padding: 12px 16px 12px 46px; border: 1px solid #94a3b8; border-radius: 12px; background: #f8fafc; color: #0f172a; font: inherit; font-size: 16px; transition: border-color .15s, box-shadow .15s; }
+.admin-login__input::placeholder { color: #64748b; opacity: 1; }
+.admin-login .admin-login__input:focus { outline: 2px solid #2563eb; outline-offset: 2px; border-color: #2563eb; background: #fff; }
+.admin-login .admin-login__input[aria-invalid="true"] { border-color: #b91c1c; }
+.admin-login .admin-login__error { background: #fef2f2; border-left: 3px solid #b91c1c; border-radius: 6px; padding: 10px 12px; color: #991b1b; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+.admin-login .admin-login__status { margin-bottom: 24px; padding: 12px 16px; border: 1px solid #86bca0; border-radius: 10px; background: #f0fdf4; color: #166534; }
+.admin-login__remember { display: flex; align-items: center; gap: 10px; min-height: 44px; }
+.admin-login__remember input { width: 18px; height: 18px; accent-color: #1d4ed8; cursor: pointer; flex-shrink: 0; }
+.admin-login__remember label { padding-block: 12px; font-size: 14px; color: #475569; cursor: pointer; }
+.admin-login__submit { display: flex; justify-content: center; align-items: center; gap: 12px; width: 100%; min-height: 52px; padding: 12px 20px; border-radius: 12px; background: #1d4ed8; color: #fff; font-size: 16px; font-weight: 500; box-shadow: 0 4px 10px #1d4ed81a; cursor: pointer; transition: background-color .15s; }
+.admin-login__submit:hover { background: #1e40af; }
+.admin-login__submit:active { background: #1e3a8a; }
+.admin-login__submit:disabled { background: #64748b; cursor: not-allowed; box-shadow: none; }
+.admin-login a:focus-visible, .admin-login button:focus-visible, .admin-login__remember input:focus-visible { outline: 2px solid #2563eb; outline-offset: 4px; border-radius: 4px; }
+.admin-login__brand a:focus-visible { outline-color: #a5e2ed; }
+.admin-login a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.admin-login__back { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; margin-top: 24px; color: #475569; font-size: 13px; }
+.admin-login__footer { font-size: 12px; line-height: 1.6; color: #64748b; text-align: center; }
+@media (max-width: 1023px) {
+    .admin-login { grid-template-columns: 1fr; }
+    .admin-login__brand-content { padding: 24px max(20px, calc((100% - 440px) / 2)); gap: 14px; }
+    .admin-login__logo { width: 220px; height: 64px; }
+    .admin-login__intro h2 { font-size: 24px; }
+    .admin-login__intro h2 br { display: none; }
+    .admin-login__brand .admin-login__eyebrow { margin-bottom: 6px; font-size: 10px; }
+    .admin-login__hero, .admin-login__description, .admin-login__security { display: none; }
+    .admin-login__panel { padding: 36px 20px 20px; gap: 36px; }
+    .admin-login__heading h1 { font-size: 30px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .admin-login *, .admin-login *::before, .admin-login *::after { transition: none !important; animation: none !important; }
+}
+
+/* ─── OTP Page Specific Styles ──────────────────────────────────────────── */
+
+/* Step badge "Langkah 2 dari 2" */
+.admin-otp__step-label { display: flex; align-items: center; gap: 8px; }
+.admin-otp__step-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px 4px 8px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 999px;
+    color: #1d4ed8;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+.admin-otp__step-icon { flex-shrink: 0; color: #1d4ed8; }
+
+/* Masked email in header */
+.admin-otp__masked-email {
+    color: #0f172a;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Alerts / session status area */
+.admin-otp__alerts { display: grid; gap: 8px; min-height: 0; }
+.admin-otp__alert { border-radius: 10px; padding: 12px 16px; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+.admin-otp__alert--status { border: 1px solid #86bca0; background: #f0fdf4; color: #166534; }
+.admin-otp__alert--error { background: #fef2f2; border-left: 3px solid #b91c1c; color: #991b1b; }
+/* Hide empty alert containers */
+.admin-otp__alert:empty { display: none; }
+
+/* OTP form layout */
+.admin-otp__form { display: grid; gap: 20px; }
+
+/* OTP field */
+.admin-otp__field { display: grid; gap: 8px; }
+.admin-otp__label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+}
+.admin-otp__label-icon { flex-shrink: 0; color: #64748b; }
+
+/* OTP input — single input, large + centered */
+.admin-otp__input {
+    width: 100%;
+    min-width: 0;
+    height: 56px;
+    padding: 12px 20px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 12px;
+    background: #f8fafc;
+    color: #0f172a;
+    font-family: inherit;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.45em;
+    text-align: center;
+    transition: border-color .15s, box-shadow .15s, background-color .15s;
+    /* Prevent zoom on mobile */
+    -webkit-text-size-adjust: none;
+}
+.admin-otp__input::placeholder {
+    color: #cbd5e1;
+    letter-spacing: 0.35em;
+    font-weight: 400;
+    font-size: 22px;
+}
+.admin-otp__input:focus {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+    border-color: #2563eb;
+    background: #fff;
+    box-shadow: 0 0 0 4px #2563eb1a;
+}
+.admin-otp__input--invalid,
+.admin-otp__input[aria-invalid="true"] {
+    border-color: #b91c1c;
+    background: #fff5f5;
+}
+.admin-otp__input--invalid:focus,
+.admin-otp__input[aria-invalid="true"]:focus {
+    outline-color: #b91c1c;
+    box-shadow: 0 0 0 4px #b91c1c1a;
+}
+.admin-otp__input:disabled {
+    background: #f1f5f9;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+/* OTP hint text */
+.admin-otp__hint { font-size: 12px; color: #94a3b8; line-height: 1.5; }
+
+/* OTP field error */
+.admin-otp__field-error {
+    background: #fef2f2;
+    border-left: 3px solid #b91c1c;
+    border-radius: 6px;
+    padding: 10px 12px;
+    color: #991b1b;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+/* Expiry countdown row */
+.admin-otp__expiry-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    color: #0369a1;
+    font-size: 13.5px;
+    font-weight: 500;
+    transition: background-color .2s, border-color .2s, color .2s;
+}
+.admin-otp__expiry-icon { flex-shrink: 0; }
+.admin-otp__expiry-text { line-height: 1.4; }
+
+/* Expired state */
+.admin-otp__expiry-wrap--expired {
+    background: #fef2f2;
+    border-color: #fca5a5;
+    color: #b91c1c;
+}
+
+/* Submit button override for OTP — keep base .admin-login__submit, add gap */
+.admin-otp__submit { margin-top: 4px; }
+
+/* Secondary actions row (resend + cancel) */
+.admin-otp__secondary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+.admin-otp__divider { color: #cbd5e1; font-size: 16px; line-height: 1; user-select: none; }
+
+/* Resend button */
+.admin-otp__resend-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: #1d4ed8;
+    font-size: 14px;
+    font-weight: 500;
+    background: transparent;
+    cursor: pointer;
+    transition: color .15s, background-color .15s;
+    white-space: nowrap;
+}
+.admin-otp__resend-btn:hover { color: #1e40af; background: #eff6ff; text-decoration: none; }
+.admin-otp__resend-btn:disabled {
+    color: #94a3b8;
+    background: transparent;
+    cursor: not-allowed;
+}
+.admin-otp__resend-icon { flex-shrink: 0; }
+.admin-otp__resend-countdown { color: #64748b; font-size: 13px; font-weight: 400; }
+
+/* Cancel / Back to Login button */
+.admin-otp__cancel-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 500;
+    background: transparent;
+    cursor: pointer;
+    transition: color .15s, background-color .15s;
+    white-space: nowrap;
+}
+.admin-otp__cancel-btn:hover { color: #334155; background: #f1f5f9; text-decoration: none; }
+.admin-otp__cancel-icon { flex-shrink: 0; }
+
+/* ─── OTP Responsive ─────────────────────────────────────────────────────── */
+@media (max-width: 1023px) {
+    .admin-otp__input { font-size: 22px; letter-spacing: 0.35em; height: 52px; }
+    .admin-otp__secondary { gap: 4px 12px; }
+}
+@media (max-width: 479px) {
+    .admin-otp__secondary { flex-direction: column; gap: 4px; }
+    .admin-otp__divider { display: none; }
+    .admin-otp__resend-btn, .admin-otp__cancel-btn { width: 100%; justify-content: center; }
+    .admin-otp__input { font-size: 20px; letter-spacing: 0.28em; }
+    .admin-otp__masked-email { word-break: break-all; }
+}
+

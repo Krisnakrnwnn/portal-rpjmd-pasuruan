@@ -1,59 +1,79 @@
 <x-guest-layout>
-    <div class="mb-8 overflow-hidden">
-        <h2 class="text-3xl font-black text-blue-900 tracking-tight mb-2">Selamat Datang</h2>
-        <p class="text-slate-500 text-sm font-medium">Masuk untuk mengakses portal manajemen RPJMD.</p>
-    </div>
+    <x-slot:pageTitle>Login Administrator | Portal RPJMD Kabupaten Pasuruan</x-slot:pageTitle>
+    <x-slot:loginBrand>
+        <img class="admin-login__hero" src="{{ asset('hero.png') }}" alt="" aria-hidden="true">
+        <div class="admin-login__brand-content">
+            <a href="/" class="admin-login__logo-link">
+                <img class="admin-login__logo" src="{{ asset('Logo Bapperida Kab Pasuruan Putih.png') }}" alt="Bapperida Kabupaten Pasuruan">
+            </a>
+            <div class="admin-login__intro">
+                <p class="admin-login__eyebrow">Kabupaten Pasuruan</p>
+                <h2>Portal Manajemen<br> RPJMD</h2>
+                <p class="admin-login__description">Kelola informasi perencanaan pembangunan daerah secara aman dan terpusat.</p>
+            </div>
+            <div class="admin-login__security">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3 4 6v6c0 4 8 9 8 9s8-5 8-9V6l-8-3Z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m8 12 3 3 5-6"/></svg>
+                <p>Login administrator dilindungi<br><strong>verifikasi email dua tahap.</strong></p>
+            </div>
+        </div>
+    </x-slot:loginBrand>
+    <header class="admin-login__heading">
+        <p class="admin-login__eyebrow">Akses Administrator</p>
+        <h1 id="login-title">Masuk ke Portal Manajemen</h1>
+        <p>Masukkan email dan kata sandi untuk melanjutkan ke verifikasi email.</p>
+    </header>
 
     <!-- Session Status -->
-    <x-auth-session-status class="mb-6" :status="session('status')" />
+    <x-auth-session-status class="admin-login__status" role="status" :status="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}" class="space-y-6">
+    <form method="POST" action="{{ route('login') }}" class="admin-login__fields">
         @csrf
 
         <!-- Email Address -->
-        <div class="space-y-2">
-            <label for="email" class="text-xs font-black text-blue-900 uppercase tracking-widest pl-1">Alamat Email</label>
-            <div class="relative group">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-blue-400 group-focus-within:text-blue-600 transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path></svg>
+        <div class="admin-login__field">
+            <label for="email">Alamat Email</label>
+            <div class="admin-login__input-wrap">
+                <div class="admin-login__input-icon">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path></svg>
                 </div>
-                <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username" 
-                    class="block w-full pl-12 pr-4 py-4 bg-white/50 border border-white/20 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 focus:bg-white outline-none transition-all font-semibold text-slate-700 placeholder-slate-400" 
+                <input id="email" aria-invalid="{{ $errors->has('email') ? 'true' : 'false' }}" @if($errors->has('email')) aria-describedby="email-error" @endif type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username"
+                    class="admin-login__input"
                     placeholder="nama@email.com">
             </div>
-            <x-input-error :messages="$errors->get('email')" class="mt-1" />
+            <x-input-error :messages="$errors->get('email')" class="admin-login__error" id="email-error" role="alert" />
         </div>
 
         <!-- Password -->
-        <div class="space-y-2">
-            <div class="flex items-center justify-between pl-1">
-                <label for="password" class="text-xs font-black text-blue-900 uppercase tracking-widest">Kata Sandi</label>
+        <div class="admin-login__field">
+            <div class="admin-login__label-row">
+                <label for="password">Kata Sandi</label>
                 @if (Route::has('password.request'))
-                    <a href="{{ route('password.request') }}" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 transition-colors uppercase tracking-wider">Lupa Sandi?</a>
+                    <a href="{{ route('password.request') }}">Lupa Sandi?</a>
                 @endif
             </div>
-            <div class="relative group">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-blue-400 group-focus-within:text-blue-600 transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+            <div class="admin-login__input-wrap">
+                <div class="admin-login__input-icon">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                 </div>
-                <input id="password" type="password" name="password" required autocomplete="current-password" 
-                    class="block w-full pl-12 pr-4 py-4 bg-white/50 border border-white/20 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 focus:bg-white outline-none transition-all font-semibold text-slate-700 placeholder-slate-400" 
+                <input id="password" aria-invalid="{{ $errors->has('password') ? 'true' : 'false' }}" @if($errors->has('password')) aria-describedby="password-error" @endif type="password" name="password" required autocomplete="current-password"
+                    class="admin-login__input"
                     placeholder="••••••••">
             </div>
-            <x-input-error :messages="$errors->get('password')" class="mt-1" />
+            <x-input-error :messages="$errors->get('password')" class="admin-login__error" id="password-error" role="alert" />
         </div>
 
         <!-- Remember Me -->
-        <div class="flex items-center">
-            <input id="remember_me" type="checkbox" name="remember" class="w-5 h-5 rounded-lg border-white/20 text-blue-600 focus:ring-blue-500/20 bg-white/50 cursor-pointer">
-            <label for="remember_me" class="ms-3 text-sm font-bold text-slate-600 cursor-pointer uppercase tracking-tight">Ingat Sesi Saya</label>
+        <div class="admin-login__remember">
+            <input id="remember_me" type="checkbox" name="remember">
+            <label for="remember_me">Ingat Sesi Saya</label>
         </div>
 
-        <div class="pt-4">
-            <button type="submit" class="w-full py-4 px-6 bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-black text-lg rounded-2xl shadow-xl shadow-blue-900/20 hover:shadow-blue-900/40 transition-all hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3">
+        <div>
+            <button type="submit" class="admin-login__submit">
                 Lanjutkan
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
             </button>
         </div>
     </form>
+    <a href="/" class="admin-login__back"><span aria-hidden="true">←</span> Kembali ke Portal RPJMD</a>
 </x-guest-layout>
