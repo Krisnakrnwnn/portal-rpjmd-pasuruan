@@ -3,9 +3,10 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" type="image/png" href="{{ asset('logo.png') }}">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ $pageTitle ?? config('app.name', 'Laravel') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,6 +33,16 @@
         </style>
     </head>
     <body class="font-sans text-gray-900 antialiased overflow-x-hidden">
+        @isset($loginBrand)
+            <main class="admin-login">
+                <aside class="admin-login__brand">{{ $loginBrand }}</aside>
+                <section class="admin-login__panel" aria-labelledby="{{ $panelLabelId ?? 'login-title' }}">
+                    <div class="admin-login__form">{{ $slot }}</div>
+                    <footer class="admin-login__footer">&copy; {{ date('Y') }} Pemerintah Kabupaten Pasuruan</footer>
+                </section>
+            </main>
+
+        @else
         <div class="min-h-screen relative flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <!-- Cinematic Background -->
             <div class="absolute inset-0 z-0">
@@ -61,5 +72,6 @@
                 </p>
             </div>
         </div>
+        @endisset
     </body>
 </html>

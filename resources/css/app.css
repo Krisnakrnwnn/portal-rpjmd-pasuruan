@@ -1,4 +1,6 @@
 @import "tailwindcss";
+/* Presentation styles scoped to the administrator login page. */
+@import "./admin-login.css";
 
 /* Explicit source scanning for Tailwind v4 — scans all Blade & JS files */
 @source "../../resources/views/**/*.blade.php";
