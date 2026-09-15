@@ -24,55 +24,6 @@
 
       <div class="flex items-center gap-3 md:gap-5">
 
-        <!-- Bell Notification Dropdown -->
-        <div class="relative" id="notif-wrapper">
-          <button id="notif-btn" type="button" aria-label="Notifikasi aspirasi" aria-controls="notif-dropdown" aria-expanded="false" class="relative p-2 text-gray-400 hover:text-blue-600 bg-gray-50 border border-gray-200 rounded-full transition-colors focus:outline-none">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-            
-            @if($unreadCount > 0)
-            <span class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-red-500 text-white text-[9px] font-black rounded-full border-2 border-white flex items-center justify-center px-0.5">
-              {{ $unreadCount > 9 ? '9+' : $unreadCount }}
-            </span>
-            @endif
-          </button>
-
-          <!-- Dropdown panel -->
-          <div id="notif-dropdown" class="hidden absolute right-0 mt-2 w-80 max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 overflow-hidden">
-            <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-              <h3 class="font-black text-gray-900 text-sm">Pesan Aspirasi Baru</h3>
-              @if($unreadCount > 0)
-              <span class="px-2 py-0.5 bg-red-100 text-red-600 text-xs font-bold rounded-full">{{ $unreadCount }} belum dibaca</span>
-              @else
-              <span class="px-2 py-0.5 bg-green-100 text-green-600 text-xs font-bold rounded-full">Semua selesai</span>
-              @endif
-            </div>
-            <div class="max-h-72 overflow-y-auto divide-y divide-gray-50">
-              
-              @forelse($latestContacts as $msg)
-              <a href="{{ route('admin.aspirasi.index') }}" class="block px-5 py-3.5 hover:bg-blue-50 transition-colors cursor-pointer group">
-                <div class="flex justify-between items-start mb-1">
-                  <p class="font-bold text-gray-900 text-sm truncate max-w-[160px] group-hover:text-blue-700 transition-colors">{{ $msg->name }}</p>
-                  <span class="text-[10px] text-gray-400 flex-shrink-0 ml-2">{{ $msg->created_at->diffForHumans() }}</span>
-                </div>
-                <p class="text-xs text-gray-600 font-semibold truncate">{{ $msg->subject }}</p>
-                <p class="text-[11px] text-gray-400 truncate mt-0.5">{{ $msg->message }}</p>
-                <p class="text-[10px] text-blue-500 font-bold mt-1 opacity-0 group-hover:opacity-100 transition-opacity">Klik untuk lihat semua →</p>
-              </a>
-              @empty
-              <div class="py-8 text-center text-gray-400">
-                <svg class="w-8 h-8 mx-auto mb-2 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0H4"></path></svg>
-                <p class="text-xs font-bold">Tidak ada pesan baru</p>
-              </div>
-              @endforelse
-            </div>
-            <div class="px-5 py-3 border-t border-gray-100 bg-gray-50">
-              <a href="{{ route('admin.aspirasi.index') }}" class="text-xs font-bold text-blue-600 hover:text-blue-800 hover:underline w-full text-center block transition-colors">
-                Lihat Semua Pesan Aspirasi →
-              </a>
-            </div>
-          </div>
-        </div>
-
         <div class="h-6 w-px bg-gray-200 hidden md:block"></div>
         <div class="flex items-center gap-3">
           <div class="hidden md:block text-right">
