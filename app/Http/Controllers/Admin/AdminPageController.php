@@ -72,8 +72,6 @@ class AdminPageController extends Controller
             'adminModule' => $module,
             'pageTitle' => $title,
             'formDefaults' => [],
-            'unreadCount' => Contact::where('status', 'unread')->count(),
-            'latestContacts' => Contact::where('status', 'unread')->latest()->limit(5)->get(),
         ], $data));
     }
 
