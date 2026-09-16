@@ -238,8 +238,8 @@ Prioritas menggunakan MoSCoW: Must (wajib), Should (penting), Could (opsional).
 | BOT-10 | Should | Pengguna dapat memberi feedback suka/tidak suka pada jawaban. |
 | BOT-11 | Should | Pengguna dapat mengekspor percakapan ke PDF atau TXT; ekspor dibatasi 10 permintaan per menit. |
 | BOT-12 | Must | Sistem menangani API key hilang, timeout, rate limit, overload, model tidak ditemukan, serta kegagalan internal dengan pesan yang aman dan mudah dipahami. |
-| BOT-13 | Must | Model generatif dapat dipilih Admin dan memiliki fallback konfigurasi. |
-| BOT-14 | **Gap** | Respons error produksi tidak boleh mengirim detail exception internal kepada pengguna. |
+| BOT-13 | Must | Admin dan Super Admin memilih model generation Gemini dari whitelist di Setelan. Test Model terisolasi tidak mengaktifkan kandidat; Simpan atomik dengan audit memperbarui stats dan berlaku pada request chatbot berikutnya. Default valid dipakai jika konfigurasi kosong/invalid, dengan status yang terlihat pada admin. Implementasi dan validasi lokal tersedia; penerimaan kualitas kedua model menunggu [UAT staging](UAT-AI-MODEL-MANAGEMENT.md). Lihat [PRD AI Model Management](PRD-AI-MODEL-MANAGEMENT.md). |
+| BOT-14 | Must | Respons chatbot dan Test Model tidak mengirim detail exception internal atau body error provider. Jalur ini menggunakan pesan aman; audit log/error ingest lama tetap pekerjaan hardening terpisah. |
 | BOT-15 | **Gap** | Feedback harus disimpan terstruktur dan terhubung ke pesan; saat ini baru berupa log aplikasi. |
 | BOT-16 | **Gap** | Sistem perlu kebijakan privasi, persetujuan cookie, anonimisasi IP, retensi chat, dan mekanisme penghapusan data. |
 | BOT-17 | **Gap** | Validasi ekspor harus membatasi ukuran/jumlah pesan dan tidak mempercayai HTML dari klien. |
@@ -335,7 +335,7 @@ Rencana pemisahan dashboard menjadi halaman berbasis route dijelaskan dalam [PRD
 - Basis data: kompatibel dengan konfigurasi Laravel; README mengarahkan penggunaan MySQL.
 - AI: Google Gemini Generative Language API.
 - Embedding: `gemini-embedding-001`.
-- Model jawaban: dapat dikonfigurasi melalui data `gemini_model`, dengan fallback `gemini-2.5-flash` pada kode saat ini.
+- Model jawaban: `AiSettings` membaca key `gemini_model` dan `ai_provider` di `stats` tanpa cache lintas request. Default dan whitelist berada di `config/ai.php`: Gemini 2.5 Flash (default) dan Gemini 2.5 Pro. `ChatbotController` mempertahankan RAG/prompt/history, lalu `AIManager` memanggil `GeminiProvider` untuk generation. API key tetap server-only melalui `services.gemini.api_key`.
 - Pemrosesan PDF: `smalot/pdfparser`.
 - Ekspor PDF: `barryvdh/laravel-dompdf`.
 - Background processing: Laravel Queue.

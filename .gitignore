@@ -36,6 +36,8 @@ Thumbs.db
 *.md
 !README.md
 !docs/RUNBOOK-OTP-ADMIN.md
+!prd/PRD-AI-MODEL-MANAGEMENT.md
+!prd/UAT-AI-MODEL-MANAGEMENT.md
 
 # Kiro AI files
 .kiro/

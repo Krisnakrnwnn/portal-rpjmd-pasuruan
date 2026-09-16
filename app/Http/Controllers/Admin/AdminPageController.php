@@ -6,14 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Contact;
 use App\Models\DocumentCategory;
+use App\Models\DocumentChunk;
 use App\Models\DocumentIngestion;
 use App\Models\Gallery;
 use App\Models\News;
 use App\Models\Profile;
 use App\Models\PublicDocument;
-use App\Models\Service;
-use App\Models\Stat;
 use App\Models\User;
+use App\Services\AI\AiSettings;
+use App\Services\AI\Exceptions\AIProviderException;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -68,6 +70,7 @@ class AdminPageController extends Controller
         if (request()->header('X-Silent-Polling') === 'true') {
             request()->session()->reflash();
         }
+
         return view('admin.'.$view, array_merge([
             'adminModule' => $module,
             'pageTitle' => $title,
@@ -80,7 +83,7 @@ class AdminPageController extends Controller
         $filters = $this->filters($request);
         $activities = Activity::with('user')->latest();
         if (! empty($filters['date'])) {
-            $start = \Carbon\Carbon::parse($filters['date'], 'Asia/Jakarta')->startOfDay()->setTimezone(config('app.timezone'));
+            $start = Carbon::parse($filters['date'], 'Asia/Jakarta')->startOfDay()->setTimezone(config('app.timezone'));
             $activities->where('created_at', '>=', $start)->where('created_at', '<', $start->copy()->addDay());
         }
         $this->search($activities, ['description', 'type', 'action'], $filters['q'] ?? null);
@@ -88,7 +91,7 @@ class AdminPageController extends Controller
         return $this->page('dashboard', 'dashboard', 'Dashboard Utama', [
             'counts' => [
                 'documents' => PublicDocument::count(),
-                'ingest_chunks' => \App\Models\DocumentChunk::count(),
+                'ingest_chunks' => DocumentChunk::count(),
                 'users' => User::count(),
             ],
             'activities' => $this->paginate($activities, 20),
@@ -194,9 +197,19 @@ class AdminPageController extends Controller
         return $this->page('pengguna/edit', 'pengguna', 'Edit Pegawai', ['record' => $user, 'formDefaults' => $user->only(['name', 'email', 'role'])]);
     }
 
-    public function setelan(): View
+    public function setelan(AiSettings $settings): View
     {
-        return $this->page('setelan/index', 'setelan', 'Setelan Konfigurasi', ['profiles' => Profile::orderBy('id')->lazy(200)->collect(), 'activeModel' => Stat::where('key', 'gemini_model')->value('value') ?? 'gemini-2.5-flash']);
+        try {
+            $active = $settings->current();
+        } catch (AIProviderException) {
+            $active = null;
+        }
+
+        return $this->page('setelan/index', 'setelan', 'Setelan Konfigurasi', [
+            'profiles' => Profile::orderBy('id')->lazy(200)->collect(),
+            'aiSettings' => $active,
+            'aiCatalog' => $settings->catalog(),
+        ]);
     }
 
     public function ingest(Request $request): View

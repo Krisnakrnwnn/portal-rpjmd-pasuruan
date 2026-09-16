@@ -99,6 +99,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.role'])->grou
 
     // Setelan (Admin & Super Admin)
     Route::post('/settings', [AdminController::class, 'updateSettings'])->name('update_settings');
+    Route::post('/settings/test-model', [AdminController::class, 'testAiModel'])
+        ->middleware('throttle:5,1')->name('test_ai_model');
 
     // Chatbot Ingestion (Admin & Super Admin)
     Route::post('/chatbot/ingest', [AdminController::class, 'ingestPdf'])->name('chatbot.ingest');
