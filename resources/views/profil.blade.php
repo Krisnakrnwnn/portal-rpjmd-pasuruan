@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('seo')
-    <x-seo 
+    <x-seo
         title="Profil Bapperida Kabupaten Pasuruan"
         description="Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah (Bapperida) Kabupaten Pasuruan - Visi, Misi, Struktur Organisasi, dan Tugas Pokok Fungsi dalam mendukung pembangunan daerah."
         keywords="Profil Bapperida, Visi Misi, Struktur Organisasi, Tupoksi, Kabupaten Pasuruan, Perencanaan Pembangunan"
@@ -9,55 +9,147 @@
 @endsection
 
 @section('content')
-    <!-- Header Spanduk -->
-    <div class="relative w-full min-h-[450px] bg-blue-950 overflow-hidden mb-16 flex items-center">
-      <div class="absolute top-0 right-0 w-96 h-96 bg-blue-500/30 rounded-full blur-[100px] animate-pulse"></div>
-      <img src="{{ asset('hero.png') }}" class="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-overlay object-bottom" />
-      <div class="absolute inset-0 bg-gradient-to-b from-[#041a42]/80 via-blue-900/60 to-[#0A3D91]"></div>
-      
-      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-16 pb-12 text-center flex flex-col items-center">
-        <!-- Breadcrumbs UI -->
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-6 text-sm text-blue-200">
-          <a href="{{ route('home') }}" class="hover:text-white cursor-pointer transition-colors text-xs uppercase tracking-wider font-semibold">Beranda</a>
-          <span>/</span>
-          <span class="text-white text-xs uppercase tracking-wider font-bold">Profil Layanan</span>
-        </div>
-        
-        <h1 class="text-4xl md:text-6xl font-black text-white mb-6 drop-shadow-2xl">
-          Profil <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500">Bapperida Pasuruan</span>
-        </h1>
-        <p class="text-blue-100 text-lg md:text-xl max-w-3xl font-light leading-relaxed">
-          Mengenal lebih dekat Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah (Bapperida) Kabupaten Pasuruan — Lembaga yang bertanggung jawab atas perencanaan, riset, dan inovasi pembangunan daerah yang berkelanjutan.
-        </p>
+    {{-- 1. Hero Section Navy (Sesuai dengan Dokumen) --}}
+    <section class="relative bg-[#102e56] text-white overflow-hidden py-14 sm:py-18 lg:py-20 font-sans">
+      {{-- Hero Background Image with Overlay --}}
+      <div class="absolute inset-0 z-0">
+        <img src="{{ asset('hero.png') }}" alt="" class="w-full h-full object-cover object-right opacity-40 mix-blend-luminosity" aria-hidden="true" />
+        <div class="absolute inset-0 bg-gradient-to-r from-[#102e56] via-[#102e56]/95 to-[#102e56]/80"></div>
       </div>
 
-      <!-- Bottom Curve Divider -->
-      <div class="absolute bottom-0 w-full overflow-hidden leading-none z-20 translate-y-[2px]">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="relative block w-full h-[50px] lg:h-[80px]">
-            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C54,82.47,110.15,77.58,168.22,76.54,219.64,75.64,271.86,65.68,321.39,56.44Z" fill="#F9FAFB"></path>
-        </svg>
-      </div>
-    </div>
+      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl">
+          {{-- Breadcrumb Pill --}}
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[#a5e2ed] text-xs font-semibold tracking-wider uppercase mb-5">
+            <a href="{{ route('home') }}" class="hover:text-white transition-colors">Beranda</a>
+            <span class="text-white/40">/</span>
+            <span class="text-white">Profil Instansi</span>
+          </div>
 
-    <!-- Konten Profil -->
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+          {{-- Main Title --}}
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white tracking-tight leading-[1.2] mb-4">
+            Profil Bapperida Kabupaten Pasuruan
+          </h1>
 
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div class="bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-sm hover:shadow-lg transition-shadow border border-blue-100 p-8 md:p-10 border-t-4 border-t-yellow-400" data-aos="fade-right" data-aos-delay="100">
-          <h2 class="text-2xl font-extrabold text-blue-900 mb-4">Visi</h2>
-          <p class="text-gray-700 font-medium italic text-lg leading-relaxed">"{{ $profiles['visi'] ?? '' }}"</p>
+          {{-- Original Description --}}
+          <p class="text-base sm:text-lg text-[#d6e3f2] leading-relaxed font-normal max-w-2xl">
+            Mengenal lebih dekat Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah (Bapperida) Kabupaten Pasuruan — Lembaga yang bertanggung jawab atas perencanaan, riset, dan inovasi pembangunan daerah yang berkelanjutan.
+          </p>
         </div>
-        <div class="bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-sm hover:shadow-lg transition-shadow border border-blue-100 p-8 md:p-10 border-t-4 border-t-blue-600" data-aos="fade-left" data-aos-delay="200">
-          <h2 class="text-2xl font-extrabold text-blue-900 mb-4">Misi</h2>
-          <ul class="space-y-4 text-gray-700 font-medium list-none">
-            @foreach(explode('|', $profiles['misi'] ?? '') as $misi)
-            <li class="flex items-start">
-              <span class="text-blue-500 mr-2 mt-1">✔</span> {{ $misi }}
-            </li>
+      </div>
+    </section>
+
+    {{-- 2. Konten Profil Section --}}
+    <section class="bg-[#f8fafc] py-12 sm:py-16 font-sans min-h-[50vh]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+
+        {{-- Sejarah Singkat (Jika Ada) --}}
+        @if(!empty($profiles['sejarah']))
+        <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 sm:p-10">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 text-[#1d4ed8] flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-xs font-bold text-[#1d4ed8] uppercase tracking-wider">Tentang Pasuruan</p>
+              <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Sejarah Singkat</h2>
+            </div>
+          </div>
+          <div class="text-slate-600 leading-relaxed text-sm sm:text-base space-y-4 font-normal">
+            @foreach(explode("\n\n", $profiles['sejarah']) as $paragraph)
+              <p>{{ $paragraph }}</p>
             @endforeach
-          </ul>
+          </div>
         </div>
+        @endif
+
+        {{-- Visi & Misi Grid --}}
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+          {{-- Card Visi --}}
+          <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 sm:p-8 flex flex-col justify-between h-full relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none"></div>
+            <div>
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-blue-50 text-[#1d4ed8] flex items-center justify-center flex-shrink-0">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-xs font-bold text-[#1d4ed8] uppercase tracking-wider">Arah Pembangunan</p>
+                  <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Visi Pembangunan</h2>
+                </div>
+              </div>
+
+              <div class="relative bg-slate-50 border border-slate-200/60 rounded-xl p-6 mb-4">
+                <svg class="w-8 h-8 text-blue-200 absolute top-4 right-4 opacity-50" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                </svg>
+                <p class="text-slate-800 text-lg sm:text-xl font-semibold leading-relaxed relative z-10 italic">
+                  "{{ $profiles['visi'] ?? 'Terwujudnya Kabupaten Pasuruan yang Maju, Sejahtera, dan Berkeadilan' }}"
+                </p>
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-slate-100 flex items-center gap-2 text-xs text-slate-400">
+              <span class="inline-block w-2 h-2 rounded-full bg-[#1d4ed8]"></span>
+              <span>Rencana Pembangunan Jangka Menengah Daerah</span>
+            </div>
+          </div>
+
+          {{-- Card Misi --}}
+          <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 sm:p-8">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-10 h-10 rounded-xl bg-blue-50 text-[#1d4ed8] flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-[#1d4ed8] uppercase tracking-wider">Komitmen Pelaksanaan</p>
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Misi Pembangunan</h2>
+              </div>
+            </div>
+
+            <div class="space-y-3.5">
+              @php
+                $misiList = array_filter(explode('|', $profiles['misi'] ?? ''));
+              @endphp
+              @forelse($misiList as $index => $misi)
+              <div class="flex items-start gap-3.5 p-3.5 sm:p-4 rounded-xl border border-slate-100 bg-slate-50/60 hover:bg-slate-50 transition-colors">
+                <span class="flex-shrink-0 w-6 h-6 rounded-full bg-[#1d4ed8] text-white text-xs font-bold flex items-center justify-center mt-0.5 shadow-xs">
+                  {{ $index + 1 }}
+                </span>
+                <p class="text-slate-700 text-sm sm:text-base leading-relaxed font-normal">
+                  {{ trim($misi) }}
+                </p>
+              </div>
+              @empty
+              <p class="text-sm text-slate-500 italic">Misi belum tersedia.</p>
+              @endforelse
+            </div>
+          </div>
+
+        </div>
+
+        {{-- Callout ke Dokumen Publik --}}
+        <div class="bg-gradient-to-r from-[#102e56] to-[#1e40af] rounded-2xl p-6 sm:p-8 text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+          <div class="max-w-xl text-center md:text-left">
+            <h3 class="text-lg sm:text-xl font-semibold mb-1">Pelajari Dokumen Perencanaan Selengkapnya</h3>
+            <p class="text-sm text-[#d6e3f2]">Akses seluruh dokumen RPJMD, RKPD, dan publikasi statistik Bapperida Kabupaten Pasuruan.</p>
+          </div>
+          <a href="{{ route('dokumen') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-[#102e56] font-semibold text-sm hover:bg-blue-50 transition-colors shadow-sm whitespace-nowrap">
+            <svg class="w-4 h-4 text-[#1d4ed8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <span>Buka Dokumen Publik</span>
+          </a>
+        </div>
+
       </div>
-    </div>
+    </section>
 @endsection

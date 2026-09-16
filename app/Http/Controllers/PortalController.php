@@ -11,13 +11,12 @@ class PortalController extends Controller
 {
     public function home()
     {
-        $latestNews = News::with('author')->published()->orderBy('published_at', 'desc')->take(3)->get();
         $services = Service::all();
-        
+
         // Ambil SEMUA statistik utama untuk hero section (dinamis jumlahnya)
         $heroStats = \App\Models\Stat::where('key', 'like', 'hero_%')->get();
 
-        return view('home', compact('latestNews', 'services', 'heroStats'));
+        return view('home', compact('services', 'heroStats'));
     }
 
     public function profil()
