@@ -11,52 +11,43 @@
           <!-- General Settings -->
           <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
             <h2 class="text-lg font-bold text-slate-900 mb-6 border-b border-slate-100 pb-3">Pengaturan Model AI Chatbot</h2>
-            <form action="{{ \App\Support\AdminNavigation::url('admin.update_settings') }}" method="POST" class="space-y-6">
+            <form id="ai-settings-form" action="{{ \App\Support\AdminNavigation::url('admin.update_settings') }}" method="POST" class="space-y-6" data-test-url="{{ route('admin.test_ai_model') }}">
               @csrf
-              @if($errors->any())<x-input-error :messages="$errors->all()" class="mb-4" role="alert" />@endif
-              
+              <input type="hidden" name="provider" value="gemini">
               <div>
-                <label for="gemini_model" class="block text-sm font-semibold text-slate-700 mb-2">Model Google Gemini Aktif <span class="text-rose-500">*</span></label>
-                <div class="relative">
-                  <input type="text" name="gemini_model" id="gemini_model" 
-                    value="{{ old('gemini_model', $activeModel) }}" 
-                    class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-medium text-slate-800 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all"
-                    placeholder="Contoh: gemini-2.5-flash" required>
-                </div>
-                <p class="text-xs text-slate-500 mt-2">Ketik nama model secara manual untuk mendukung versi Gemini terbaru yang dirilis Google.</p>
+                <p class="text-sm font-semibold text-slate-700">Provider AI</p>
+                <p class="text-sm text-slate-900">{{ $aiCatalog['gemini']['label'] ?? 'Google Gemini' }}</p>
+                @error('provider')<p class="text-sm text-rose-600" role="alert">{{ $message }}</p>@enderror
               </div>
-
+              <div class="rounded-xl bg-slate-50 p-4 text-sm">
+                <p class="font-semibold text-slate-700">Model aktif</p>
+                <p id="active-model-display" class="font-bold text-slate-900 break-words">{{ $aiSettings ? $aiSettings['provider_label'].' — '.$aiSettings['model_label'].' ('.$aiSettings['model'].')' : 'Konfigurasi AI belum siap' }}</p>
+                @if(!$aiSettings)
+                  <p class="mt-2 text-rose-700" role="alert">Konfigurasi default tidak valid. Hubungi pengelola server.</p>
+                @elseif($aiSettings['fallback'])
+                  <p class="mt-2 text-amber-800" role="status">Setelan tersimpan tidak valid. Chatbot menggunakan default aplikasi sampai model yang valid disimpan.</p>
+                @elseif($aiSettings['default'])
+                  <p class="mt-2 text-slate-600">Belum ada model tersimpan; menggunakan default aplikasi.</p>
+                @endif
+              </div>
               <div>
-                <span class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2.5">Pilihan Cepat (Klik untuk memilih):</span>
-                <div class="flex flex-wrap gap-2">
-                  <button type="button" onclick="selectModel('gemini-2.5-flash')" 
-                    class="model-badge px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 {{ $activeModel === 'gemini-2.5-flash' ? 'bg-gray-900 border-gray-900 text-white shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100 hover:border-slate-300' }}">
-                    Gemini 2.5 Flash
-                  </button>
-                  <button type="button" onclick="selectModel('gemini-2.5-pro')" 
-                    class="model-badge px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 {{ $activeModel === 'gemini-2.5-pro' ? 'bg-gray-900 border-gray-900 text-white shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100 hover:border-slate-300' }}">
-                    Gemini 2.5 Pro
-                  </button>
-                  <button type="button" onclick="selectModel('gemini-1.5-flash')" 
-                    class="model-badge px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 {{ $activeModel === 'gemini-1.5-flash' ? 'bg-gray-900 border-gray-900 text-white shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100 hover:border-slate-300' }}">
-                    Gemini 1.5 Flash
-                  </button>
-                  <button type="button" onclick="selectModel('gemini-1.5-pro')" 
-                    class="model-badge px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 {{ $activeModel === 'gemini-1.5-pro' ? 'bg-gray-900 border-gray-900 text-white shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100 hover:border-slate-300' }}">
-                    Gemini 1.5 Pro
-                  </button>
-                </div>
+                <label for="gemini_model" class="block text-sm font-semibold text-slate-700 mb-2">Model yang dipilih</label>
+                <select name="gemini_model" id="gemini_model" required aria-describedby="ai-model-help ai-model-error" aria-invalid="{{ $errors->has('gemini_model') ? 'true' : 'false' }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600">
+                  <option value="">Pilih model AI</option>
+                  @foreach($aiCatalog['gemini']['models'] ?? [] as $modelId => $modelLabel)
+                    <option value="{{ $modelId }}" @selected(old('gemini_model', $aiSettings['model'] ?? '') === $modelId)>{{ $modelLabel }}</option>
+                  @endforeach
+                </select>
+                <p id="ai-model-help" class="text-xs text-slate-500 mt-2">Pilihan baru aktif setelah Simpan. Test Model memakai kuota API dan hanya menguji koneksi tanpa dokumen RPJMD.</p>
+                <div id="ai-model-error">@error('gemini_model')<p class="text-sm text-rose-600 mt-2" role="alert">{{ $message }}</p>@enderror</div>
               </div>
-
-              <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
-                <div class="flex items-center gap-2 text-xs text-slate-600">
-                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                  Model: <strong class="text-slate-900 font-bold" id="active-model-display">{{ $activeModel }}</strong>
-                </div>
+              <div class="pt-4 border-t border-slate-100 flex flex-wrap gap-3">
+                <button type="button" id="test-ai-model" class="px-5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-blue-600 disabled:opacity-50">Test Model</button>
                 <button type="submit" class="px-5 py-2.5 bg-gray-900 hover:bg-black text-white font-semibold rounded-xl transition-all shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-gray-900">
                   Simpan Model AI
                 </button>
               </div>
+              <div id="ai-test-result" aria-live="polite" aria-atomic="true" class="text-sm text-slate-700 whitespace-pre-wrap break-words"></div>
             </form>
           </div>
 
