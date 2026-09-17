@@ -20,10 +20,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if (!app()->runningInConsole()) {
-            $socials = \App\Models\Profile::whereIn('key', ['ig_link', 'fb_link', 'wa_number'])
-                         ->get()
-                         ->pluck('content', 'key');
-            view()->share('socials', $socials);
+            try {
+                $socials = \App\Models\Profile::whereIn('key', ['ig_link', 'fb_link', 'wa_number'])
+                             ->get()
+                             ->pluck('content', 'key');
+                view()->share('socials', $socials);
+            } catch (\Throwable $e) {
+                view()->share('socials', collect());
+            }
         }
     }
 }
