@@ -190,6 +190,7 @@ class AdminMultipageTest extends TestCase
         $this->assertDatabaseHas('contacts', ['id' => 1, 'status' => 'resolved']);
         $this->delete(route('admin.delete_contact', 1))->assertRedirect(route('admin.aspirasi.index'));
         $this->put(route('admin.update_gallery', 1), ['title' => 'Galeri Diperbarui', 'location' => 'Pasuruan'])->assertRedirect(route('admin.galeri.index'));
+        config(['services.gemini.api_key' => 'fake-settings-key']);
         $this->post(route('admin.update_settings'), ['gemini_model' => 'gemini-2.5-pro'])->assertRedirect(route('admin.setelan.index'))->assertSessionHas('success');
         $this->assertDatabaseHas('activities', ['type' => 'Dokumen', 'action' => 'Update']);
     }

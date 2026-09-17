@@ -11,13 +11,26 @@
           <!-- General Settings -->
           <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
             <h2 class="text-lg font-bold text-slate-900 mb-6 border-b border-slate-100 pb-3">Pengaturan Model AI Chatbot</h2>
-            <form id="ai-settings-form" action="{{ \App\Support\AdminNavigation::url('admin.update_settings') }}" method="POST" class="space-y-6" data-test-url="{{ route('admin.test_ai_model') }}">
+            @php
+              $candidateProvider = old('provider', $aiSettings['provider'] ?? 'gemini');
+              $candidateProvider = is_string($candidateProvider) && isset($aiCatalog[$candidateProvider]) ? $candidateProvider : '';
+              $candidateModel = old('model', old('gemini_model', $aiSettings['model'] ?? ''));
+              $candidateReady = $aiReadiness[$candidateProvider] ?? false;
+              $candidateEnabled = $aiCatalog[$candidateProvider]['enabled'] ?? false;
+            @endphp
+            <form id="ai-settings-form" action="{{ \App\Support\AdminNavigation::url('admin.update_settings') }}" method="POST" class="space-y-6" data-test-url="{{ route('admin.test_ai_model') }}" data-embedding-ready="{{ $aiReadiness['gemini'] ? 'true' : 'false' }}">
               @csrf
-              <input type="hidden" name="provider" value="gemini">
               <div>
-                <p class="text-sm font-semibold text-slate-700">Provider AI</p>
-                <p class="text-sm text-slate-900">{{ $aiCatalog['gemini']['label'] ?? 'Google Gemini' }}</p>
-                @error('provider')<p class="text-sm text-rose-600" role="alert">{{ $message }}</p>@enderror
+                <label for="ai_provider" class="block text-sm font-semibold text-slate-700 mb-2">Provider AI</label>
+                <select name="provider" id="ai_provider" required aria-describedby="ai-provider-error ai-credential-status" aria-invalid="{{ $errors->has('provider') ? 'true' : 'false' }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600">
+                  <option value="">Pilih provider AI</option>
+                  @foreach($aiCatalog as $providerId => $providerConfig)
+                    <option value="{{ $providerId }}" @selected($candidateProvider === $providerId)>{{ $providerConfig['label'] }}</option>
+                  @endforeach
+                </select>
+                <div id="ai-provider-error">@error('provider')<p class="text-sm text-rose-600" role="alert">{{ $message }}</p>@enderror</div>
+                <p id="ai-credential-status" class="text-xs text-slate-600 mt-2" aria-live="polite">{{ $candidateReady ? 'API key provider tersedia; akses model perlu diuji.' : 'API key provider belum dikonfigurasi di server.' }}</p>
+                <p class="text-xs text-slate-600 mt-2">Pencarian dokumen Gemini: {{ $aiReadiness['gemini'] ? 'API key tersedia.' : 'API key belum dikonfigurasi; Simpan belum tersedia.' }}</p>
               </div>
               <div class="rounded-xl bg-slate-50 p-4 text-sm">
                 <p class="font-semibold text-slate-700">Model aktif</p>
@@ -29,21 +42,24 @@
                 @elseif($aiSettings['default'])
                   <p class="mt-2 text-slate-600">Belum ada model tersimpan; menggunakan default aplikasi.</p>
                 @endif
+                @if($aiSettings && !$aiSettings['configured'])
+                  <p class="mt-2 text-rose-700" role="status">API key provider aktif belum tersedia. Hubungi pengelola server.</p>
+                @endif
               </div>
               <div>
-                <label for="gemini_model" class="block text-sm font-semibold text-slate-700 mb-2">Model yang dipilih</label>
-                <select name="gemini_model" id="gemini_model" required aria-describedby="ai-model-help ai-model-error" aria-invalid="{{ $errors->has('gemini_model') ? 'true' : 'false' }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600">
+                <label for="ai_model" class="block text-sm font-semibold text-slate-700 mb-2">Model yang dipilih</label>
+                <select name="model" id="ai_model" required aria-describedby="ai-model-help ai-model-error" aria-invalid="{{ $errors->hasAny(['model', 'gemini_model']) ? 'true' : 'false' }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600">
                   <option value="">Pilih model AI</option>
-                  @foreach($aiCatalog['gemini']['models'] ?? [] as $modelId => $modelLabel)
-                    <option value="{{ $modelId }}" @selected(old('gemini_model', $aiSettings['model'] ?? '') === $modelId)>{{ $modelLabel }}</option>
+                  @foreach($aiCatalog[$candidateProvider]['models'] ?? [] as $modelId => $modelLabel)
+                    <option value="{{ $modelId }}" @selected($candidateModel === $modelId)>{{ $modelLabel }}</option>
                   @endforeach
                 </select>
                 <p id="ai-model-help" class="text-xs text-slate-500 mt-2">Pilihan baru aktif setelah Simpan. Test Model memakai kuota API dan hanya menguji koneksi tanpa dokumen RPJMD.</p>
-                <div id="ai-model-error">@error('gemini_model')<p class="text-sm text-rose-600 mt-2" role="alert">{{ $message }}</p>@enderror</div>
+                <div id="ai-model-error">@foreach(['model', 'gemini_model'] as $modelField)@error($modelField)<p class="text-sm text-rose-600 mt-2" role="alert">{{ $message }}</p>@enderror @endforeach</div>
               </div>
               <div class="pt-4 border-t border-slate-100 flex flex-wrap gap-3">
-                <button type="button" id="test-ai-model" class="px-5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-blue-600 disabled:opacity-50">Test Model</button>
-                <button type="submit" class="px-5 py-2.5 bg-gray-900 hover:bg-black text-white font-semibold rounded-xl transition-all shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-gray-900">
+                <button type="button" id="test-ai-model" @disabled(!$candidateReady || !$candidateEnabled) class="px-5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-blue-600 disabled:opacity-50">Test Model</button>
+                <button type="submit" id="save-ai-model" @disabled(!$candidateReady || !$candidateEnabled || !$aiReadiness['gemini']) class="px-5 py-2.5 bg-gray-900 hover:bg-black text-white font-semibold rounded-xl transition-all shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 disabled:opacity-50">
                   Simpan Model AI
                 </button>
               </div>
