@@ -1,8 +1,15 @@
-# PRD Teknis Pengelolaan Model AI Chatbot
+# PRD Teknis Pengelolaan Model AI Chatbot — Multi-Provider
 
 Tanggal: 15 September 2026  
-Status: Implementasi lokal tersedia; validasi otomatis dilengkapi, UAT staging belum selesai  
+Revisi: 16 September 2026 — fase dua multi-provider
+
+Status: Fase satu Gemini tersedia; fase dua Gemini/OpenAI/Anthropic masih rancangan, belum diimplementasikan
+
 Produk: Portal RPJMD Kabupaten Pasuruan — Bapperida
+
+> **Acuan implementasi berikutnya:** bagian 22–32 menetapkan kebutuhan fase dua dan menggantikan batas Gemini-only pada bagian 5, 6, 9–18, serta acceptance criteria bagian 21 untuk pengembangan multi-provider. Bagian 1–21 dipertahankan sebagai riwayat dan kontrak regresi fase satu. Status test fase satu bukan bukti bahwa GPT/Claude sudah diimplementasikan atau lulus UAT.
+
+> **Informasi hosting dari pengguna:** terdapat 75 dokumen publik dan 9.732 chunk ingest AI; tidak ada staging terpisah. Pengguna melaporkan Test Model `gemini-2.5-flash` berhasil dan `gemini-2.5-pro` gagal dengan pesan model tidak tersedia/akses ditolak. Ini hasil yang dilaporkan pengguna, bukan inspeksi langsung database/API oleh penyusun. Tidak diketahui apakah semua dokumen publik telah di-ingest, apakah semua chunk valid, atau apakah kualitas jawaban sudah memenuhi UAT. Kode HTTP kegagalan Pro belum tersedia; penyebab spesifik belum disimpulkan.
 
 > Catatan implementasi 15 September 2026: fitur telah diterapkan; uraian existing di bawah dipertahankan sebagai baseline sebelum refactor. Interface netral menyediakan `chat()` dan `test()` terpisah agar preview selalu satu attempt. Adapter history lama berada di AIManager. Generation dan query embedding chatbot kini mengirim key melalui header `x-goog-api-key` dengan redirect HTTP dinonaktifkan; endpoint/version, payload embedding, model embedding dan algoritme RAG tetap sama. Penyimpanan memakai transaction dengan lock key provider untuk menyerialkan save bersamaan. Tidak ada migration baru. Hasil API sukses tanpa teks memakai fallback publik existing; preview menganggapnya gagal, termasuk safety-blocked. Test RAG awal dijalankan sebelum refactor, dan hash prompt baseline dipertahankan. UAT kualitas dan akses kedua model menggunakan key staging masih merupakan verifikasi manual terpisah.
 
@@ -436,3 +443,187 @@ Validasi lokal 16 September 2026: `php artisan test --compact` selesai tanpa keg
 8. Save atomic dengan audit actor; kegagalan tidak meninggalkan pasangan settings sebagian. Tidak ada cache lintas request yang membuat model lama terus dipakai.
 9. Transport generation diisolasi melalui manager/interface/provider tanpa mengimplementasikan provider lain dan tanpa memindahkan atau merancang ulang RAG.
 10. Seluruh pengujian scope lulus, UAT model tercatat, dokumentasi operasional diperbarui, dan known technical debt dibedakan dari regresi baru. Pekerjaan fitur dimulai hanya setelah instruksi implementasi berikutnya.
+
+## 22. Tujuan dan cakupan fase dua
+
+Admin dan Super Admin dapat berganti provider **Google Gemini**, **OpenAI (GPT)**, dan **Anthropic (Claude)** beserta model yang disetujui, melalui Setelan tanpa mengedit kode, credential, atau melakukan deploy pada setiap pergantian. Penambahan adapter, credential, dan katalog awal tetap membutuhkan konfigurasi/deployment satu kali.
+
+Termasuk: adapter OpenAI/Anthropic, dropdown provider/model, status credential tanpa nilainya, preview terisolasi, penyimpanan model netral, transisi data Gemini lama, pemetaan error, audit, contract test, UAT per provider, serta prosedur rollback.
+
+Tidak termasuk: router pihak ketiga, endpoint custom, API key di UI/database, dynamic model discovery otomatis, failover antarprovider, pilihan provider oleh warga, streaming, tools/web search, upload dokumen ke provider, migrasi embedding, reingest, perubahan retrieval/prompt/history, atau perbaikan seluruh utang teknis chatbot.
+
+## 23. Pemisahan generation dan embedding
+
+```text
+Pertanyaan warga
+  -> embedding pertanyaan: Gemini (GEMINI_API_KEY)
+  -> retrieval document_chunks existing + berita + prompt + history
+  -> AIManager -> snapshot provider/model aktif
+       -> GeminiProvider / OpenAIProvider / AnthropicProvider
+  -> teks jawaban -> persistence dan JSON {reply} existing
+
+Setelan -> pilih kandidat provider/model -> Test Model (generation saja)
+                                       -> Simpan (settings + audit saja)
+```
+
+- Default deployment tetap Gemini/`gemini-2.5-flash`; jangan mengaktifkan provider baru otomatis.
+- Generation GPT/Claude menerima konteks teks hasil retrieval, bukan seluruh 75 PDF atau seluruh 9.732 chunk. Pemilihan top ten dan threshold > 0,3 tetap berlaku.
+- Embedding pertanyaan serta ingest tetap `gemini-embedding-001`. Pergantian generation tidak menulis `document_chunks`/`document_ingestions` dan tidak membutuhkan ingest ulang.
+- **GEMINI_API_KEY tetap diperlukan untuk chatbot RAG walaupun generation memakai GPT/Claude.** Preview GPT/Claude dapat berhasil tanpa embedding, sehingga UI harus menampilkan readiness generation dan embedding secara terpisah.
+- Riwayat lokal tetap delapan elemen dengan role existing `user|model`. Adapter manager mengubahnya menjadi `user|assistant` untuk provider; jangan memigrasikan record percakapan.
+- Save berlaku saat request berikutnya mengambil snapshot. Request yang sudah mengambil snapshot menyelesaikan generation dengan pasangan lama, tanpa mencampur provider/model.
+
+## 24. Functional requirements multi-provider
+
+| ID | Kebutuhan |
+|---|---|
+| MP-01 | Admin/Super Admin melihat pasangan aktif, status default/fallback, dropdown tiga provider dan model sesuai katalog provider. |
+| MP-02 | Perubahan provider menghapus pilihan model yang tidak sesuai, membatalkan preview lama, dan mempertahankan label aktif sampai save berhasil. |
+| MP-03 | Model yang ditampilkan hanya exact ID dari katalog server; pasangan silang, provider tak terdaftar, URL, array, atau model embedding ditolak. |
+| MP-04 | UI menyatakan credential generation tersedia/belum tersedia; tidak menampilkan key, potongan key, atau mengklaim akses model sudah terverifikasi hanya karena key tersedia. |
+| MP-05 | Save ditolak server jika credential kandidat generation atau credential embedding Gemini kosong. Tidak ada HTTP provider pada save; credential terisi bukan jaminan kuota/akses valid. |
+| MP-06 | Test Model menguji kandidat dengan credential provider tersebut saja, tanpa embedding, RAG, perubahan settings, riwayat, cookie chat, atau log isi percakapan. |
+| MP-07 | Pasangan provider/model disimpan atomik dengan audit aktor dan before/after; kegagalan salah satu write/audit merollback seluruh transaksi. |
+| MP-08 | Request generation setelah commit menggunakan provider/model baru tanpa cache clear atau restart. |
+| MP-09 | UI memberi pesan Indonesia untuk key belum tersedia, akses ditolak, model tidak tersedia, kuota, overload, timeout, dan respons tidak valid. |
+| MP-10 | Konfigurasi Gemini lama dibaca tanpa reset; migrasi ke key netral tidak menyimpan ID GPT/Claude di `gemini_model`. |
+| MP-11 | Endpoint statistik tidak boleh membuat/mengubah/menghapus `ai_provider`, `ai_model`, maupun `gemini_model` melalui jalur lain. |
+| MP-12 | Kegagalan provider aktif tidak memicu pergantian otomatis ke provider/model lain. |
+
+## 25. Katalog, credential, dan readiness
+
+| Provider ID | Label UI | Konfigurasi server yang diusulkan | Credential environment |
+|---|---|---|---|
+| `gemini` | Google Gemini | `services.gemini.api_key` | `GEMINI_API_KEY` |
+| `openai` | OpenAI (GPT) | `services.openai.api_key` | `OPENAI_API_KEY` |
+| `anthropic` | Anthropic (Claude) | `services.anthropic.api_key` | `ANTHROPIC_API_KEY` |
+
+Semua credential dibaca melalui `config()` di adapter, bukan `env()` saat request. Perubahan credential mengikuti prosedur config cache hosting. Tidak memasukkan credential ke source, database, form, hasil Test Model, audit, atau exception. Credential provider tidak boleh dipakai pada host provider lain; host HTTPS dan path API ditentukan server, redirect dinonaktifkan, TLS diverifikasi.
+
+`config/ai.php` menjadi katalog tunggal: provider ID, label, exact model ID, label model, status enabled, serta parameter generation khusus adapter. Registry hanya menerima tiga adapter yang diimplementasikan; request tidak menentukan class atau URL.
+
+Katalog Gemini existing dipertahankan sebagai baseline. Pro tidak boleh ditandai lolos akses hanya karena terdaftar. Untuk GPT dan Claude, **ID model belum ditetapkan dalam revisi ini**: pada implementasi pilih minimal satu model teks dari tiap provider, verifikasi dokumentasi, akses akun hosting, biaya, context window, dan kualitas RPJMD; catat exact ID dan hasilnya sebelum enabled. Jangan menggunakan placeholder `gpt` atau `claude` sebagai ID API atau mengasumsikan semua model akun tersedia. Tidak mewajibkan model termahal/terbaru.
+
+Provider tanpa credential tetap terlihat dengan status “API key belum dikonfigurasi”; Test/Simpan dinonaktifkan dan server menolak request langsung. Readiness `configured` hanya berarti key tidak kosong. Hasil preview bersifat sementara untuk kandidat yang diuji, bukan sertifikat akses permanen. Jika credential provider aktif dihapus, tampilkan status tidak siap dan balas error aman; jangan fallback lintas provider secara diam-diam.
+
+## 26. Kontrak adapter generation
+
+Pertahankan `AIProviderInterface::chat(string $model, array $messages): string` dan `test(...)` serta pesan netral `{role: user|assistant, text}`. Manager memilih adapter dari registry internal. Isi prompt, urutan history, dan konteks tetap sama; pemindahan prompt ke system/developer role adalah perubahan perilaku terpisah yang membutuhkan evaluasi, bukan bagian refactor transport ini.
+
+| Adapter | Transport dan pemetaan target |
+|---|---|
+| GeminiProvider | Pertahankan endpoint/payload, parsing, timeout, dan retry fase satu. |
+| OpenAIProvider | REST `POST https://api.openai.com/v1/responses`, Bearer credential; pesan ke `input`, `store: false`; parse teks pada item output message dan content bertipe `output_text`, jangan mengasumsikan `output[0]` adalah jawaban. Tidak menggunakan conversation/previous_response_id. |
+| AnthropicProvider | REST `POST https://api.anthropic.com/v1/messages`, header `x-api-key` dan `anthropic-version` yang ditetapkan serta diverifikasi saat implementasi; pesan ke `messages`, `max_tokens` dari config; gabungkan content bertipe `text` saja. |
+
+Keputusan memakai Responses API mengikuti [panduan text generation OpenAI](https://developers.openai.com/api/docs/guides/text); bentuk input/output dan `store` mengikuti [referensi Responses](https://developers.openai.com/api/reference/cli/resources/responses/methods/create). Anthropic mengikuti [Messages API](https://platform.claude.com/docs/en/api/messages/create) dan [panduan percakapan stateless](https://platform.claude.com/docs/en/build-with-claude/working-with-messages). Referensi diperiksa pada 16 September 2026; verifikasi ulang saat implementasi.
+
+Parameter budget output GPT/Claude ditetapkan per model di config dan dievaluasi untuk jawaban RPJMD; nilai konkret menjadi keputusan implementasi sebelum enabled, bukan input admin. Jangan mengirim temperature/reasoning option generik ke semua model. Pertahankan parameter Gemini existing.
+
+Respons OpenAI incomplete/failed, refusal, Claude terpotong karena `max_tokens`, tool-only, thinking-only, malformed, teks kosong, atau safety block bukan preview sukses. GPT/Claude gagal aman bila tidak ada jawaban lengkap yang dapat digunakan; jangan menampilkan reasoning/internal blocks. Gemini mempertahankan fallback teks produksi existing. Gunakan HTTP fake untuk membuktikan parser dan pemetaan pesan masing-masing provider, termasuk multi-block output.
+
+## 27. Penyimpanan netral dan transisi data
+
+Gunakan tabel `stats` existing dengan unique key; tidak memerlukan perubahan skema atau edit migration lama.
+
+| Key | Makna fase dua |
+|---|---|
+| `ai_provider` | Provider generation aktif (`gemini`, `openai`, `anthropic`). |
+| `ai_model` | Model generation aktif, netral terhadap provider. |
+| `gemini_model` | Kompatibilitas fase satu; terakhir disimpan ketika provider Gemini dipilih, tidak pernah diisi model GPT/Claude. |
+
+Urutan resolver dalam satu query snapshot:
+
+1. Jika `ai_model` ada, pasangan `ai_provider` + `ai_model` adalah sumber utama. Missing/blank provider tidak boleh diterka sebagai Gemini untuk record netral.
+2. Jika `ai_model` belum ada dan provider kosong karena record tidak ada atau bernilai `gemini`, baca `gemini_model`; hanya record model yang tidak ada boleh menggunakan default. Nilai blank/invalid harus ditandai fallback.
+3. Jika kedua setting lama belum ada, gunakan default Gemini/Flash tanpa menulis DB. Jika provider lama eksplisit non-Gemini tetapi `ai_model` belum ada, konfigurasi dianggap invalid; jangan memasangkan GPT/Claude dengan `gemini_model`.
+4. Pasangan invalid menggunakan default Gemini/Flash yang tervalidasi katalog dengan status fallback terlihat, sesuai fase satu. Missing key/akses ditolak/outage bukan invalid pair dan tidak memicu fallback. DB outage gagal aman, bukan dianggap setting kosong.
+
+Save pertama menambahkan `ai_model` secara lazy. Semua save mengunci record provider dalam transaction, mengambil nilai sebelum, menulis pasangan netral, memperbarui `gemini_model` hanya untuk Gemini, dan menulis Activity. Jangan mengganti konfigurasi saat GET/preview atau menghapus data percakapan/chunk.
+
+Kompatibilitas request selama **satu siklus rilis transisi**:
+
+- Payload baru `{provider, model}` pada route save/test existing.
+- Save lama `{gemini_model}` atau `{provider: gemini, gemini_model}` dinormalisasi hanya ketika `model` tidak disertakan dan provider Gemini. Payload lama tidak dapat mengaktifkan GPT/Claude.
+- Preview lama wajib provider eksplisit dan hanya menerima alias `gemini_model` untuk Gemini.
+- Jika `model` dan `gemini_model` dikirim bersama, tolak 422 untuk mencegah prioritas ambigu.
+- Sebelum menghapus alias, pastikan UI/client lama tidak digunakan dan dokumentasikan rilis penghapusan. Reserved key lama tetap diblokir di endpoint statistik selama masih disimpan.
+
+Hindari menjalankan writer fase satu dan dua bersamaan: deploy seragam atau hentikan sementara write settings selama rollout; writer lama hanya memperbarui `gemini_model` dan bisa tertinggal dari `ai_model`.
+
+Rollback ke kode Gemini-only: sebelum rollback, gunakan versi baru untuk menyimpan Gemini dengan model yang sudah lolos koneksi; verifikasi kedua key model sinkron, lalu rollback kode. Jangan rollback ketika provider aktif GPT/Claude dan mengasumsikan kode lama memahami `ai_model`. `ai_model` boleh tetap ada; sebelum re-upgrade, rekonsiliasi dengan setting Gemini jika operator mengubahnya selama kode lama berjalan. Jangan menyalin nilai stale secara otomatis.
+
+## 28. UI, endpoint, otorisasi, dan error
+
+Tetap gunakan GET `/admin/setelan`, POST `/admin/settings`, POST `/admin/settings/test-model`, named routes existing, auth + `admin.role`, serta CSRF. Admin dan Super Admin tetap sama-sama berhak; tidak menambah Super Admin-only. Preview tetap `throttle:5,1`; chat/ekspor mempertahankan throttle existing.
+
+UI menampilkan pasangan aktif, provider kandidat, model kandidat, status credential generation dan embedding, serta tombol Test/Simpan. Tidak menampilkan input credential. Ketika provider berubah, model kandidat dikosongkan sampai dipilih; daftar model berasal dari katalog server. Hasil preview wajib menampilkan provider/model yang benar-benar diuji; respons lama dibuang jika salah satu pilihan berubah. Test tidak menghapus dirty state. Teks hasil memakai `textContent`, label/error terasosiasi, loading disabled, `aria-live`, keyboard, 320px, dan zoom 200%.
+
+Preview JSON tetap `{success, provider, model, reply}`. Tambahkan `error_code` aman pada kegagalan (`configuration`, `access_denied`, `model_unavailable`, `rate_limited`, `unavailable`, `timeout`, `invalid_response`) dan `request_id` internal untuk penelusuran. Jangan menyimpulkan penyebab lebih spesifik daripada status/type provider yang tervalidasi. Log hanya provider/model allowlist, kategori, upstream status, durasi, request ID; tanpa raw body, header, key, prompt, chunk, atau pertanyaan warga.
+
+| Kondisi | Preview | Chatbot publik |
+|---|---|---|
+| Input invalid/credential belum tersedia saat Save | 422, tanpa mutation/provider call | Tidak menerima override provider/model dari warga. |
+| Credential preview hilang | 503 + configuration | 500 dengan pesan konfigurasi aman; tidak beralih provider. |
+| Provider 401/403 atau model 404 | 502 + kategori aman | Kontrak Gemini existing dipertahankan; GPT/Claude 500. |
+| 429 | 429 | Reply aman HTTP 200 seperti kontrak publik existing. |
+| Overload 503; Anthropic 529 | 503 | Reply sibuk HTTP 200. |
+| Timeout/network | 504 | 500, tanpa detail internal. |
+| Respons tidak valid/tidak lengkap | 502 | GPT/Claude 500; fallback Gemini existing tetap. |
+
+Preview satu attempt, timeout 45 detik. Production Gemini tetap maksimal tiga attempt/45 detik, jeda existing. GPT/Claude awalnya **satu attempt/45 detik tanpa retry otomatis** untuk membatasi duplikasi biaya; perubahan retry harus dievaluasi tersendiri. Embedding tetap maksimal tiga attempt/30 detik pada 429 dengan jeda dua detik. Cocokkan timeout PHP/proxy hosting dengan batas request; jangan meningkatkan deadline diam-diam.
+
+## 29. Data dan batas keamanan
+
+Pergantian provider mengirim pertanyaan, konteks hasil retrieval, dan history yang diperlukan kepada provider terpilih. Pertanyaan embedding tetap dikirim ke Gemini. Jangan mengirim IP, email, user ID, cookie, seluruh PDF, atau history melebihi kontrak. History sebelum pergantian provider dapat menjadi bagian konteks ke provider baru; jelaskan alur ini dalam dokumentasi privasi sebelum mengaktifkan provider baru untuk warga.
+
+`store: false` adalah pengaturan request OpenAI, bukan jaminan zero retention seluruh layanan. Pengelola meninjau ketentuan data provider dan kesesuaian dokumen/percakapan sebelum rollout. Tidak mengubah retensi database lokal pada fitur ini. Jangan menyimpan hasil preview atau menambah log prompt untuk keperluan UAT. Isi dokumen dan pesan tetap data tidak tepercaya; perbedaan kepatuhan grounding/prompt injection harus dievaluasi per model.
+
+## 30. Rencana file dan implementasi
+
+| File | Perubahan yang direncanakan, belum diterapkan |
+|---|---|
+| `app/Services/AI/Providers/OpenAIProvider.php` | Adapter Responses API, parsing teks/status dan error aman. |
+| `app/Services/AI/Providers/AnthropicProvider.php` | Adapter Messages API, header/version, parsing teks/stop reason. |
+| `app/Services/AI/AIManager.php` | Registry tiga provider dan snapshot pasangan aktif. |
+| `app/Services/AI/AiSettings.php` | Katalog/readiness, resolver `ai_model`, alias transisi, transaction dan audit. |
+| `app/Services/AI/Exceptions/AIProviderException.php` | Kategori aman dan pemetaan provider error. |
+| `config/ai.php`, `config/services.php` | Katalog/parameter per provider, tiga credential server. |
+| `app/Http/Requests/Admin/UpdateAiSettingsRequest.php`, `TestAiModelRequest.php` | Validasi `{provider, model}`, readiness, alias Gemini dan penolakan field ambigu. |
+| `app/Http/Controllers/Admin/AdminController.php` | Save/test netral, guard tiga reserved keys, logging metadata aman. |
+| `app/Http/Controllers/Admin/AdminPageController.php` | Katalog dan status generation/embedding untuk view. |
+| `app/Http/Controllers/ChatbotController.php` | Error multi-provider; embedding/RAG/persistence tetap. |
+| `resources/views/admin/setelan/index.blade.php`, `resources/views/admin/scripts/settings.blade.php` | Dropdown terkait, label aktif, status credential, pembatalan preview lintas provider. |
+| `tests/Unit/*ProviderTest.php`, `tests/Feature/AiModelSettingsTest.php`, `ChatbotModelSelectionTest.php`, `tests/Browser/ai-settings.cjs` | Contract test, transisi data, UI dan regresi seluruh provider. |
+| `README.md`, dokumen PRD/UAT | Cara konfigurasi hosting, status implementasi, hasil evaluasi dan rollback. |
+
+Urutan kerja: baseline tests → tetapkan kandidat/parameter → resolver transisi + test → adapter + fake HTTP → endpoint/UI → regression suite/Pint/build/browser → credential hosting → preview tiap provider → evaluasi RAG → rollout terkontrol. Penambahan key di hosting dilakukan operator melalui konfigurasi server. Tidak membaca atau menyalin secret untuk menyusun PRD ini.
+
+## 31. Pengujian dan acceptance criteria fase dua
+
+Checklist berikut masih **belum dilaksanakan untuk multi-provider**:
+
+- [ ] Admin/Super Admin dapat test/save/reload tiga provider dengan minimal satu model tervalidasi masing-masing; guest/User/CSRF invalid ditolak tanpa HTTP/write.
+- [ ] Pasangan silang, unknown provider/model, key override, URL/prompt override tidak dapat memengaruhi request provider; payload alias ambigu ditolak.
+- [ ] Credential generation/embedding kosong memblokir save; preview memakai key provider yang benar dan tidak melakukan embedding. Status key tersedia tidak mengklaim akses model lulus.
+- [ ] Missing `ai_model`, konfigurasi Gemini lama, konfigurasi netral valid/invalid, partial pair, default invalid, dan DB outage mengikuti resolver; GET tidak mengubah DB.
+- [ ] Save atomik/audit rollback diuji pada kegagalan setiap write. Guard statistik mencakup ketiga keys. Lock diuji pada engine DB target di environment uji, bukan hanya SQLite.
+- [ ] Chat sebelum/sesudah save memakai provider berbeda; snapshot konsisten, instance baru membaca pasangan yang sama, tidak ada cache lintas request.
+- [ ] Gemini payload baseline tetap; OpenAI parsing multi-item/text, Anthropic multi-block/text, refusal/thinking-only/incomplete/empty/malformed diuji dengan fake.
+- [ ] 400/401/403/404/429/500/503/529, timeout/network, key hilang, bounded attempts dan timeout tidak membocorkan credential/provider body.
+- [ ] RAG/batas 0,3/top ten/sumber/berita terbit/history/cookie/persistence tetap; tidak ada write chunk/ingestion atau reingest saat provider diganti.
+- [ ] Riwayat dari provider lama dapat dipakai provider baru tanpa role invalid; tidak mengirim metadata pribadi tambahan.
+- [ ] Browser menguji pergantian provider/model saat preview berjalan, dirty state, error, keyboard, mobile dan zoom; tidak ada XSS atau label aktif palsu.
+- [ ] Semua routine tests memakai DB/storage test dan HTTP fake; suite, Pint, build dan diff checks lulus.
+- [ ] Model, batas output, biaya/latensi dan akses akun diverifikasi; hasil UAT grounding/bahasa/sumber tercatat per provider. Model yang gagal tidak dinyatakan siap produksi.
+- [ ] Runbook konfigurasi dan rollback diuji; proses tidak mereset settings atau 9.732 chunk yang dilaporkan tersedia.
+
+Selesai implementasi berarti semua alur provider terhubung dan test otomatis lulus. Selesai rilis berarti tambahan akses API dan UAT per model sudah lulus. Jika hanya Gemini memiliki credential, deployment boleh mempertahankan Gemini aktif dan menampilkan provider lain belum siap; kondisi tersebut **belum memenuhi penerimaan live tiga provider**.
+
+## 32. UAT pada kondisi hosting saat ini
+
+Tidak ada staging terpisah menurut pengguna. Gunakan database/storage test dan fake untuk pengembangan. Uji koneksi live dapat memakai Test Model hosting secara terbatas tanpa mengaktifkan kandidat; akses OpenAI/Anthropic memerlukan credential masing-masing yang belum dikonfirmasi tersedia.
+
+UAT RAG penuh pada hosting memakai pertanyaan uji dan sesi uji baru serta dokumen yang benar-benar ada dalam korpus. Karena pemilihan provider global memengaruhi warga, jadwalkan pergantian aktif pada jendela uji yang disepakati, catat pasangan sebelumnya, lalu pulihkan setelah uji. Jangan membuat endpoint publik bypass untuk preview RAG penuh dalam scope ini. Alternatif bila tidak ada jendela uji adalah menunggu environment uji terpisah; jangan menjalankan suite/migration destruktif terhadap hosting.
+
+Hasil awal dan matriks Gemini/GPT/Claude dicatat di [UAT AI Model Management](UAT-AI-MODEL-MANAGEMENT.md). Koneksi Flash yang dilaporkan berhasil bukan bukti kualitas RAG; kegagalan Pro bukan bukti semua model Gemini atau provider lain gagal. Penetapan exact ID GPT/Claude, budget output, batas biaya/latensi, credential, dan jendela UAT merupakan keputusan terbuka sebelum enabled/rollout.

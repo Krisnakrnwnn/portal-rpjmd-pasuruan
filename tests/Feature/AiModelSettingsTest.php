@@ -23,7 +23,7 @@ class AiModelSettingsTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        config(['services.gemini.api_key' => 'fake-settings-secret']);
+        config(['services.gemini.api_key' => 'fake-settings-secret', 'services.openai.api_key' => 'fake-openai-secret', 'services.anthropic.api_key' => null]);
         Http::preventStrayRequests();
     }
 
@@ -77,7 +77,7 @@ class AiModelSettingsTest extends TestCase
         foreach (['typo', '', 'gemini-embedding-001', 'models/gemini-2.5-pro', '../gemini-2.5-pro', 'https://example.test/model', 'gemini-2.5-pro?key=bad', ['gemini-2.5-pro'], (object) ['model' => 'gemini-2.5-pro']] as $value) {
             $cases[] = [['provider' => 'gemini', 'gemini_model' => $value], 'gemini_model'];
         }
-        foreach (['openai', '', ['gemini'], (object) ['name' => 'gemini']] as $value) {
+        foreach (['unknown', '', ['gemini'], (object) ['name' => 'gemini']] as $value) {
             $cases[] = [['provider' => $value, 'gemini_model' => 'gemini-2.5-pro'], 'provider'];
         }
 
@@ -101,7 +101,7 @@ class AiModelSettingsTest extends TestCase
     {
         $this->actingAs(User::factory()->create(['role' => 'Admin']));
         Stat::create(['key' => 'hero_documents', 'value' => '1']);
-        foreach (['gemini_model', 'ai_provider', 'GEMINI_MODEL', 'ai_provider '] as $key) {
+        foreach (['gemini_model', 'ai_provider', 'ai_model', 'AI_MODEL', 'GEMINI_MODEL', 'ai_provider '] as $key) {
             foreach (['stats' => '/admin/stats', 'hero_stats' => '/admin/hero-stats'] as $field => $url) {
                 $this->postJson($url, [$field => ['hero_documents' => '2', $key => 'bad']])->assertUnprocessable();
                 $this->assertDatabaseHas('stats', ['key' => 'hero_documents', 'value' => '1']);

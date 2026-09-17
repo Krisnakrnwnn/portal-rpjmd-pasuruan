@@ -13,10 +13,7 @@ class PortalController extends Controller
     {
         $services = Service::all();
 
-        // Ambil SEMUA statistik utama untuk hero section (dinamis jumlahnya)
-        $heroStats = \App\Models\Stat::where('key', 'like', 'hero_%')->get();
-
-        return view('home', compact('services', 'heroStats'));
+        return view('home', compact('services'));
     }
 
     public function profil()

@@ -177,7 +177,7 @@ class ChatbotController extends Controller
                 return response()->json(['reply' => $e->previewMessage()], 500);
             }
 
-            if ($status == 503) {
+            if (in_array($status, [503, 529], true)) {
                 return response()->json(['reply' => '🙏 Mohon maaf, server AI kami saat ini sedang sangat antre (Server Overload). Silakan coba kirim ulang pertanyaan Anda dalam beberapa detik/menit ke depan.']);
             }
 
@@ -185,7 +185,7 @@ class ChatbotController extends Controller
                 return response()->json(['reply' => '🚀 Wah, sepertinya Anda terlalu bersemangat bertanya! Sistem kami butuh waktu sejenak untuk bernapas. Mohon tunggu sekitar 1 menit sebelum mengirim pertanyaan lagi ya.']);
             }
 
-            if ($status == 404) {
+            if ($status == 404 && $e->provider === 'gemini') {
                 return response()->json(['reply' => '🧩 Maaf, model AI tidak tersedia (Error 404). Silakan hubungi admin untuk mengecek Setelan Model AI.']);
             }
 

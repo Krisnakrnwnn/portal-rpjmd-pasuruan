@@ -209,6 +209,7 @@ class AdminPageController extends Controller
             'profiles' => Profile::orderBy('id')->lazy(200)->collect(),
             'aiSettings' => $active,
             'aiCatalog' => $settings->catalog(),
+            'aiReadiness' => $settings->readiness(),
         ]);
     }
 
