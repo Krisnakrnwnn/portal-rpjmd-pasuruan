@@ -25,7 +25,7 @@ class GeminiProvider implements AIProviderInterface
 
     private function generate(string $model, array $messages, int $attempts, bool $strict): string
     {
-        if (! $this->settings->allows('gemini', $model) || ! config('services.gemini.api_key')) {
+        if (! $this->settings->allows('gemini', $model) || ! $this->settings->configured('gemini')) {
             throw new AIProviderException('configuration');
         }
         $contents = array_map(static fn (array $message) => [

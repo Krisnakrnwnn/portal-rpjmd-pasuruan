@@ -621,12 +621,12 @@ class AdminController extends Controller
     public function updateSettings(UpdateAiSettingsRequest $request, AiSettings $settings)
     {
         try {
-            $settings->save($request->validated('provider'), $request->validated('gemini_model'));
+            $settings->save($request->validated('provider'), $request->selectedModel());
         } catch (\Throwable) {
             Log::warning('AI settings save failed', ['category' => 'storage']);
 
             return redirect(AdminNavigation::url('admin.setelan.index'))
-                ->withInput($request->safe()->only(['provider', 'gemini_model']))
+                ->withInput($request->safe()->only(['provider', 'model', 'gemini_model']))
                 ->with('error', 'Setelan AI gagal disimpan. Konfigurasi sebelumnya tetap digunakan.');
         }
 
@@ -636,11 +636,11 @@ class AdminController extends Controller
     public function testAiModel(TestAiModelRequest $request, AIManager $ai)
     {
         $provider = $request->validated('provider');
-        $model = $request->validated('gemini_model');
+        $model = $request->selectedModel();
         try {
             return response()->json(['success' => true, 'provider' => $provider, 'model' => $model, 'reply' => $ai->test($provider, $model)]);
         } catch (AIProviderException $e) {
-            return response()->json(['success' => false, 'provider' => $provider, 'model' => $model, 'reply' => $e->previewMessage()], $e->previewStatus());
+            return response()->json(['success' => false, 'provider' => $provider, 'model' => $model, 'reply' => $e->previewMessage(), 'error_code' => $e->errorCode(), 'request_id' => $e->requestId], $e->previewStatus());
         } catch (\Throwable) {
             return response()->json(['success' => false, 'provider' => $provider, 'model' => $model, 'reply' => 'Pengujian model belum berhasil. Silakan coba lagi nanti.'], 500);
         }
