@@ -155,7 +155,7 @@ class AdminMultipageTest extends TestCase
         $news = News::where('title', 'Berita Baru')->firstOrFail();
         $slug = $news->slug;
         $this->assertFalse($news->is_published);
-        $this->get(route('berita.detail', $slug))->assertNotFound();
+        $this->get('/berita/'.$slug)->assertNotFound();
         $this->put(route('admin.update_news', $news), $payload + [])->assertRedirect(route('admin.berita.index'));
         $this->assertSame($slug, $news->fresh()->slug);
         $this->post(route('admin.toggle_publish', $news))->assertRedirect(route('admin.berita.index'));

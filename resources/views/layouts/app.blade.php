@@ -414,58 +414,32 @@
   </main>
 
   <!-- Footer -->
-  <footer class="bg-[#102e56] text-[#d6e3f2] pt-16 pb-8 border-t border-[#1e3a8a] w-full mt-auto relative z-10 font-sans">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-        <div class="col-span-1 md:col-span-2">
-          <div class="flex items-center gap-3 mb-6">
-            <img src="{{ asset('Logo Bapperida Kab Pasuruan Putih.png') }}" class="h-16 sm:h-20 w-auto object-contain" alt="Logo Bapperida Kabupaten Pasuruan" />
-          </div>
-          <p class="text-[#d6e3f2]/90 text-sm leading-relaxed max-w-sm mb-6 font-normal">
-            Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah (Bapperida) Kabupaten Pasuruan — Portal Resmi Perencanaan Pembangunan Daerah.
+  <footer class="bg-[#102e56] text-[#d6e3f2] border-t border-[#1e3a8a] w-full mt-auto relative z-10 font-sans">
+    <div class="max-w-[1240px] mx-auto px-5 sm:px-8 lg:px-10 py-10 lg:py-11">
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_auto] lg:items-start lg:gap-20">
+        <div class="flex flex-col items-center text-center lg:max-w-[450px] lg:items-start lg:text-left">
+          <img src="{{ asset('Logo Bapperida Kab Pasuruan Putih.png') }}" class="h-auto w-[165px] object-contain" alt="Logo Bapperida Kabupaten Pasuruan" />
+          <p class="mt-5 max-w-[450px] text-base sm:text-[17px] font-medium leading-relaxed text-white">
+            Portal Informasi Perencanaan Daerah, Riset dan Inovasi
           </p>
-          <div class="flex gap-3">
-            <a href="{{ $socials['ig_link'] ?? '#' }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram Bapperida" class="w-10 h-10 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-white hover:bg-[#1d4ed8] hover:border-transparent transition-colors shadow-sm">
-                <i class="fab fa-instagram"></i>
-            </a>
-            <a href="{{ $socials['fb_link'] ?? '#' }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook Bapperida" class="w-10 h-10 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-white hover:bg-[#1d4ed8] hover:border-transparent transition-colors shadow-sm">
-                <i class="fab fa-facebook-f"></i>
-            </a>
-            <a href="https://wa.me/{{ $socials['wa_number'] ?? '' }}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Bapperida" class="w-10 h-10 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-white hover:bg-[#1d4ed8] hover:border-transparent transition-colors shadow-sm">
-                <i class="fab fa-whatsapp"></i>
-            </a>
+        </div>
+
+        <div class="flex flex-col items-center text-center lg:min-w-[430px] lg:items-start lg:text-left">
+          <nav aria-label="Navigasi footer" class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm lg:justify-start">
+            <a href="{{ route('home') }}" class="hover:text-white transition-colors">Beranda</a>
+            <a href="{{ route('profil') }}" class="hover:text-white transition-colors">Profil</a>
+            <a href="{{ route('dokumen') }}" class="hover:text-white transition-colors">Dokumen</a>
+          </nav>
+
+          <div class="mt-6 flex max-w-full flex-col items-center gap-2 text-xs sm:text-sm text-[#d6e3f2]/85 lg:items-start">
+            <a href="mailto:bapperida@pasuruankab.go.id" class="break-words hover:text-white transition-colors">bapperida@pasuruankab.go.id</a>
+            <span class="break-words">Kompleks Perkantoran Pemerintah Kabupaten Pasuruan, Bangil</span>
           </div>
-        </div>
-        <div>
-          <h3 class="text-white text-sm font-semibold mb-4 tracking-wider uppercase">Tautan Cepat</h3>
-          <ul class="space-y-3 text-sm text-[#d6e3f2] flex flex-col">
-            <li><a href="{{ route('home') }}" class="hover:text-white transition-colors">Beranda</a></li>
-            <li><a href="{{ route('profil') }}" class="hover:text-white transition-colors">Profil Instansi</a></li>
-            <li><a href="{{ route('berita') }}" class="hover:text-white transition-colors">Berita Terkini</a></li>
-            <li><a href="{{ route('galeri') }}" class="hover:text-white transition-colors">Galeri Kegiatan</a></li>
-            <li><a href="{{ route('dokumen') }}" class="hover:text-white transition-colors">Dokumen Publik</a></li>
-            <li><a href="{{ route('kontak') }}" class="hover:text-white transition-colors">Kontak & Aspirasi</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="text-white text-sm font-semibold mb-4 tracking-wider uppercase">Kontak Kami</h3>
-          <ul class="space-y-3 text-sm text-[#d6e3f2] flex flex-col">
-            <li class="leading-relaxed">
-              Kompleks Perkantoran Pemerintah Kabupaten Pasuruan<br>
-              Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
-            </li>
-            <li>
-              <a href="mailto:bapperida@pasuruankab.go.id" class="hover:text-white transition-colors">bapperida@pasuruankab.go.id</a>
-            </li>
-          </ul>
         </div>
       </div>
-      <div class="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[#d6e3f2]/80 text-center md:text-left">
+
+      <div class="mt-8 border-t border-white/10 pt-5 text-center text-xs text-[#d6e3f2]/70 lg:text-left">
         <p>&copy; {{ date('Y') }} Bapperida Kabupaten Pasuruan. Hak Cipta Dilindungi.</p>
-        <div class="flex gap-6">
-          <a href="{{ route('dokumen') }}" class="hover:text-white transition-colors">Dokumen RPJMD</a>
-          <a href="{{ route('kontak') }}" class="hover:text-white transition-colors">Layanan Aspirasi</a>
-        </div>
       </div>
     </div>
   </footer>
@@ -576,6 +550,9 @@
               </div>
             </div>
             <div class="flex items-center gap-1">
+              <button id="expand-chat" class="text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-xl transition-all cursor-pointer" title="Buka PRivIA layar penuh" aria-label="Buka PRivIA layar penuh">
+                <svg id="expand-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 3H5a2 2 0 0 0-2 2v3m0 8v3a2 2 0 0 0 2 2h3m8 0h3a2 2 0 0 0 2-2v-3m0-8V5a2 2 0 0 0-2-2h-3"></path></svg>
+              </button>
               <button id="close-chat" class="text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-xl transition-all cursor-pointer" title="Tutup">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
               </button>
@@ -651,6 +628,12 @@
     const notifDot   = document.getElementById('chat-notif-dot');
     const messages   = document.getElementById('chat-messages');
     const clearHistory = document.getElementById('clear-history');
+    let activeConversationId = null;
+    expandChat?.addEventListener('click', () => {
+      window.location.href = activeConversationId
+        ? `/privia/c/${encodeURIComponent(activeConversationId)}`
+        : '/privia';
+    });
     let isChatBusy = false; // Flag untuk mengunci chat
     let messageCount = 0; // Counter untuk pesan
     // ===== VOICE INPUT/OUTPUT CLASSES =====
@@ -843,33 +826,10 @@
           setTimeout(() => chatInput.focus(), 100);
       }
 
-      // Fetch reply from backend RAG API
+      // Gunakan persistence layer yang sama dengan full-page PRivIA.
       const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-
-      // Hardcode Quick Options untuk hemat kuota API
-      const quickResponses = {
-        "Apa Visi dan Misi Kabupaten Pasuruan?": "Pemerintah Kabupaten Pasuruan memiliki **Visi**:<br>\"Menuju Kabupaten Pasuruan Maju, Sejahtera dan Berkadilan.\"<br><br>**Misi Utama**:<br>1. Mempercepat pertumbuhan ekonomi<br>2. Meningkatkan tata kelola pemerintahan yang baik<br>3. Pemerataan pembangunan infrastruktur<br>4. Membangun SDM unggul dan berdaya saing.",
-        "Berapa jumlah Program Prioritas saat ini?": "Berdasarkan data RPJMD terbaru, Pemerintah Kabupaten Pasuruan saat ini menargetkan lebih dari **78+ Program Prioritas** yang dieksekusi secara berkesinambungan di berbagai sektor (Infrastruktur, Pelayanan Publik, Pendidikan, dll) selama periode 5 tahun ke depan.",
-        "Tolong jelaskan apa itu RPJMD secara singkat.": "**RPJMD** (Rencana Pembangunan Jangka Menengah Daerah) adalah pedoman perencanaan resmi daerah untuk periode 5 tahun. Dokumen ini menjabarkan arah kebijakan, visi, misi, dan program kerja Kepala Daerah yang dijaga transparansinya untuk publik."
-      };
-
-      if (quickResponses[msg]) {
-        setTimeout(() => {
-          document.getElementById(typingId)?.remove();
-          messages.innerHTML += `
-            <div class="flex justify-start animate-chat-msg opacity-0">
-              <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 mr-2 mt-1">
-                <span class="text-blue-600 font-bold text-xs">AI</span>
-              </div>
-              <div class="bg-white border border-gray-100 text-gray-800 rounded-2xl rounded-tl-sm px-5 py-3.5 max-w-[80%] shadow-sm font-medium leading-relaxed text-sm">${quickResponses[msg]}</div>
-            </div>`;
-          messages.scrollTop = messages.scrollHeight;
-          unlockChat(); // Buka gembok
-        }, 1000); // Simulasi delay ngetik 1 detik
-        return; // Jangan fetch API
-      }
       
-      fetch('/api/chat', {
+      fetch('/privia/messages', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -877,14 +837,19 @@
         },
         body: JSON.stringify({ 
           message: msg,
-          language: languageManager.currentLang
+          conversation_id: activeConversationId
         })
       })
-      .then(response => response.json())
+      .then(async response => {
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw Object.assign(new Error(data.message || 'Gagal mendapatkan jawaban.'), { body: data });
+        return data;
+      })
       .then(data => {
         document.getElementById(typingId)?.remove();
-        
-        const reply = data.reply || 'Maaf, terjadi kesalahan saat menghubungi AI.';
+
+        activeConversationId = data.conversation?.id || activeConversationId;
+        const reply = data.assistant_message?.content || 'Maaf, terjadi kesalahan saat menghubungi AI.';
         
         // IMPROVED: Use marked.js for proper markdown rendering
         const formattedReply = typeof marked !== 'undefined' ? marked.parse(reply) : reply.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
@@ -920,6 +885,7 @@
       })
       .catch(error => {
         document.getElementById(typingId)?.remove();
+        activeConversationId = error.body?.conversation_id || activeConversationId;
         messages.innerHTML += `
           <div class="flex justify-start animate-chat-msg opacity-0">
             <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center shrink-0 mr-2 mt-1 hidden sm:flex">
@@ -948,7 +914,7 @@
 
     // Export Chat Logic
     const exportChat = document.getElementById('export-chat');
-    exportChat.addEventListener('click', async function() {
+    exportChat?.addEventListener('click', async function() {
       if (isChatBusy) return;
       
       // Get all messages from chat
@@ -1079,7 +1045,7 @@
     });
 
     // Clear History Logic
-    clearHistory.addEventListener('click', function() {
+    clearHistory?.addEventListener('click', function() {
       if (isChatBusy) return;
       
       if (confirm(languageManager.translate('confirmClear'))) {
@@ -1122,6 +1088,7 @@
             });
             
             if (response.ok) {
+              activeConversationId = null;
               // Reload greeting with current language
               languageManager.reloadGreeting();
               messageCount = 0;

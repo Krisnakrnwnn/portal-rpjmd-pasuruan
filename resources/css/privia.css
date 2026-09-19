@@ -1,0 +1,107 @@
+.privia-page { --privia-navy: #102e56; --privia-blue: #1d4ed8; --privia-surface: #fff; --privia-bg: #f8fafc; --privia-muted: #64748b; width: 100%; height: 100dvh; min-width: 320px; min-height: 100svh; margin: 0; overflow: hidden; color: #0f172a; background: var(--privia-bg); font-family: "Outfit", ui-sans-serif, system-ui, sans-serif; }
+.privia-page *, .privia-page *::before, .privia-page *::after { box-sizing: border-box; }
+.privia-app { display: flex; height: 100%; min-height: 0; overflow: hidden; }
+.privia-sidebar { display: flex; width: 292px; height: 100%; min-height: 0; flex: 0 0 292px; flex-direction: column; padding: 24px 16px 18px; color: #dbeafe; background: var(--privia-navy); }
+.privia-sidebar__brand, .privia-header, .privia-sidebar__footer { display: flex; align-items: center; justify-content: space-between; }
+.privia-brand-link { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; }
+.privia-brand-link strong, .privia-brand-link small { display: block; }
+.privia-brand-link strong { font-size: 20px; line-height: 1.1; }
+.privia-brand-link small { margin-top: 4px; color: #a5e2ed; font-size: 11px; }
+.privia-brand-mark { display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid rgba(255,255,255,.2); border-radius: 14px; background: rgba(255,255,255,.1); }
+.privia-brand-mark img { width: 30px; height: 30px; object-fit: contain; }
+.privia-new-chat { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 28px; padding: 12px 14px; border: 1px solid rgba(165,226,237,.45); border-radius: 12px; color: #fff; background: rgba(255,255,255,.1); cursor: pointer; font: inherit; font-size: 14px; font-weight: 600; transition: background .18s ease, border-color .18s ease; }
+.privia-new-chat:hover, .privia-new-chat:focus-visible { border-color: #a5e2ed; background: rgba(165,226,237,.18); outline: none; }
+.privia-sidebar__section-title { margin: 30px 8px 10px; color: #93c5fd; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.privia-conversation-list { min-height: 0; overflow-y: auto; }
+.privia-conversation-item { display: flex; align-items: center; gap: 4px; width: 100%; margin-bottom: 4px; padding: 4px; border: 0; border-radius: 10px; color: #dbeafe; background: transparent; text-align: left; }
+.privia-conversation-item.is-active, .privia-conversation-item:hover { background: rgba(255,255,255,.1); }
+.privia-conversation-open { min-width: 0; flex: 1; padding: 9px 8px; border: 0; color: inherit; background: transparent; cursor: pointer; font: inherit; text-align: left; }
+.privia-conversation-title { display: block; overflow: hidden; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+.privia-conversation-date { display: block; margin-top: 3px; color: #93c5fd; font-size: 10px; }
+.privia-conversation-action { width: 30px; height: 30px; border: 0; border-radius: 8px; color: #93c5fd; background: transparent; cursor: pointer; }
+.privia-conversation-action:hover, .privia-conversation-action:focus-visible { color: #fff; background: rgba(255,255,255,.14); outline: none; }
+.privia-sidebar__footer { gap: 8px; margin-top: auto; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.12); color: #93c5fd; font-size: 11px; }
+.privia-back-link { color: #dbeafe; text-decoration: none; }
+.privia-back-link:hover { color: #fff; }
+.privia-main { display: flex; width: 0; height: 100%; min-width: 0; min-height: 0; flex: 1; flex-direction: column; overflow: hidden; background: radial-gradient(circle at 80% 0%, rgba(165,226,237,.16), transparent 32%), var(--privia-bg); }
+.privia-header { min-height: 78px; flex-shrink: 0; padding: 18px clamp(20px, 5vw, 64px); border-bottom: 1px solid #e2e8f0; background: rgba(255,255,255,.84); }
+.privia-eyebrow { margin: 0 0 3px; color: var(--privia-blue); font-size: 10px; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; }
+.privia-header h1 { margin: 0; color: var(--privia-navy); font-size: 23px; font-weight: 600; line-height: 1.2; }
+.privia-status { color: #15803d; font-size: 12px; font-weight: 500; }
+.privia-messages { width: min(100%, 840px); min-height: 0; flex: 1 1 auto; margin: 0 auto; padding: 42px clamp(20px, 5vw, 64px) 18px; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; }
+.privia-welcome { display: flex; min-height: 100%; flex-direction: column; align-items: center; justify-content: flex-start; padding: clamp(42px, 9vh, 88px) 0 24px; text-align: center; }
+.privia-welcome__mark { display: grid; width: 78px; height: 78px; margin-bottom: 24px; place-items: center; border-radius: 24px; background: linear-gradient(135deg, #1d4ed8, #102e56); box-shadow: 0 12px 28px rgba(29,78,216,.22); }
+.privia-welcome__mark img { width: 54px; height: 54px; object-fit: contain; }
+.privia-welcome h2 { max-width: 100%; margin: 0; color: var(--privia-navy); font-size: clamp(26px, 4vw, 36px); font-weight: 600; line-height: 1.2; overflow-wrap: anywhere; }
+.privia-welcome p { max-width: 640px; margin: 12px 0 22px; color: var(--privia-muted); line-height: 1.65; }
+.privia-suggestions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 12px; max-width: 720px; }
+.privia-suggestion { padding: 8px 13px; border: 1px solid #bfdbfe; border-radius: 999px; color: #1d4ed8; background: #fff; cursor: pointer; font: inherit; font-size: 12px; line-height: 1.35; transition: background .18s ease, border-color .18s ease; }
+.privia-suggestion:hover, .privia-suggestion:focus-visible { border-color: #1d4ed8; background: #eff6ff; outline: none; }
+.privia-message { display: flex; gap: 12px; margin-bottom: 26px; }
+.privia-message--user { justify-content: flex-end; }
+.privia-message__avatar { display: grid; width: 32px; height: 32px; flex: 0 0 32px; place-items: center; border-radius: 11px; color: #fff; background: var(--privia-navy); font-size: 11px; font-weight: 700; }
+.privia-message__bubble { max-width: min(720px, 88%); padding: 13px 16px; border: 1px solid #e2e8f0; border-radius: 16px; color: #334155; background: #fff; box-shadow: 0 4px 16px rgba(15,23,42,.05); line-height: 1.65; white-space: pre-wrap; word-break: break-word; }
+.privia-message--user .privia-message__bubble { border-color: #1d4ed8; color: #fff; background: #1d4ed8; }
+.privia-sources { margin-top: 13px; padding-top: 11px; border-top: 1px solid #e2e8f0; color: #475569; font-size: 12px; }
+.privia-sources strong { display: block; margin-bottom: 5px; color: var(--privia-navy); }
+.privia-sources li { margin-left: 17px; }
+.privia-retry { display: inline-flex; margin-top: 10px; padding: 7px 11px; border: 1px solid #fecaca; border-radius: 8px; color: #b91c1c; background: #fff; cursor: pointer; font: inherit; font-size: 12px; }
+.privia-loading { color: var(--privia-muted); font-size: 13px; }
+.privia-loading::after { content: '...'; animation: privia-dots 1.2s steps(4, end) infinite; }
+@keyframes privia-dots { 0% { opacity: .15; } 50% { opacity: 1; } 100% { opacity: .15; } }
+.privia-composer { position: relative; width: min(100%, 860px); flex-shrink: 0; margin: 0 auto; padding: 0 clamp(20px, 5vw, 64px) 24px; }
+.privia-composer textarea { display: block; width: 100%; min-height: 60px; max-height: 160px; padding: 16px 58px 16px 18px; resize: none; border: 1px solid #cbd5e1; border-radius: 16px; outline: none; color: #0f172a; background: #fff; box-shadow: 0 5px 20px rgba(15,23,42,.06); font: inherit; font-size: 15px; line-height: 1.45; }
+.privia-composer textarea:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+.privia-send { position: absolute; top: 30px; right: clamp(28px, 5.7vw, 72px); display: grid; width: 44px; height: 44px; place-items: center; border: 0; border-radius: 11px; color: #fff; background: var(--privia-blue); cursor: pointer; font-size: 21px; line-height: 1; transform: translateY(-50%); }
+.privia-send:disabled { cursor: wait; opacity: .55; }
+.privia-composer__hint { margin: 7px 4px 0; color: #94a3b8; font-size: 10px; text-align: left; }
+.privia-icon-button { width: 34px; height: 34px; border: 0; border-radius: 9px; color: inherit; background: transparent; cursor: pointer; font: inherit; font-size: 20px; }
+.privia-icon-button:hover, .privia-icon-button:focus-visible { background: rgba(255,255,255,.12); outline: none; }
+.privia-mobile-only { display: none; }
+.privia-backdrop { display: none; }
+.privia-dialog-open { overflow: hidden; }
+.privia-dialog[hidden] { display: none; }
+.privia-dialog { position: fixed; z-index: 50; inset: 0; display: grid; place-items: center; padding: 16px; }
+.privia-dialog__overlay { position: absolute; inset: 0; background: rgba(15,23,42,.56); animation: privia-dialog-fade .18s ease-out; }
+.privia-dialog__panel { position: relative; width: min(100%, 480px); padding: 28px; border: 1px solid #e2e8f0; border-radius: 20px; color: #0f172a; background: #fff; box-shadow: 0 24px 60px rgba(15,23,42,.2); animation: privia-dialog-enter .2s ease-out; }
+.privia-dialog__close { position: absolute; top: 14px; right: 14px; display: grid; width: 32px; height: 32px; place-items: center; border: 0; border-radius: 9px; color: #64748b; background: transparent; cursor: pointer; font-size: 22px; line-height: 1; }
+.privia-dialog__close:hover, .privia-dialog__close:focus-visible { color: #102e56; background: #f1f5f9; outline: none; }
+.privia-dialog__eyebrow { margin: 0 0 7px; color: #1d4ed8; font-size: 10px; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; }
+.privia-dialog__panel h2 { margin: 0; padding-right: 28px; color: #102e56; font-size: 22px; font-weight: 600; line-height: 1.25; }
+.privia-dialog__description { margin: 10px 0 20px; color: #64748b; font-size: 14px; line-height: 1.6; }
+.privia-dialog__context { margin: -4px 0 20px; padding: 12px 14px; overflow-wrap: anywhere; border-left: 3px solid #93c5fd; border-radius: 8px; color: #334155; background: #eff6ff; font-size: 14px; font-weight: 500; }
+.privia-dialog__label { display: block; margin-bottom: 7px; color: #334155; font-size: 13px; font-weight: 600; }
+.privia-dialog__input { display: block; width: 100%; height: 48px; padding: 0 14px; border: 1px solid #cbd5e1; border-radius: 12px; outline: none; color: #0f172a; background: #f8fafc; font: inherit; font-size: 15px; }
+.privia-dialog__input:focus { border-color: #2563eb; background: #fff; box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+.privia-dialog__error { margin: 8px 0 0; color: #b91c1c; font-size: 12px; line-height: 1.5; }
+.privia-dialog__actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+.privia-dialog__button { min-height: 44px; padding: 10px 16px; border: 1px solid transparent; border-radius: 12px; cursor: pointer; font: inherit; font-size: 13px; font-weight: 600; transition: background .18s ease, border-color .18s ease, opacity .18s ease; }
+.privia-dialog__button:disabled { cursor: wait; opacity: .6; }
+.privia-dialog__button--secondary { border-color: #cbd5e1; color: #334155; background: #fff; }
+.privia-dialog__button--secondary:hover, .privia-dialog__button--secondary:focus-visible { border-color: #94a3b8; background: #f8fafc; outline: none; }
+.privia-dialog__button--primary { color: #fff; background: #1d4ed8; }
+.privia-dialog__button--primary:hover, .privia-dialog__button--primary:focus-visible { background: #1e40af; outline: none; }
+.privia-dialog__button--danger { background: #b91c1c; }
+.privia-dialog__button--danger:hover, .privia-dialog__button--danger:focus-visible { background: #991b1b; }
+@keyframes privia-dialog-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes privia-dialog-enter { from { opacity: 0; transform: translateY(6px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@media (max-width: 760px) {
+    .privia-sidebar { position: fixed; z-index: 20; inset: 0 auto 0 0; width: min(86vw, 320px); transform: translateX(-105%); transition: transform .22s ease; }
+    .privia-sidebar.is-open { transform: translateX(0); }
+    .privia-backdrop.is-visible { position: fixed; z-index: 19; inset: 0; display: block; background: rgba(15,23,42,.46); }
+    .privia-mobile-only { display: inline-grid; place-items: center; }
+    .privia-header { gap: 10px; padding-inline: 16px; }
+    .privia-header > div { flex: 1; }
+    .privia-status { font-size: 11px; }
+    .privia-messages { padding: 24px 16px 12px; }
+    .privia-welcome { padding-top: 32px; }
+    .privia-welcome__mark { margin-bottom: 20px; }
+    .privia-welcome p { margin-bottom: 20px; }
+    .privia-composer { padding: 0 16px 18px; }
+    .privia-send { right: 24px; }
+    .privia-composer__hint { display: none; }
+    .privia-dialog__panel { padding: 24px 20px 20px; }
+    .privia-dialog__actions { flex-direction: column-reverse; }
+    .privia-dialog__button { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { .privia-page *, .privia-page *::before, .privia-page *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
