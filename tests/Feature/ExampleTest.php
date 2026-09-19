@@ -25,6 +25,10 @@ class ExampleTest extends TestCase
 
         $response = $this->actingAs($user)->get('/');
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)
+            ->assertDontSee('JIWA TERLAYANI')
+            ->assertDontSee('JUMLAH DESA')
+            ->assertDontSee('PERIODE RPJMD')
+            ->assertDontSee('PROGRAM PRIORITAS');
     }
 }
