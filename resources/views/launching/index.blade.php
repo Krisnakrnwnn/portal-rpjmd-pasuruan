@@ -13,7 +13,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="launching-page" style="--launching-background: url('{{ asset('launching/launching-bg.png') }}');">
+    <body class="launching-page" style="--launching-background: url('{{ asset('launching-bg.png') }}');">
         <main class="launching-shell" aria-live="polite">
             <section class="launching-screen launching-screen--intro" data-screen="intro" aria-labelledby="launching-title">
                 <header class="launching-identity" aria-label="Kolaborasi Politeknik Negeri Bali dan Bapperida Kabupaten Pasuruan">
@@ -25,7 +25,7 @@
 
                     <div class="launching-collaboration-row">
                         <div class="launching-institution launching-institution--pnb">
-                            <img src="{{ asset('launching/pnb-logo.png') }}" width="180" height="180" alt="Logo Politeknik Negeri Bali">
+                            <img src="{{ asset('pnb-logo.png') }}" width="180" height="180" alt="Logo Politeknik Negeri Bali">
                             <strong><span>Politeknik</span><span>Negeri Bali</span></strong>
                         </div>
 
@@ -33,7 +33,7 @@
 
                         <div class="launching-institution launching-institution--pasuruan">
                             <div class="launching-pasuruan-logos">
-                                <img src="{{ asset('launching/logo_pasuruan.png') }}" width="160" height="160" alt="Lambang Pemerintah Kabupaten Pasuruan">
+                                <img src="{{ asset('launching-logo-pasuruan.png') }}" width="160" height="160" alt="Lambang Pemerintah Kabupaten Pasuruan">
                                 <img class="launching-bapperida-logo" src="{{ asset('Logo Bapperida Kab Pasuruan Putih.png') }}" width="260" height="160" alt="Logo Bapperida Kabupaten Pasuruan">
                             </div>
                             <strong class="launching-pasuruan-caption">Pemerintah Kabupaten Pasuruan</strong>
@@ -60,7 +60,7 @@
                 <div class="launching-loading" aria-live="polite">
                     <div class="launching-robot-reveal" aria-hidden="true">
                         <span class="launching-robot-reveal-halo"></span>
-                        <img src="{{ asset('launching/prisia-robot.png') }}" width="640" height="640" alt="">
+                        <img src="{{ asset('prisia-robot.png') }}" width="640" height="640" alt="">
                     </div>
                     <div class="launching-loading-copy">
                         <p>Launching Portal<span class="launching-loading-dots" aria-hidden="true">...</span></p>
@@ -76,7 +76,7 @@
                     <div class="launching-privia-stage">
                         <a class="launching-robot-link" href="{{ route('home') }}" aria-label="Klik PRivIA untuk masuk ke portal">
                             <span class="launching-robot-halo" aria-hidden="true"></span>
-                            <img src="{{ asset('launching/prisia-robot.png') }}" width="640" height="640" alt="PRivIA, bot asisten Portal Bapperida">
+                            <img src="{{ asset('prisia-robot.png') }}" width="640" height="640" alt="PRivIA, bot asisten Portal Bapperida">
                         </a>
                         <div class="launching-chat-bubble" data-privia-bubble aria-labelledby="privia-title">
                             <strong id="privia-title">Halo, saya PRivIA</strong>
