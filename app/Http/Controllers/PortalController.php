@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\DocumentCategory;
 use App\Models\Profile;
 use App\Models\PublicDocument;
-use App\Models\Stat;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -13,10 +12,7 @@ class PortalController extends Controller
 {
     public function home()
     {
-        // Ambil SEMUA statistik utama untuk hero section (dinamis jumlahnya)
-        $heroStats = Stat::where('key', 'like', 'hero_%')->get();
-
-        return view('home', compact('heroStats'));
+        return view('home');
     }
 
     public function profil()

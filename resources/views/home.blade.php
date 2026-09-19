@@ -53,17 +53,4 @@
       </div>
     </section>
 
-    {{-- 2. Statistik Dinamis --}}
-    @if(isset($heroStats) && $heroStats->isNotEmpty())
-    <section class="relative z-20 -mt-12 sm:-mt-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 font-sans pb-24 sm:pb-32">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        @foreach($heroStats as $stat)
-        <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-7 shadow-lg hover:shadow-xl transition-all duration-300">
-          <p class="text-3xl sm:text-4xl font-bold text-[#102e56] tracking-tight leading-tight">{{ $stat->value }}</p>
-          <p class="text-xs sm:text-sm font-semibold text-slate-500 uppercase tracking-wider mt-2">{{ $stat->label }}</p>
-        </div>
-        @endforeach
-      </div>
-    </section>
-    @endif
 @endsection
