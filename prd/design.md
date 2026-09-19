@@ -141,10 +141,10 @@ Contoh copy: “Belum ada dokumen pada kategori ini.”, “Tidak ada berita yan
 
 Urutan tampilan yang dituju:
 
-1. Header dengan navigasi Beranda, Profil, Berita, Galeri, Dokumen, dan Kontak.
-2. Hero navy dengan identitas portal, deskripsi layanan, tindakan utama “Lihat Dokumen”, dan tautan pendukung menuju berita.
+1. Header dengan navigasi Beranda, Profil, dan Dokumen.
+2. Hero navy dengan identitas portal, deskripsi layanan, tindakan utama “Lihat Dokumen”, dan tautan pendukung menuju Profil.
 3. Statistik dinamis yang memang tersedia pada aplikasi.
-4. Tiga berita terbaru dengan kartu putih yang konsisten.
+4. Ringkasan akses menuju Profil dan Dokumen dengan kartu putih yang konsisten bila diperlukan.
 5. Footer navy dengan identitas instansi dan tautan penting.
 
 Gunakan `hero.png` sebagai foto kontekstual jika sesuai komposisi. Overlay mengikuti karakter login, dengan keterbacaan teks diperiksa pada hasil render. Widget chatbot tetap mudah ditemukan. Jangan menambahkan angka capaian, tautan layanan, atau informasi kontak rekaan.
@@ -153,23 +153,17 @@ Gunakan `hero.png` sebagai foto kontekstual jika sesuai komposisi. Overlay mengi
 
 Gunakan header halaman yang ringkas, judul bagian yang berurutan, dan area baca putih. Sajikan bagian profil sesuai data yang tersimpan. Navigasi antarbagian dapat digunakan jika konten panjang dan judul bagian tersedia.
 
-### Daftar dan detail berita
+### Konten berita dan galeri
 
-Daftar menggunakan pencarian yang terlihat, grid 3 kolom desktop, 2 kolom tablet, dan 1 kolom mobile, dengan pagination di bawah. Detail menggunakan breadcrumb, judul, metadata, gambar utama, serta kolom artikel yang nyaman dibaca. Judul lengkap harus tetap dapat diakses meskipun kartu membatasi baris.
-
-Hanya berita terbit yang terlihat; detail draf tetap 404. Pertahankan slug dan metadata SEO.
-
-### Galeri
-
-Gunakan grid responsif dan rasio thumbnail konsisten, dengan nama atau keterangan kegiatan. Foto penuh tidak boleh terdistorsi. Jika penampil foto/modal dipertahankan atau diterapkan, sediakan kontrol keyboard dan label navigasi. Pagination tetap tersedia.
+Berita dan galeri tidak lagi menjadi halaman publik. Data, model, dan dashboard Admin untuk pengelolaan berita/galeri tetap dipertahankan untuk kebutuhan internal.
 
 ### Dokumen
 
 Prioritaskan breadcrumb kategori, pilihan kategori/subkategori, filter tahun, daftar dokumen, dan pagination. Pada mobile, filter disusun vertikal di atas hasil. Nama dokumen panjang boleh membungkus. Tombol buka dan unduh tidak bergantung pada ikon saja. Parameter filter dan hierarki kategori harus tetap bekerja.
 
-### Kontak dan aspirasi
+### Informasi kontak dan aspirasi
 
-Desktop dapat menggunakan dua kolom: informasi instansi dan form. Mobile menjadi satu kolom. Field nama, email, subjek, dan pesan memiliki label, status wajib, serta error masing-masing. Data kontak mengambil sumber yang sudah tersedia. Tampilkan keberhasilan setelah penyimpanan berhasil.
+Informasi institusi dan kontak dapat ditampilkan sebagai teks pada footer. Pengelolaan aspirasi tetap berada di dashboard Admin; tidak ada halaman publik Kontak pada navigasi portal.
 
 ### Chatbot
 
@@ -235,7 +229,7 @@ Tahapan yang disarankan:
 
 1. Rekam tampilan login sebagai baseline visual dan inventarisasi komponen yang dipakai halaman lain.
 2. Susun token serta komponen bersama; verifikasi login tidak mengalami regresi.
-3. Terapkan pada layout publik dan beranda, lalu daftar/detail berita, profil, galeri, dokumen, dan kontak.
+3. Terapkan pada layout publik dan beranda, lalu profil dan dokumen. Berita, galeri, dan aspirasi tetap dicakup oleh dashboard Admin.
 4. Selaraskan chatbot dan halaman autentikasi terkait.
 5. Terapkan pada dashboard dengan mempertahankan navigasi dan otorisasi.
 6. Jalankan pemeriksaan visual, aksesibilitas, build, dan regresi perilaku yang terdampak.

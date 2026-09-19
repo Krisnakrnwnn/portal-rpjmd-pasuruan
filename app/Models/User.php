@@ -42,6 +42,11 @@ class User extends Authenticatable
         return $this->hasMany(AdminAuthEvent::class);
     }
 
+    public function conversations(): HasMany
+    {
+        return $this->hasMany(Conversation::class);
+    }
+
     /**
      * Get the attributes that should be cast.
      *

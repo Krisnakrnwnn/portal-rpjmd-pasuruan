@@ -4,20 +4,29 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminPageController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\PortalController;
+use App\Http\Controllers\PriviaController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
+
+// Seremoni launching publik, terpisah dari portal utama yang tetap dilindungi auth.
+Route::view('/launching', 'launching.index')->name('launching.index');
+
+Route::middleware('auth')->prefix('privia')->name('privia.')->group(function () {
+    Route::get('/', [PriviaController::class, 'index'])->name('index');
+    Route::get('/c/{conversation}', [PriviaController::class, 'index'])->name('conversation');
+    Route::get('/conversations', [PriviaController::class, 'conversations'])->name('conversations');
+    Route::get('/conversations/{conversation}', [PriviaController::class, 'show'])->name('conversation.show');
+    Route::post('/messages', [PriviaController::class, 'storeMessage'])->name('messages.store');
+    Route::post('/messages/retry', [PriviaController::class, 'retryMessage'])->name('messages.retry');
+    Route::patch('/conversations/{conversation}', [PriviaController::class, 'rename'])->name('conversation.rename');
+    Route::delete('/conversations/{conversation}', [PriviaController::class, 'destroy'])->name('conversation.destroy');
+});
 
 // Protected Portal Routes (Wajib Login)
 Route::middleware('auth')->group(function () {
     Route::get('/', [PortalController::class, 'home'])->name('home');
     Route::get('/profil', [PortalController::class, 'profil'])->name('profil');
-    Route::get('/berita', [PortalController::class, 'berita'])->name('berita');
-    Route::get('/berita/{slug}', [PortalController::class, 'beritaDetail'])->name('berita.detail');
-    Route::get('/galeri', [PortalController::class, 'galeri'])->name('galeri');
     Route::get('/dokumen', [PortalController::class, 'dokumen'])->name('dokumen');
-    Route::get('/kontak', [PortalController::class, 'kontak'])->name('kontak');
-    Route::post('/kontak', [PortalController::class, 'storeContact'])->name('kontak.store');
 });
 
 // API Chatbot (with rate limiting)
@@ -45,9 +54,6 @@ Route::post('/api/chat/feedback', [ChatbotController::class, 'feedback'])
 Route::post('/api/chat/export', [ChatbotController::class, 'exportChat'])
     ->middleware('throttle:10,1') // Max 10 exports per minute
     ->name('api.chat.export');
-
-// SEO Routes
-Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 // Admin Routes (Protected by Auth + Admin Role)
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.role'])->group(function () {

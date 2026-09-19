@@ -154,11 +154,11 @@ Prioritas menggunakan MoSCoW: Must (wajib), Should (penting), Could (opsional).
 
 | ID | Prioritas | Kebutuhan |
 |---|---|---|
-| PUB-01 | Must | Sistem menyediakan beranda dengan identitas portal, ajakan membuka dokumen/berita, statistik dinamis, dan tiga berita terbaru. |
-| PUB-02 | Must | Navigasi publik menyediakan akses ke Beranda, Profil, Berita, Galeri, Dokumen, dan Kontak. |
+| PUB-01 | Must | Sistem menyediakan beranda dengan identitas portal, ajakan membuka dokumen/profil, dan statistik dinamis. |
+| PUB-02 | Must | Navigasi publik menyediakan akses ke Beranda, Profil, dan Dokumen; `/launching` dipertahankan sebagai halaman seremoni di luar navbar. |
 | PUB-03 | Must | Halaman harus responsif pada desktop, tablet, dan ponsel. |
-| PUB-04 | Must | Sistem hanya menampilkan konten berita berstatus publik kepada pengunjung. |
-| PUB-05 | Must | Sistem menyediakan favicon, sitemap XML, judul halaman, meta description, dan metadata berbagi sosial untuk detail berita. |
+| PUB-04 | Must | Sistem hanya menampilkan halaman publik Beranda, Profil, dan Dokumen pada navigasi utama; data berita/galeri tetap dikelola melalui Admin. |
+| PUB-05 | Must | Sistem menyediakan favicon, judul halaman, dan meta description untuk halaman publik yang masih tersedia. |
 | PUB-06 | Should | Sistem menampilkan keadaan kosong dan pesan kesalahan yang mudah dipahami ketika data tidak tersedia. |
 | PUB-07 | Should | Seluruh kontrol interaktif dapat digunakan dengan keyboard dan memiliki label aksesibel. |
 
@@ -174,9 +174,9 @@ Prioritas menggunakan MoSCoW: Must (wajib), Should (penting), Could (opsional).
 
 | ID | Prioritas | Kebutuhan |
 |---|---|---|
-| NWS-01 | Must | Pengunjung dapat melihat berita publik, diurutkan berdasarkan tanggal terbit terbaru, dengan paginasi. |
-| NWS-02 | Must | Pengunjung dapat mencari berita berdasarkan judul tanpa membedakan kapitalisasi. |
-| NWS-03 | Must | Detail berita dapat diakses melalui slug unik dan menampilkan 404 untuk berita draf/tidak ditemukan. |
+| NWS-01 | Must | Admin dapat melihat berita yang dikelola, diurutkan berdasarkan tanggal terbit terbaru, dengan paginasi. |
+| NWS-02 | Must | Admin dapat mencari berita berdasarkan judul tanpa membedakan kapitalisasi. |
+| NWS-03 | Must | Detail berita tidak dipublikasikan sebagai halaman publik; data dan status berita tetap tersedia untuk pengelolaan Admin. |
 | NWS-04 | Must | Admin dapat membuat, mengubah, menghapus, serta mengalihkan status publik/draf berita. |
 | NWS-05 | Must | Berita menyimpan penulis, judul, slug, kategori, isi, gambar opsional, waktu publikasi, dan status publikasi. |
 | NWS-06 | Must | Gambar berita dibatasi pada format gambar yang disetujui dan ukuran maksimum 2 MB. |
@@ -186,7 +186,7 @@ Prioritas menggunakan MoSCoW: Must (wajib), Should (penting), Could (opsional).
 
 | ID | Prioritas | Kebutuhan |
 |---|---|---|
-| GAL-01 | Must | Pengunjung dapat melihat galeri terbaru dengan paginasi. |
+| GAL-01 | Must | Admin dapat melihat galeri terbaru dengan paginasi. |
 | GAL-02 | Must | Admin dapat membuat, mengubah, dan menghapus item galeri. |
 | GAL-03 | Must | Item galeri memuat judul, gambar, lokasi opsional, deskripsi opsional, dan waktu pembuatan. |
 | GAL-04 | Must | Unggahan menerima JPEG, PNG, JPG, atau WebP dengan ukuran maksimum 5 MB. |
@@ -215,7 +215,7 @@ Prioritas menggunakan MoSCoW: Must (wajib), Should (penting), Could (opsional).
 
 | ID | Prioritas | Kebutuhan |
 |---|---|---|
-| CON-01 | Must | Warga dapat mengirim nama, email valid, subjek, dan pesan. |
+| CON-01 | Must | Data aspirasi tetap dapat dikelola Admin; formulir Kontak tidak lagi menjadi halaman publik utama. |
 | CON-02 | Must | Aspirasi baru mendapat status `unread`. |
 | CON-03 | Must | Admin dapat melihat, mencari/memfilter berdasarkan status, menandai selesai, dan menghapus aspirasi. |
 | CON-04 | Should | Sistem menampilkan notifikasi jumlah aspirasi belum selesai pada dashboard. |

@@ -92,12 +92,6 @@
                   {{ $post->is_published ? 'Jadikan Draft' : 'Publikasikan' }}
                 </button>
               </form>
-              @if($post->is_published)
-                <a href="{{ route('berita.detail', $post->slug) }}" target="_blank"
-                   class="text-xs px-3 py-1.5 bg-slate-100 text-slate-700 border border-slate-200 rounded-xl font-medium hover:bg-slate-800 hover:text-white transition-colors inline-block">
-                  Lihat
-                </a>
-              @endif
               <a href="{{ route('admin.berita.edit', array_merge(['news' => $post->id], request()->only(['q', 'status', 'category', 'page']))) }}" class="text-xs px-3 py-1.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-xl font-medium hover:bg-blue-600 hover:text-white transition-colors inline-block">Edit</a>
               <form action="{{ route('admin.delete_news', $post->id) }}{{ \App\Support\AdminNavigation::context() ? '?'.http_build_query(\App\Support\AdminNavigation::context()) : '' }}" method="POST" class="inline">
                   @csrf
