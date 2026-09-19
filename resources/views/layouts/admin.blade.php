@@ -106,7 +106,7 @@
     }
   </script>
 
-  @php($adminNavigation = ['home' => route('admin.dashboard'), 'aspirasi' => route('admin.aspirasi.index'), 'legacy' => collect(['section-dashboard' => 'admin.dashboard','section-berita' => 'admin.berita.index','section-berita-form' => 'admin.berita.create','section-berita-edit' => 'admin.berita.index','section-dokumen' => 'admin.dokumen.index','section-dokumen-form' => 'admin.dokumen.create','section-dokumen-edit' => 'admin.dokumen.index','section-galeri' => 'admin.galeri.index','section-aspirasi' => 'admin.aspirasi.index','section-ingest' => 'admin.ingest.index','section-pengguna' => 'admin.pengguna.index','section-pengguna-form' => 'admin.pengguna.create','section-pengguna-edit' => 'admin.pengguna.index','section-setelan' => 'admin.setelan.index'])->map(fn ($route) => route($route))])
+  @php($adminNavigation = ['home' => route('admin.dashboard'), 'legacy' => collect(['section-dashboard' => 'admin.dashboard','section-dokumen' => 'admin.dokumen.index','section-dokumen-form' => 'admin.dokumen.create','section-dokumen-edit' => 'admin.dokumen.index','section-ingest' => 'admin.ingest.index','section-pengguna' => 'admin.pengguna.index','section-pengguna-form' => 'admin.pengguna.create','section-pengguna-edit' => 'admin.pengguna.index','section-setelan' => 'admin.setelan.index'])->map(fn ($route) => route($route))])
   <script id="admin-navigation" type="application/json">@json($adminNavigation)</script>
   @stack('scripts')
 </body>

@@ -155,15 +155,15 @@ Gunakan header halaman yang ringkas, judul bagian yang berurutan, dan area baca 
 
 ### Konten berita dan galeri
 
-Berita dan galeri tidak lagi menjadi halaman publik. Data, model, dan dashboard Admin untuk pengelolaan berita/galeri tetap dipertahankan untuk kebutuhan internal.
+Modul berita dan galeri telah dihentikan dan tidak termasuk dalam antarmuka maupun dashboard aplikasi. Jangan menambahkan kartu, navigasi, model, atau alur pengelolaan untuk kedua modul tersebut.
 
 ### Dokumen
 
 Prioritaskan breadcrumb kategori, pilihan kategori/subkategori, filter tahun, daftar dokumen, dan pagination. Pada mobile, filter disusun vertikal di atas hasil. Nama dokumen panjang boleh membungkus. Tombol buka dan unduh tidak bergantung pada ikon saja. Parameter filter dan hierarki kategori harus tetap bekerja.
 
-### Informasi kontak dan aspirasi
+### Informasi institusi
 
-Informasi institusi dan kontak dapat ditampilkan sebagai teks pada footer. Pengelolaan aspirasi tetap berada di dashboard Admin; tidak ada halaman publik Kontak pada navigasi portal.
+Informasi institusi dan kontak hanya ditampilkan sebagai teks pada footer bila diperlukan. Modul aspirasi/kontak telah dihentikan dan tidak memiliki halaman, form, atau dashboard pengelolaan.
 
 ### Chatbot
 
@@ -229,7 +229,7 @@ Tahapan yang disarankan:
 
 1. Rekam tampilan login sebagai baseline visual dan inventarisasi komponen yang dipakai halaman lain.
 2. Susun token serta komponen bersama; verifikasi login tidak mengalami regresi.
-3. Terapkan pada layout publik dan beranda, lalu profil dan dokumen. Berita, galeri, dan aspirasi tetap dicakup oleh dashboard Admin.
+3. Terapkan pada layout publik dan beranda, lalu profil dan dokumen. Modul berita, galeri, dan aspirasi tidak termasuk dalam cakupan aplikasi aktif.
 4. Selaraskan chatbot dan halaman autentikasi terkait.
 5. Terapkan pada dashboard dengan mempertahankan navigasi dan otorisasi.
 6. Jalankan pemeriksaan visual, aksesibilitas, build, dan regresi perilaku yang terdampak.
@@ -242,7 +242,7 @@ Tahapan yang disarankan:
 - [ ] Layout lolos pemeriksaan pada seluruh lebar uji tanpa konten atau kontrol terpotong.
 - [ ] Navigasi keyboard, fokus, label form, kontras, dan reduced motion telah diperiksa.
 - [ ] Empty, error, loading, success, dan disabled state tersedia sesuai interaksi masing-masing.
-- [ ] Berita draf tetap tidak terlihat; search, kategori bertingkat, filter tahun, breadcrumb, dan pagination tetap berfungsi.
+- [ ] Search, kategori bertingkat, filter tahun, breadcrumb, dan pagination dokumen tetap berfungsi.
 - [ ] Alur login/OTP, hak akses dashboard, audit log, serta lifecycle ingest tetap sesuai kontrak.
 - [ ] Chatbot mempertahankan sumber jawaban dan fungsi sesi tanpa membuka data internal.
 - [ ] Test perilaku yang terdampak diperbarui dan lulus; test AI memakai fake/mock.

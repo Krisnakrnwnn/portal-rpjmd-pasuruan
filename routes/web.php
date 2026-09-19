@@ -58,37 +58,15 @@ Route::post('/api/chat/export', [ChatbotController::class, 'exportChat'])
 // Admin Routes (Protected by Auth + Admin Role)
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.role'])->group(function () {
     Route::get('/', [AdminPageController::class, 'dashboard'])->name('dashboard');
-    Route::get('/berita', [AdminPageController::class, 'berita'])->name('berita.index');
-    Route::get('/berita/tambah', [AdminPageController::class, 'createBerita'])->name('berita.create');
-    Route::get('/berita/{news}/edit', [AdminPageController::class, 'editBerita'])->name('berita.edit');
     Route::get('/dokumen', [AdminPageController::class, 'dokumen'])->name('dokumen.index');
     Route::get('/dokumen/tambah', [AdminPageController::class, 'createDokumen'])->name('dokumen.create');
     Route::get('/dokumen/{document}/edit', [AdminPageController::class, 'editDokumen'])->name('dokumen.edit');
-    Route::get('/galeri', [AdminPageController::class, 'galeri'])->name('galeri.index');
-    Route::get('/aspirasi', [AdminPageController::class, 'aspirasi'])->name('aspirasi.index');
     Route::get('/ingest', [AdminPageController::class, 'ingest'])->name('ingest.index');
     Route::get('/setelan', [AdminPageController::class, 'setelan'])->name('setelan.index');
     Route::post('/stats', [AdminController::class, 'updateStats'])->name('update_stats');
     Route::post('/hero-stats', [AdminController::class, 'updateHeroStats'])->name('update_hero_stats');
     Route::post('/hero-stats/add', [AdminController::class, 'storeHeroStat'])->name('store_hero_stat');
     Route::delete('/hero-stats/{id}', [AdminController::class, 'deleteHeroStat'])->name('delete_hero_stat');
-
-    // Berita (Admin & Super Admin)
-    Route::post('/berita', [AdminController::class, 'storeNews'])->name('store_news');
-    Route::put('/berita/{id}', [AdminController::class, 'updateNews'])->name('update_news');
-    Route::delete('/berita/{id}', [AdminController::class, 'deleteNews'])->name('delete_news');
-
-    // Galeri (Admin & Super Admin)
-    Route::post('/galeri', [AdminController::class, 'storeGallery'])->name('store_gallery');
-    Route::put('/galeri/{id}', [AdminController::class, 'updateGallery'])->name('update_gallery');
-    Route::delete('/galeri/{id}', [AdminController::class, 'deleteGallery'])->name('delete_gallery');
-
-    // Aspirasi/Kontak (Admin & Super Admin)
-    Route::post('/kontak/{id}/resolve', [AdminController::class, 'resolveContact'])->name('resolve_contact');
-    Route::delete('/kontak/{id}', [AdminController::class, 'deleteContact'])->name('delete_contact');
-
-    // Toggle Publik/Draft (Admin & Super Admin)
-    Route::post('/berita/{id}/toggle', [AdminController::class, 'togglePublish'])->name('toggle_publish');
 
     // Profil Instansi (Admin & Super Admin)
     Route::post('/profile', [AdminController::class, 'updateProfile'])->name('update_profile');

@@ -4,12 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
-use App\Models\Contact;
 use App\Models\DocumentCategory;
 use App\Models\DocumentChunk;
 use App\Models\DocumentIngestion;
-use App\Models\Gallery;
-use App\Models\News;
 use App\Models\Profile;
 use App\Models\PublicDocument;
 use App\Models\User;
@@ -98,33 +95,6 @@ class AdminPageController extends Controller
         ]);
     }
 
-    public function berita(Request $request): View
-    {
-        $filters = $this->filters($request);
-        $query = $this->search(News::with('author')->orderByDesc('published_at'), ['title', 'category'], $filters['q'] ?? null);
-        if (in_array($filters['status'] ?? '', ['publik', 'draft'], true)) {
-            $query->where('is_published', $filters['status'] === 'publik');
-        }
-        if (! empty($filters['category'])) {
-            $query->whereRaw('LOWER(category) = ?', [mb_strtolower($filters['category'])]);
-        }
-
-        return $this->page('berita/index', 'berita', 'Manajemen Berita', [
-            'news' => $this->paginate($query),
-            'newsCategories' => News::select('category')->distinct()->whereNotNull('category')->cursor()->pluck('category')->filter()->values(),
-        ]);
-    }
-
-    public function createBerita(): View
-    {
-        return $this->page('berita/create', 'berita', 'Tambah Berita');
-    }
-
-    public function editBerita(News $news): View
-    {
-        return $this->page('berita/edit', 'berita', 'Edit Berita', ['record' => $news, 'formDefaults' => $news->only(['title', 'category', 'content', 'is_published'])]);
-    }
-
     private function categories()
     {
         return DocumentCategory::with('parent')->orderBy('id')->lazy(200);
@@ -159,25 +129,6 @@ class AdminPageController extends Controller
     public function editDokumen(PublicDocument $document): View
     {
         return $this->page('dokumen/edit', 'dokumen', 'Edit Dokumen', ['record' => $document, 'documentCategories' => $this->categories(), 'formDefaults' => $document->only(['title', 'document_category_id'])]);
-    }
-
-    public function galeri(Request $request): View
-    {
-        $filters = $this->filters($request);
-        $record = ! empty($filters['edit']) ? Gallery::findOrFail($filters['edit']) : null;
-
-        return $this->page('galeri/index', 'galeri', 'Manajemen Galeri', ['galleries' => $this->paginate($this->search(Gallery::latest(), ['title', 'location'], $filters['q'] ?? null)), 'record' => $record, 'formDefaults' => $record?->only(['title', 'location']) ?? []]);
-    }
-
-    public function aspirasi(Request $request): View
-    {
-        $filters = $this->filters($request);
-        $query = $this->search(Contact::latest(), ['name', 'email', 'subject', 'message'], $filters['q'] ?? null);
-        if (in_array($filters['status'] ?? '', ['unread', 'resolved'], true)) {
-            $query->where('status', $filters['status']);
-        }
-
-        return $this->page('aspirasi/index', 'aspirasi', 'Aspirasi & Pesan', ['contacts' => $this->paginate($query)]);
     }
 
     public function pengguna(Request $request): View

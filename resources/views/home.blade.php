@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Beranda | Portal Informasi Perencanaan Daerah, Riset Dan Inovasi Kabupaten Pasuruan')
-@section('meta_description', 'Portal Resmi Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah (Bapperida) Kabupaten Pasuruan — Akses data perencanaan, dokumen RPJMD resmi, dan berita pembangunan daerah secara transparan.')
+@section('meta_description', 'Portal Resmi Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah (Bapperida) Kabupaten Pasuruan — Akses data perencanaan dan dokumen RPJMD resmi secara transparan.')
 
 @section('content')
     {{-- 1. Hero Section Navy --}}

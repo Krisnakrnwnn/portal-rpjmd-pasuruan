@@ -627,3 +627,6 @@ Tidak ada staging terpisah menurut pengguna. Gunakan database/storage test dan f
 UAT RAG penuh pada hosting memakai pertanyaan uji dan sesi uji baru serta dokumen yang benar-benar ada dalam korpus. Karena pemilihan provider global memengaruhi warga, jadwalkan pergantian aktif pada jendela uji yang disepakati, catat pasangan sebelumnya, lalu pulihkan setelah uji. Jangan membuat endpoint publik bypass untuk preview RAG penuh dalam scope ini. Alternatif bila tidak ada jendela uji adalah menunggu environment uji terpisah; jangan menjalankan suite/migration destruktif terhadap hosting.
 
 Hasil awal dan matriks Gemini/GPT/Claude dicatat di [UAT AI Model Management](UAT-AI-MODEL-MANAGEMENT.md). Koneksi Flash yang dilaporkan berhasil bukan bukti kualitas RAG; kegagalan Pro bukan bukti semua model Gemini atau provider lain gagal. Penetapan exact ID GPT/Claude, budget output, batas biaya/latensi, credential, dan jendela UAT merupakan keputusan terbuka sebelum enabled/rollout.
+# Catatan implementasi
+
+Mulai 19 September 2026, modul Berita telah dihentikan permanen. PRivIA tidak lagi mengambil data berita dari database sebagai konteks tambahan; retrieval aktif hanya menggunakan sumber dokumen yang tersedia.

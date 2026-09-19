@@ -15,34 +15,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Seed News
-        \App\Models\News::create([
-            'title' => 'Musrenbang Kabupaten Pasuruan 2026 Hasilkan 68 Usulan Program Prioritas',
-            'slug' => 'musrenbang-kota-pasuruan-2026',
-            'category' => 'Musrenbang 2026',
-            'content' => 'Pemerintah Kabupaten Pasuruan sukses menyelenggarakan Musyawarah Rencana Pembangunan tingkat kota dengan menampung 68 usulan program prioritas dari seluruh OPD dan masyarakat...',
-            'image_url' => 'news1.png',
-            'published_at' => now(),
-        ]);
-
-        \App\Models\News::create([
-            'title' => 'Dokumen RPJMD Kabupaten Pasuruan 2025-2029 Resmi Ditetapkan Perda',
-            'slug' => 'dokumen-rpjmd-ditetapkan',
-            'category' => 'Dokumen Resmi',
-            'content' => 'DPRD Kabupaten Pasuruan mengesahkan Peraturan Daerah tentang RPJMD Kabupaten Pasuruan 2025-2029 dalam sidang paripurna, menjadi acuan pembangunan lima tahun ke depan.',
-            'image_url' => 'news2.png',
-            'published_at' => now(),
-        ]);
-
-        \App\Models\News::create([
-            'title' => 'Progres Infrastruktur Kabupaten Pasuruan Capai 78% Sesuai Target RPJMD',
-            'slug' => 'progres-infrastruktur-capai-target',
-            'category' => 'Realisasi Program',
-            'content' => 'Wali Kabupaten Pasuruan mengumumkan capaian realisasi program infrastruktur telah mencapai 78% dari target RPJMD, dipimpin oleh proyek jalan dan drainase perkotaan.',
-            'image_url' => 'news3.png',
-            'published_at' => now(),
-        ]);
-
         // Seed Services
         \App\Models\Service::create([
             'name' => 'Dokumen RPJMD',
@@ -56,13 +28,6 @@ class DatabaseSeeder extends Seeder
             'description' => 'Pantau realisasi dan capaian program prioritas RPJMD Kabupaten Pasuruan secara berkala, lengkap dengan indikator kinerja utama (IKU) setiap OPD terkait.',
             'icon' => 'chart-bar',
             'url' => route('capaian'),
-        ]);
-
-        \App\Models\Service::create([
-            'name' => 'Aspirasi & Pengaduan',
-            'description' => 'Sampaikan aspirasi, masukan, dan laporan terkait pelaksanaan program RPJMD Kabupaten Pasuruan langsung kepada tim pengelola melalui portal digital resmi.',
-            'icon' => 'office-building',
-            'url' => route('kontak'),
         ]);
 
         // Seed Sectors & Indicators

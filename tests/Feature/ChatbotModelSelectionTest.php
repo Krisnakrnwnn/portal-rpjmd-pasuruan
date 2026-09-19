@@ -6,7 +6,6 @@ use App\Http\Controllers\ChatbotController;
 use App\Models\ChatMessage;
 use App\Models\ChatSession;
 use App\Models\DocumentChunk;
-use App\Models\News;
 use App\Models\Stat;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -38,16 +37,12 @@ class ChatbotModelSelectionTest extends TestCase
         ]);
     }
 
-    public function test_existing_rag_news_history_and_persistence_payload(): void
+    public function test_existing_rag_history_and_persistence_payload(): void
     {
         $this->fakeGeneration();
         for ($i = 0; $i < 11; $i++) {
             DocumentChunk::create(['document_name' => "RPJMD-$i.pdf", 'page_number' => $i + 1, 'chunk_text' => "Konteks $i", 'embedding' => [1, $i / 10]]);
         }
-        foreach (range(1, 4) as $i) {
-            News::create(['title' => "Berita $i", 'slug' => "berita-$i", 'content' => 'Isi', 'category' => 'Uji', 'is_published' => true, 'published_at' => now(), 'created_at' => now()->subDays($i)]);
-        }
-        News::create(['title' => 'Draf rahasia', 'slug' => 'draf', 'content' => 'Isi', 'category' => 'Uji', 'is_published' => false]);
         $history = [];
         foreach (range(1, 4) as $i) {
             $history[] = ['role' => 'user', 'parts' => [['text' => "Tanya $i"]]];
@@ -66,9 +61,6 @@ class ChatbotModelSelectionTest extends TestCase
             $this->assertSame(10, substr_count($prompt, '[File:'));
             $this->assertStringContainsString('[File: RPJMD-0.pdf, Hal: 1]', $prompt);
             $this->assertStringNotContainsString('RPJMD-10.pdf', $prompt);
-            $this->assertStringContainsString('3. Berita 3 (Rilis: 15 Sep 2026)', $prompt);
-            $this->assertStringNotContainsString('Berita 4', $prompt);
-            $this->assertStringNotContainsString('Draf rahasia', $prompt);
             $this->assertStringEndsWith('Pertanyaan Baru Warga: Prioritas?', $prompt);
 
             return true;
@@ -172,7 +164,7 @@ class ChatbotModelSelectionTest extends TestCase
     {
         // Hashes recorded from the pre-refactor source; normalize platform newlines only.
         $method = new \ReflectionMethod(ChatbotController::class, 'getSystemPrompt');
-        foreach (['en' => '2bf2df6128a32be0f11052fc1d62573e425e0dc70cb00f4f0238b595e168f7c2', 'id' => 'd9a2b87ab0fab037d1987466ba4589130cb7b9c418d688827a421aab0dc0e82a'] as $language => $hash) {
+        foreach (['en' => 'd6bfc385f0e7857a823f3ab930d034134b72eef190283837152f9b2727e5a23c', 'id' => '77900e3974890679b107cb18fe461021b00a3e6cbaa8065b566a69c5580bdfea'] as $language => $hash) {
             $prompt = $method->invoke(app(ChatbotController::class), $language, 'Selamat pagi');
             $this->assertSame($hash, hash('sha256', str_replace("\r\n", "\n", $prompt)));
         }

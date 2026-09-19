@@ -6,8 +6,6 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use App\Models\Sector;
 use App\Models\Indicator;
-use App\Models\News;
-use Illuminate\Support\Str;
 
 class DummyDataSeeder extends Seeder
 {
@@ -16,7 +14,6 @@ class DummyDataSeeder extends Seeder
         // 1. Membersihkan tabel (Agnostik untuk Postgres/Supabase)
         Indicator::query()->delete();
         Sector::query()->delete();
-        // News::query()->delete(); // Biarkan berita asli tetap ada
 
         // 2. Data Sektor & Indikator Fiktif Interaktif
         $sectorsData = [
@@ -59,19 +56,5 @@ class DummyDataSeeder extends Seeder
             }
         }
 
-        // 3. Tambahan Berita Fiktif untuk memeriahkan Landing Page
-        $firstUserId = \App\Models\User::first()->id ?? 1;
-        for ($i = 4; $i <= 8; $i++) {
-            News::create([
-                'title' => 'Pencapaian Baru Kabupaten Pasuruan Q' . rand(1,4) . ' ' . rand(2025, 2027) . ': Transformasi ' . Str::random(5),
-                'slug' => Str::slug('berita-dummy-pencapaian-' . Str::random(8)),
-                'category' => 'Press Release',
-                'content' => 'Ini adalah konten berita simulasi yang dihasilkan secara otomatis oleh sistem Seeder. Pemerintah terus menggenjot percepatan pembangunan sesuai peta jalan RPJMD yang telah disusun. Partisipasi masyarakat dinilai sangat memuaskan.',
-                'image_url' => null,
-                'is_published' => true,
-                'published_at' => now()->subDays(rand(1, 30)),
-                'user_id' => $firstUserId,
-            ]);
-        }
     }
 }

@@ -11,7 +11,7 @@
                 Masuk ke Akun Anda
             </h2>
             <p class="text-sm text-slate-600 dark:text-slate-400">
-                Gunakan email dan kata sandi Anda untuk menyampaikan aspirasi dan mengakses fasilitas publik.
+                Gunakan email dan kata sandi Anda untuk mengakses portal informasi perencanaan daerah.
             </p>
         </div>
 
