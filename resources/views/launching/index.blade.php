@@ -33,7 +33,7 @@
 
                         <div class="launching-institution launching-institution--pasuruan">
                             <div class="launching-pasuruan-logos">
-                                <img src="{{ asset('launching-logo-pasuruan.png') }}" width="160" height="160" alt="Lambang Pemerintah Kabupaten Pasuruan">
+                                <img src="{{ asset('logo_pasuruan.png') }}" width="160" height="160" alt="Lambang Pemerintah Kabupaten Pasuruan">
                                 <img class="launching-bapperida-logo" src="{{ asset('Logo Bapperida Kab Pasuruan Putih.png') }}" width="260" height="160" alt="Logo Bapperida Kabupaten Pasuruan">
                             </div>
                             <strong class="launching-pasuruan-caption">Pemerintah Kabupaten Pasuruan</strong>
