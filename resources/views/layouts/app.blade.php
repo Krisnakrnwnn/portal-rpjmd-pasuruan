@@ -414,54 +414,32 @@
   </main>
 
   <!-- Footer -->
-  <footer class="bg-[#102e56] text-[#d6e3f2] pt-16 pb-8 border-t border-[#1e3a8a] w-full mt-auto relative z-10 font-sans">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-        <div class="col-span-1 md:col-span-2">
-          <div class="flex items-center gap-3 mb-6">
-            <img src="{{ asset('Logo Bapperida Kab Pasuruan Putih.png') }}" class="h-16 sm:h-20 w-auto object-contain" alt="Logo Bapperida Kabupaten Pasuruan" />
-          </div>
-          <p class="text-[#d6e3f2]/90 text-sm leading-relaxed max-w-sm mb-6 font-normal">
-            Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah (Bapperida) Kabupaten Pasuruan — Portal Resmi Perencanaan Pembangunan Daerah.
+  <footer class="bg-[#102e56] text-[#d6e3f2] border-t border-[#1e3a8a] w-full mt-auto relative z-10 font-sans">
+    <div class="max-w-[1240px] mx-auto px-5 sm:px-8 lg:px-10 py-10 lg:py-11">
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_auto] lg:items-start lg:gap-20">
+        <div class="flex flex-col items-center text-center lg:max-w-[450px] lg:items-start lg:text-left">
+          <img src="{{ asset('Logo Bapperida Kab Pasuruan Putih.png') }}" class="h-auto w-[165px] object-contain" alt="Logo Bapperida Kabupaten Pasuruan" />
+          <p class="mt-5 max-w-[450px] text-base sm:text-[17px] font-medium leading-relaxed text-white">
+            Portal Informasi Perencanaan Daerah, Riset dan Inovasi
           </p>
-          <div class="flex gap-3">
-            <a href="{{ $socials['ig_link'] ?? '#' }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram Bapperida" class="w-10 h-10 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-white hover:bg-[#1d4ed8] hover:border-transparent transition-colors shadow-sm">
-                <i class="fab fa-instagram"></i>
-            </a>
-            <a href="{{ $socials['fb_link'] ?? '#' }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook Bapperida" class="w-10 h-10 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-white hover:bg-[#1d4ed8] hover:border-transparent transition-colors shadow-sm">
-                <i class="fab fa-facebook-f"></i>
-            </a>
-            <a href="https://wa.me/{{ $socials['wa_number'] ?? '' }}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Bapperida" class="w-10 h-10 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-white hover:bg-[#1d4ed8] hover:border-transparent transition-colors shadow-sm">
-                <i class="fab fa-whatsapp"></i>
-            </a>
+        </div>
+
+        <div class="flex flex-col items-center text-center lg:min-w-[430px] lg:items-start lg:text-left">
+          <nav aria-label="Navigasi footer" class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm lg:justify-start">
+            <a href="{{ route('home') }}" class="hover:text-white transition-colors">Beranda</a>
+            <a href="{{ route('profil') }}" class="hover:text-white transition-colors">Profil</a>
+            <a href="{{ route('dokumen') }}" class="hover:text-white transition-colors">Dokumen</a>
+          </nav>
+
+          <div class="mt-6 flex max-w-full flex-col items-center gap-2 text-xs sm:text-sm text-[#d6e3f2]/85 lg:items-start">
+            <a href="mailto:bapperida@pasuruankab.go.id" class="break-words hover:text-white transition-colors">bapperida@pasuruankab.go.id</a>
+            <span class="break-words">Kompleks Perkantoran Pemerintah Kabupaten Pasuruan, Bangil</span>
           </div>
-        </div>
-        <div>
-          <h3 class="text-white text-sm font-semibold mb-4 tracking-wider uppercase">Tautan Cepat</h3>
-          <ul class="space-y-3 text-sm text-[#d6e3f2] flex flex-col">
-            <li><a href="{{ route('home') }}" class="hover:text-white transition-colors">Beranda</a></li>
-            <li><a href="{{ route('profil') }}" class="hover:text-white transition-colors">Profil Instansi</a></li>
-            <li><a href="{{ route('dokumen') }}" class="hover:text-white transition-colors">Dokumen Publik</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="text-white text-sm font-semibold mb-4 tracking-wider uppercase">Kontak Kami</h3>
-          <ul class="space-y-3 text-sm text-[#d6e3f2] flex flex-col">
-            <li class="leading-relaxed">
-              Kompleks Perkantoran Pemerintah Kabupaten Pasuruan<br>
-              Gedung Berakhlak Lt. 2, Jl. Raya Raci Km. 09 Bangil – Pasuruan
-            </li>
-            <li>
-              <a href="mailto:bapperida@pasuruankab.go.id" class="hover:text-white transition-colors">bapperida@pasuruankab.go.id</a>
-            </li>
-          </ul>
         </div>
       </div>
-      <div class="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[#d6e3f2]/80 text-center md:text-left">
+
+      <div class="mt-8 border-t border-white/10 pt-5 text-center text-xs text-[#d6e3f2]/70 lg:text-left">
         <p>&copy; {{ date('Y') }} Bapperida Kabupaten Pasuruan. Hak Cipta Dilindungi.</p>
-        <div class="flex gap-6">
-          <a href="{{ route('dokumen') }}" class="hover:text-white transition-colors">Dokumen RPJMD</a>
-        </div>
       </div>
     </div>
   </footer>
