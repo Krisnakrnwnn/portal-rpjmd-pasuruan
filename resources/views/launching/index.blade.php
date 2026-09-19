@@ -6,12 +6,14 @@
         <meta name="theme-color" content="#102e56">
         <title>Launching Portal Bapperida Kabupaten Pasuruan</title>
         <link rel="icon" type="image/png" href="{{ asset('logo.png') }}">
+        <link rel="manifest" href="{{ asset('manifest.json') }}">
+        <link rel="apple-touch-icon" href="{{ asset('logo.png') }}">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="launching-page">
+    <body class="launching-page" style="--launching-background: url('{{ asset('launching/launching-bg.png') }}');">
         <main class="launching-shell" aria-live="polite">
             <section class="launching-screen launching-screen--intro" data-screen="intro" aria-labelledby="launching-title">
                 <header class="launching-identity" aria-label="Kolaborasi Politeknik Negeri Bali dan Bapperida Kabupaten Pasuruan">

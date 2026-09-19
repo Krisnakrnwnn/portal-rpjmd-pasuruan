@@ -9,7 +9,7 @@ const assert = require('node:assert/strict');
 const mode = process.argv[2] || 'after';
 const root = path.resolve(__dirname, '../..');
 const review = path.join(root, 'storage/framework/testing/admin-review');
-const pages = {dashboard: '/admin', berita: '/admin/berita', dokumen: '/admin/dokumen', galeri: '/admin/galeri', aspirasi: '/admin/aspirasi', ingest: '/admin/ingest', pengguna: '/admin/pengguna', setelan: '/admin/setelan', capaian: '/admin/capaian'};
+const pages = {dashboard: '/admin', dokumen: '/admin/dokumen', ingest: '/admin/ingest', pengguna: '/admin/pengguna', setelan: '/admin/setelan'};
 const server = http.createServer((req, res) => {
     const url = new URL(req.url, 'http://localhost');
     let file;

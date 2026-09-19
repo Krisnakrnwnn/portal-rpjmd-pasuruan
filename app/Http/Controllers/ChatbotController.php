@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\ChatMessage;
 use App\Models\ChatSession;
 use App\Models\DocumentChunk;
-use App\Models\News;
 use App\Services\AI\AIManager;
 use App\Services\AI\Exceptions\AIProviderException;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -112,21 +111,6 @@ class ChatbotController extends Controller
 
             }
 
-            // STEP 2B: Ambil Data SQL Langsung dari Tabel Website (Contoh: Berita)
-            $webDataText = '';
-            try {
-                $latestNews = News::published()->latest()->take(3)->get();
-                if ($latestNews->count() > 0) {
-                    $webDataText .= "Info Tambahan dari Database Website (Berita Terbaru Kabupaten Pasuruan):\n";
-                    foreach ($latestNews as $idx => $news) {
-                        $tgl = $news->published_at ? $news->published_at->format('d M Y') : '-';
-                        $webDataText .= ($idx + 1).". {$news->title} (Rilis: {$tgl})\n";
-                    }
-                }
-            } catch (\Exception $e) {
-                // Abaikan jika tabel tidak siap
-            }
-
             // STEP 3: Prompt Gemini to answer (IMPROVED PROMPT)
             // Get appropriate greeting based on time
             $hour = now()->format('H');
@@ -142,7 +126,7 @@ class ChatbotController extends Controller
             // Get system instruction based on language
             $systemInstruction = $this->getSystemPrompt($language, $greeting);
 
-            $prompt = $systemInstruction."\n\n".$contextText."\n\n".$webDataText."\n\nPertanyaan Baru Warga: ".$userMessage;
+            $prompt = $systemInstruction."\n\n".$contextText."\n\nPertanyaan Baru Warga: ".$userMessage;
 
             // STEP 4: Siapkan Riwayat Percakapan (Memory) agar bot tidak pikun
             $history = session()->get('chatbot_history', []);
@@ -395,7 +379,6 @@ TOPICS THAT CAN BE ANSWERED:
 ✅ Development Achievements
 ✅ Bapperida Services
 ✅ Planning Documents
-✅ Latest News & Information
 
 IF ASKED OUTSIDE THE TOPIC:
 'Sorry, I specialize in helping with information about RPJMD and development of Pasuruan Regency. For other questions, please contact the relevant services! 😊'";
@@ -441,7 +424,6 @@ TOPIK YANG BISA DIJAWAB:
 ✅ Capaian Pembangunan
 ✅ Layanan Bapperida
 ✅ Dokumen Perencanaan
-✅ Berita & Informasi Terkini
 
 JIKA DITANYA DI LUAR TOPIK:
 'Maaf, saya khusus membantu informasi seputar RPJMD dan pembangunan Kabupaten Pasuruan. Untuk pertanyaan lain, silakan hubungi layanan terkait ya! 😊'";

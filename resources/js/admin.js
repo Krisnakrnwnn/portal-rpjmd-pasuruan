@@ -75,24 +75,6 @@ if (configuration) {
         if (result.isConfirmed) { submitting = true; location.assign(link.href); }
     });
 
-    // Delegation survives replacement of rows after filtering or background polling.
-    document.addEventListener('click', async event => {
-        const toggle = event.target.closest('.toggle-btn');
-        const resolve = event.target.closest('.resolve-btn');
-        if (!toggle && !resolve) return;
-        event.preventDefault();
-        const button = toggle || resolve;
-        const result = await Swal.fire({
-            title:toggle ? button.dataset.title : 'Tandai Selesai?',
-            text:toggle ? button.dataset.text : `Pesan dari "${button.dataset.name}" akan ditandai sebagai selesai.`,
-            icon:'question', showCancelButton:true,
-            confirmButtonColor:toggle ? button.dataset.color : '#16a34a', cancelButtonColor:'#6b7280',
-            confirmButtonText:toggle ? button.dataset.confirm : 'Ya, Tandai Selesai', cancelButtonText:'Batal',
-            customClass:{popup:'rounded-3xl shadow-2xl',title:'font-black'},
-        });
-        if (result.isConfirmed) window.adminSubmit(button.closest('form'));
-    });
-
     let pendingRequest;
     let changingFilter = false;
     const filterStatus = document.createElement('p');
@@ -125,11 +107,6 @@ if (configuration) {
     function syncFilterState() {
         const query = new URL(location.href).searchParams;
         document.querySelectorAll('[data-admin-filter]').forEach(input => { input.value = query.get(input.dataset.adminFilter) || ''; });
-        document.querySelectorAll('.aspirasi-filter-btn').forEach(button => {
-            const active = button.id === `aspirasi-filter-${query.get('status') || 'all'}`;
-            button.className = `aspirasi-filter-btn px-3 py-1.5 rounded-md text-xs font-bold transition-all ${active ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`;
-            button.setAttribute('aria-pressed', String(active));
-        });
     }
     function applyFilter(key, value) {
         const url = new URL(location.href);
@@ -146,7 +123,6 @@ if (configuration) {
         if (key === 'q') debounce = setTimeout(() => applyFilter(key, value), 350);
         else applyFilter(key, value);
     });
-    window.filterAspirasi = status => applyFilter('status', status === 'all' ? '' : status);
     syncFilterState();
     window.addEventListener('popstate', () => { syncFilterState(); refreshPage(location.href); });
     setInterval(() => {

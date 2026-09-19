@@ -13,6 +13,8 @@
 
 > Dokumen ini mendeskripsikan kondisi produk yang terlihat dari kode saat ini sekaligus target minimum agar produk layak dioperasikan. Butir berlabel **Gap** belum sepenuhnya tersambung atau memerlukan konfirmasi.
 
+> **Pembaruan implementasi 19 September 2026:** Modul Berita, Galeri, dan Aspirasi/Kontak telah dihentikan secara permanen. Route, controller, model, view, seed data, aset unggahan, dan tabel databasenya tidak lagi menjadi bagian dari aplikasi aktif. Bagian PRD historis yang masih menyebut modul tersebut perlu dibaca sebagai catatan lama, bukan kontrak fitur saat ini.
+
 ## 1. Ringkasan produk
 
 Portal RPJMD Kabupaten Pasuruan adalah pusat informasi internal dan terbatas bagi pengguna/warga terdaftar untuk menemukan informasi perencanaan pembangunan daerah, membaca berita, mengakses dokumen resmi, melihat galeri kegiatan, menyampaikan aspirasi, dan bertanya kepada asisten virtual berbasis dokumen RPJMD. **Seluruh fitur dan halaman portal memerlukan login pengguna sebelum dapat diakses.**

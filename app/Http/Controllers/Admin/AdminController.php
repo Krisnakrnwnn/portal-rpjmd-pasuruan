@@ -7,12 +7,9 @@ use App\Http\Requests\Admin\TestAiModelRequest;
 use App\Http\Requests\Admin\UpdateAiSettingsRequest;
 use App\Jobs\IngestDocumentJob;
 use App\Models\Activity;
-use App\Models\Contact;
 use App\Models\DocumentCategory;
 use App\Models\DocumentChunk;
 use App\Models\DocumentIngestion;
-use App\Models\Gallery;
-use App\Models\News;
 use App\Models\Profile;
 use App\Models\PublicDocument;
 use App\Models\Service;
@@ -25,7 +22,6 @@ use App\Support\AdminNavigation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class AdminController extends Controller
@@ -78,129 +74,6 @@ class AdminController extends Controller
         Activity::log('Kategori', 'Hapus', 'Menghapus kategori dokumen: '.$category->name);
 
         return redirect(AdminNavigation::url('admin.dokumen.index'))->with('success', 'Kategori dokumen berhasil dihapus!');
-    }
-
-    public function storeNews(Request $request)
-    {
-        $request->validate([
-            'title' => 'required',
-            'category' => 'required',
-            'content' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        $imageUrl = null;
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
-            $uploadDir = public_path('uploads/news');
-            if (! file_exists($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
-            }
-            $file->move($uploadDir, $filename);
-            $imageUrl = 'uploads/news/'.$filename;
-        }
-
-        News::create([
-            'user_id' => auth()->id(),
-            'title' => $request->title,
-            'slug' => Str::slug($request->title).'-'.uniqid(),
-            'category' => $request->category,
-            'content' => $request->content,
-            'image_url' => $imageUrl,
-            'published_at' => now(),
-            'is_published' => $request->boolean('is_published', true), // default publik
-        ]);
-
-        $status = $request->boolean('is_published', true) ? 'publik' : 'draft';
-        Activity::log('Berita', 'Buat', 'Menerbitkan berita baru ('.$status.'): '.$request->title);
-
-        return redirect(AdminNavigation::url('admin.berita.index'))->with('success', 'Berita berhasil disimpan!');
-    }
-
-    public function updateNews(Request $request, $id)
-    {
-        $request->validate([
-            'title' => 'required',
-            'category' => 'required',
-            'content' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        $news = News::findOrFail($id);
-
-        $data = [
-            'title' => $request->title,
-            'category' => $request->category,
-            'content' => $request->content,
-            'is_published' => $request->boolean('is_published', true),
-        ];
-
-        if ($request->hasFile('image')) {
-            // Hapus gambar lama jika ada
-            if ($news->image_url) {
-                $oldImagePath = public_path($news->image_url);
-                if (file_exists($oldImagePath)) {
-                    unlink($oldImagePath);
-                }
-                // Fallback: hapus dari storage juga jika punya path lama
-                if (str_starts_with($news->image_url, 'storage/')) {
-                    $oldPath = str_replace('storage/', '', $news->image_url);
-                    Storage::disk('public')->delete($oldPath);
-                }
-            }
-
-            $file = $request->file('image');
-            $filename = time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
-            $uploadDir = public_path('uploads/news');
-            if (! file_exists($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
-            }
-            $file->move($uploadDir, $filename);
-            $data['image_url'] = 'uploads/news/'.$filename;
-        }
-
-        $news->update($data);
-
-        Activity::log('Berita', 'Update', 'Memperbarui berita: '.$news->title);
-
-        return redirect(AdminNavigation::url('admin.berita.index'))->with('success', 'Berita berhasil diperbarui!');
-    }
-
-    public function deleteNews($id)
-    {
-        $news = News::findOrFail($id);
-
-        // Hapus file gambar jika ada
-        if ($news->image_url) {
-            $oldImagePath = public_path($news->image_url);
-            if (file_exists($oldImagePath)) {
-                unlink($oldImagePath);
-            }
-            // Fallback: hapus dari storage juga jika punya path lama
-            if (str_starts_with($news->image_url, 'storage/')) {
-                $path = str_replace('storage/', '', $news->image_url);
-                Storage::disk('public')->delete($path);
-            }
-        }
-
-        Activity::log('Berita', 'Hapus', 'Menghapus berita: '.$news->title);
-        $news->delete();
-
-        return redirect(AdminNavigation::url('admin.berita.index'))->with('success', 'Berita berhasil dihapus!');
-    }
-
-    public function togglePublish($id)
-    {
-        $news = News::findOrFail($id);
-        $news->is_published = ! $news->is_published;
-        $news->save();
-
-        $status = $news->is_published ? 'Dipublikasikan' : 'Dijadikan Draft';
-        Activity::log('Berita', 'Toggle', $status.': '.$news->title);
-
-        return redirect(AdminNavigation::url('admin.berita.index'))
-            ->with('success', 'Berita "'.$news->title.'" berhasil '.strtolower($status).'!');
     }
 
     public function storeService(Request $request)
@@ -355,25 +228,6 @@ class AdminController extends Controller
 
         return redirect(AdminNavigation::url('admin.setelan.index'))
             ->with('success', 'Profil instansi berhasil diperbarui!');
-    }
-
-    public function resolveContact($id)
-    {
-        $contact = Contact::findOrFail($id);
-        $contact->update(['status' => 'resolved']);
-        Activity::log('Aspirasi', 'Selesai', 'Menandai selesai pesan dari: '.$contact->name);
-
-        return redirect(AdminNavigation::url('admin.aspirasi.index'))->with('success', 'Aspirasi dari "'.$contact->name.'" ditandai selesai!');
-    }
-
-    public function deleteContact($id)
-    {
-        $contact = Contact::findOrFail($id);
-        $name = $contact->name;
-        $contact->delete();
-        Activity::log('Aspirasi', 'Hapus', 'Menghapus pesan dari: '.$name);
-
-        return redirect(AdminNavigation::url('admin.aspirasi.index'))->with('success', 'Aspirasi dari "'.$name.'" berhasil dihapus!');
     }
 
     public function storeUser(Request $request)
@@ -692,83 +546,4 @@ class AdminController extends Controller
         ], 400);
     }
 
-    // ==========================================
-    // GALLERY MANAGEMENT
-    // ==========================================
-    public function storeGallery(Request $request)
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'location' => 'nullable|string|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
-        ]);
-
-        $imagePath = '';
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = 'gallery_'.time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
-            // Pindahkan ke folder public/images/gallery (agar sesuai dengan file yang sudah ada sebelumnya)
-            $file->move(public_path('images/gallery'), $filename);
-            $imagePath = $filename;
-        }
-
-        Gallery::create([
-            'title' => $request->title,
-            'location' => $request->location,
-            'image_path' => $imagePath,
-        ]);
-
-        Activity::log('Galeri', 'Tambah', 'Menambah foto galeri baru: '.$request->title);
-
-        return redirect(AdminNavigation::url('admin.galeri.index'))->with('success', 'Galeri berhasil ditambahkan!');
-    }
-
-    public function updateGallery(Request $request, $id)
-    {
-        $gallery = Gallery::findOrFail($id);
-
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'location' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
-        ]);
-
-        if ($request->hasFile('image')) {
-            // Hapus gambar lama jika ada
-            $oldPath = public_path('images/gallery/'.$gallery->image_path);
-            if (file_exists($oldPath) && is_file($oldPath)) {
-                @unlink($oldPath);
-            }
-
-            $file = $request->file('image');
-            $filename = 'gallery_'.time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
-            $file->move(public_path('images/gallery'), $filename);
-            $gallery->image_path = $filename;
-        }
-
-        $gallery->title = $request->title;
-        $gallery->location = $request->location;
-        $gallery->save();
-
-        Activity::log('Galeri', 'Ubah', 'Mengubah data galeri: '.$gallery->title);
-
-        return redirect(AdminNavigation::url('admin.galeri.index'))->with('success', 'Galeri berhasil diubah!');
-    }
-
-    public function deleteGallery($id)
-    {
-        $gallery = Gallery::findOrFail($id);
-
-        $oldPath = public_path('images/gallery/'.$gallery->image_path);
-        if (file_exists($oldPath) && is_file($oldPath)) {
-            @unlink($oldPath);
-        }
-
-        $title = $gallery->title;
-        $gallery->delete();
-
-        Activity::log('Galeri', 'Hapus', 'Menghapus foto galeri: '.$title);
-
-        return redirect(AdminNavigation::url('admin.galeri.index'))->with('success', 'Galeri berhasil dihapus!');
-    }
 }
