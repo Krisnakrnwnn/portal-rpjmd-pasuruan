@@ -17,12 +17,17 @@ class LaunchingPageTest extends TestCase
         $response->assertSee('PRivIA');
         $response->assertSee('launching-chat-bubble', false);
         $response->assertSee('Masuk ke Portal');
-        $response->assertSee('KOLABORASI');
-        $response->assertSeeInOrder(['Politeknik', 'Negeri Bali']);
         $response->assertSee('Pemerintah Kabupaten Pasuruan');
+        $response->assertSee('Bapperida Kabupaten Pasuruan');
         $response->assertSee('Logo Bapperida Kab Pasuruan Putih.png', false);
-        $response->assertSee('launching-collaboration-mark', false);
-        $response->assertDontSee('Kolaborator');
+        $response->assertSee('Mendukung perencanaan pembangunan daerah yang transparan, berbasis data, riset, dan inovasi.');
+        $response->assertDontSee('KOLABORASI');
+        $response->assertDontSee('Politeknik Negeri Bali');
+        $response->assertDontSee('pnb-logo.png');
+        $response->assertDontSee('launching-collaboration');
+        $response->assertDontSee('launching-institution--pnb');
+        $response->assertDontSee('×');
+        $response->assertDontSee('Kolaborasi untuk mendukung');
         $response->assertDontSee('Pemerintah Kabupaten</span>', false);
         $response->assertSee(route('home'), false);
     }
