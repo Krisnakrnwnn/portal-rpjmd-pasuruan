@@ -16,36 +16,20 @@
     <body class="launching-page" style="--launching-background: url('{{ asset('launching-bg.png') }}');">
         <main class="launching-shell" aria-live="polite">
             <section class="launching-screen launching-screen--intro" data-screen="intro" aria-labelledby="launching-title">
-                <header class="launching-identity" aria-label="Kolaborasi Politeknik Negeri Bali dan Bapperida Kabupaten Pasuruan">
-                    <div class="launching-collaboration-label" aria-hidden="true">
-                        <span></span>
-                        <span>KOLABORASI</span>
-                        <span></span>
+                <header class="launching-identity" aria-label="Pemerintah Kabupaten Pasuruan dan Bapperida Kabupaten Pasuruan">
+                    <div class="launching-pasuruan-logos">
+                        <img src="{{ asset('logo_pasuruan.png') }}" width="160" height="160" alt="Lambang Pemerintah Kabupaten Pasuruan">
+                        <img class="launching-bapperida-logo" src="{{ asset('Logo Bapperida Kab Pasuruan Putih.png') }}" width="260" height="160" alt="Logo Bapperida Kabupaten Pasuruan">
                     </div>
-
-                    <div class="launching-collaboration-row">
-                        <div class="launching-institution launching-institution--pnb">
-                            <img src="{{ asset('pnb-logo.png') }}" width="180" height="180" alt="Logo Politeknik Negeri Bali">
-                            <strong><span>Politeknik</span><span>Negeri Bali</span></strong>
-                        </div>
-
-                        <span class="launching-collaboration-mark" aria-hidden="true">×</span>
-
-                        <div class="launching-institution launching-institution--pasuruan">
-                            <div class="launching-pasuruan-logos">
-                                <img src="{{ asset('logo_pasuruan.png') }}" width="160" height="160" alt="Lambang Pemerintah Kabupaten Pasuruan">
-                                <img class="launching-bapperida-logo" src="{{ asset('Logo Bapperida Kab Pasuruan Putih.png') }}" width="260" height="160" alt="Logo Bapperida Kabupaten Pasuruan">
-                            </div>
-                            <strong class="launching-pasuruan-caption">Pemerintah Kabupaten Pasuruan</strong>
-                        </div>
-                    </div>
+                    <strong class="launching-pasuruan-caption">Pemerintah Kabupaten Pasuruan</strong>
+                    <span class="launching-institution-name">Bapperida Kabupaten Pasuruan</span>
                 </header>
 
                 <div class="launching-intro-content">
                     <p class="launching-eyebrow">Portal Informasi Pemerintah Daerah, Riset dan Inovasi</p>
-                    <h1 id="launching-title">Launching</h1>
+                    <h1 id="launching-title" aria-label="Launching">Launching<span id="launching-dots" aria-hidden="true">...</span></h1>
                     <p class="launching-title">Portal Informasi Perencanaan Daerah,<br>Riset dan Inovasi</p>
-                    <p class="launching-supporting-copy">Kolaborasi untuk mendukung perencanaan pembangunan daerah yang transparan, berbasis data, riset, dan inovasi.</p>
+                    <p class="launching-supporting-copy">Mendukung perencanaan pembangunan daerah yang transparan, berbasis data, riset, dan inovasi.</p>
 
                     <button type="button" class="launching-button launching-button--primary" data-start>
                         Mulai Launching
@@ -99,9 +83,27 @@
                 const progress = document.querySelector('.launching-progress');
                 const progressBar = document.querySelector('.launching-progress-bar');
                 const priviaBubble = document.querySelector('[data-privia-bubble]');
+                const launchingDots = document.querySelector('#launching-dots');
                 const LAUNCH_DURATION = 10000;
                 let launchStarted = false;
                 let progressFrame = null;
+
+                if (launchingDots && !launchingDots.dataset.animationInitialized) {
+                    launchingDots.dataset.animationInitialized = 'true';
+
+                    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                        launchingDots.textContent = '...';
+                    } else {
+                        const dots = ['.', '..', '...'];
+                        let dotIndex = 0;
+
+                        launchingDots.textContent = dots[dotIndex];
+                        window.setInterval(() => {
+                            dotIndex = (dotIndex + 1) % dots.length;
+                            launchingDots.textContent = dots[dotIndex];
+                        }, 1000);
+                    }
+                }
 
                 startButton.addEventListener('click', () => {
                     if (launchStarted) return;
