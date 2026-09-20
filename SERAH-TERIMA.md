@@ -142,7 +142,17 @@ Backup rutin harus mencakup:
 
 Dokumen chatbot berada di storage privat dan tidak boleh dipindahkan ke folder publik.
 
-## 7. Chatbot dan Gemini
+## 7. Chatbot dan pengelolaan model AI
+
+### Status implementasi saat serah-terima
+
+Aplikasi yang diserahterimakan saat ini berada pada fase satu:
+
+- Provider generation yang berjalan: Google Gemini.
+- Credential generation dan embedding: `GEMINI_API_KEY`.
+- Model embedding tetap Gemini dan tidak berubah ketika model generation diganti.
+- Model generation yang tersedia mengikuti katalog Gemini pada aplikasi dan pengaturan Admin.
+- Tidak ada failover otomatis ke provider atau model lain.
 
 Sebelum go-live:
 
@@ -156,9 +166,26 @@ Sebelum go-live:
 8. Ajukan pertanyaan yang jawabannya memang terdapat di dokumen.
 9. Pastikan sumber file dan halaman tampil pada jawaban.
 
-Model embedding tetap menggunakan Gemini. Penggantian model generatif tidak otomatis membutuhkan ingest ulang.
+### Rencana fase dua multi-provider
 
-Catatan teknis: beberapa command ingest masih membaca `GEMINI_API_KEY` langsung melalui `env()`. Setelah konfigurasi Laravel di-cache, jalur ingest harus diuji ulang secara khusus.
+PRD mencatat rencana pengembangan tiga provider:
+
+- Google Gemini — `GEMINI_API_KEY`.
+- OpenAI/GPT — `OPENAI_API_KEY`.
+- Anthropic/Claude — `ANTHROPIC_API_KEY`.
+
+Fase dua tersebut belum boleh dianggap sebagai fitur production pada saat serah-terima. Adapter, katalog model, validasi credential, UAT, evaluasi kualitas RAG, biaya, latency, dan prosedur rollback untuk OpenAI/Anthropic masih harus diselesaikan dan diuji sebelum diaktifkan.
+
+Jika fase dua nanti diimplementasikan:
+
+- Credential provider dibaca dari konfigurasi server, bukan dari UI atau database.
+- Provider yang tidak memiliki credential hanya ditampilkan sebagai belum siap.
+- Pergantian provider tidak mengubah atau mengharuskan re-ingest embedding secara otomatis.
+- Kegagalan provider aktif tidak boleh memicu perpindahan provider diam-diam.
+- Pertanyaan embedding tetap dikirim ke Gemini sesuai rancangan PRD.
+- Setiap provider harus melalui Test Model dan UAT terpisah sebelum rollout.
+
+Catatan teknis: beberapa command ingest saat ini masih membaca `GEMINI_API_KEY` langsung melalui `env()`. Setelah konfigurasi Laravel di-cache, jalur ingest harus diuji ulang secara khusus.
 
 ## 8. Akun dan hak akses
 
@@ -233,4 +260,3 @@ Tim Kominfo perlu menetapkan:
 | Backup dan restore test | [ ] | |
 | Smoke test pasca-deployment | [ ] | |
 | Kontak dukungan teknis | [ ] | |
-
