@@ -171,8 +171,17 @@ Sebelum go-live:
 PRD mencatat rencana pengembangan tiga provider:
 
 - Google Gemini — `GEMINI_API_KEY`.
-- OpenAI/GPT — `OPENAI_API_KEY`.
-- Anthropic/Claude — `ANTHROPIC_API_KEY`.
+- **OpenAI/GPT — `OPENAI_API_KEY` wajib disiapkan oleh Kominfo.**
+- **Anthropic/Claude — `ANTHROPIC_API_KEY` wajib disiapkan oleh Kominfo.**
+
+Kominfo perlu menyiapkan dan mengamankan dua credential berikut sebagai bagian dari persiapan fase dua:
+
+```env
+OPENAI_API_KEY=...
+ANTHROPIC_API_KEY=...
+```
+
+Credential tersebut harus berasal dari akun organisasi resmi, memiliki billing/kuota yang sesuai, dan disimpan hanya pada secret manager atau environment server. Jangan memasukkannya ke repository, database, UI admin, log, atau dokumen serah-terima yang dibagikan umum.
 
 Fase dua tersebut belum boleh dianggap sebagai fitur production pada saat serah-terima. Adapter, katalog model, validasi credential, UAT, evaluasi kualitas RAG, biaya, latency, dan prosedur rollback untuk OpenAI/Anthropic masih harus diselesaikan dan diuji sebelum diaktifkan.
 
