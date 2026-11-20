@@ -36,6 +36,10 @@
     const save = form.querySelector('#save-ai-model');
     const credentialStatus = form.querySelector('#ai-credential-status');
     const result = form.querySelector('#ai-test-result');
+    const refreshBtn = form.querySelector('#refresh-gemini-models');
+    const refreshSpinner = form.querySelector('#refresh-spinner');
+    const refreshLabel = form.querySelector('#refresh-label');
+    const refreshStatus = form.querySelector('#refresh-status');
     let sequence = 0;
     let pending;
     function updateReadiness() {
@@ -45,6 +49,9 @@
       save.disabled = !configured || !enabled || !select.value || form.dataset.embeddingReady !== 'true';
       credentialStatus.textContent = !enabled ? 'Provider belum diaktifkan dalam konfigurasi aplikasi.' : configured
         ? 'API key provider tersedia; akses model perlu diuji.' : 'API key provider belum dikonfigurasi di server.';
+      if (refreshBtn) {
+        refreshBtn.classList.toggle('hidden', providerSelect.value !== 'gemini');
+      }
     }
     function cancel() {
       sequence++;
@@ -62,6 +69,62 @@
     });
     updateReadiness();
     form.addEventListener('submit', cancel);
+
+    if (refreshBtn && form.dataset.refreshUrl) {
+      refreshBtn.addEventListener('click', async () => {
+        if (refreshBtn.disabled) return;
+        const origLabel = refreshLabel.textContent;
+        refreshBtn.disabled = true;
+        refreshLabel.textContent = 'Menyegarkan...';
+        refreshSpinner.classList.add('animate-spin');
+        if (refreshStatus) refreshStatus.classList.add('hidden');
+
+        try {
+          const res = await fetch(form.dataset.refreshUrl, {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': form.elements._token.value,
+            },
+          });
+          const data = await res.json();
+          if (res.ok && data.success && data.models) {
+            catalog['gemini'] = catalog['gemini'] || {};
+            catalog['gemini'].models = data.models;
+
+            if (providerSelect.value === 'gemini') {
+              const prev = select.value;
+              select.replaceChildren(new Option('Pilih model AI', ''));
+              Object.entries(data.models).forEach(([id, label]) => select.add(new Option(label, id)));
+              if (prev && data.models[prev]) {
+                select.value = prev;
+              }
+              updateReadiness();
+            }
+
+            if (refreshStatus) {
+              refreshStatus.textContent = 'Daftar model berhasil disegarkan.';
+              refreshStatus.classList.remove('hidden');
+              setTimeout(() => refreshStatus.classList.add('hidden'), 4000);
+            }
+          } else {
+            throw new Error('Gagal menyegarkan');
+          }
+        } catch {
+          if (refreshStatus) {
+            refreshStatus.textContent = 'Gagal menyegarkan model dari API.';
+            refreshStatus.classList.remove('hidden');
+            setTimeout(() => refreshStatus.classList.add('hidden'), 4000);
+          }
+        } finally {
+          refreshBtn.disabled = false;
+          refreshLabel.textContent = origLabel;
+          refreshSpinner.classList.remove('animate-spin');
+        }
+      });
+    }
+
     button.addEventListener('click', async () => {
       if (!providerSelect.reportValidity() || !select.reportValidity() || !readiness[providerSelect.value]) return;
       cancel();
