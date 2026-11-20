@@ -22,6 +22,10 @@ class UpdateAiSettingsRequest extends FormRequest
 
     public function rules(AiSettings $settings): array
     {
+        if ($this->input('provider') === 'gemini') {
+            app(\App\Services\AI\GeminiModelCatalog::class)->list();
+        }
+
         return $settings->rules($this->input('provider'), $this->modelField());
     }
 
