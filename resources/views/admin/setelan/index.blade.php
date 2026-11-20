@@ -18,7 +18,7 @@
               $candidateReady = $aiReadiness[$candidateProvider] ?? false;
               $candidateEnabled = $aiCatalog[$candidateProvider]['enabled'] ?? false;
             @endphp
-            <form id="ai-settings-form" action="{{ \App\Support\AdminNavigation::url('admin.update_settings') }}" method="POST" class="space-y-6" data-test-url="{{ route('admin.test_ai_model') }}" data-embedding-ready="{{ $aiReadiness['gemini'] ? 'true' : 'false' }}">
+            <form id="ai-settings-form" action="{{ \App\Support\AdminNavigation::url('admin.update_settings') }}" method="POST" class="space-y-6" data-test-url="{{ route('admin.test_ai_model') }}" data-refresh-url="{{ route('admin.refresh_gemini_models') }}" data-embedding-ready="{{ $aiReadiness['gemini'] ? 'true' : 'false' }}">
               @csrf
               <div>
                 <label for="ai_provider" class="block text-sm font-semibold text-slate-700 mb-2">Provider AI</label>
@@ -42,18 +42,34 @@
                 @elseif($aiSettings['default'])
                   <p class="mt-2 text-slate-600">Belum ada model tersimpan; menggunakan default aplikasi.</p>
                 @endif
+                @if($staleModel && preg_match('/^[a-zA-Z0-9\.\-_]+$/', $staleModel) && !str_contains($staleModel, '..'))
+                  <div class="mt-2 p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-900" role="status">
+                    <span class="font-semibold">⚠️ Model tersimpan tidak tersedia:</span>
+                    Model <span class="font-mono font-medium">{{ $staleModel }}</span> sudah tidak tersedia di katalog penyedia. Silakan pilih dan simpan model lain di bawah.
+                  </div>
+                @endif
                 @if($aiSettings && !$aiSettings['configured'])
                   <p class="mt-2 text-rose-700" role="status">API key provider aktif belum tersedia. Hubungi pengelola server.</p>
                 @endif
               </div>
               <div>
-                <label for="ai_model" class="block text-sm font-semibold text-slate-700 mb-2">Model yang dipilih</label>
+                <div class="flex items-center justify-between mb-2">
+                  <label for="ai_model" class="block text-sm font-semibold text-slate-700">Model yang dipilih</label>
+                  <button type="button" id="refresh-gemini-models" title="Segarkan daftar model dari Google API" class="text-xs text-blue-600 hover:text-blue-800 font-medium inline-flex items-center gap-1 transition-colors {{ $candidateProvider !== 'gemini' ? 'hidden' : '' }}">
+                    <svg id="refresh-spinner" class="w-3.5 h-3.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    <span id="refresh-label">Segarkan daftar model</span>
+                  </button>
+                </div>
                 <select name="model" id="ai_model" required aria-describedby="ai-model-help ai-model-error" aria-invalid="{{ $errors->hasAny(['model', 'gemini_model']) ? 'true' : 'false' }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600">
                   <option value="">Pilih model AI</option>
+                  @if($staleModel && preg_match('/^[a-zA-Z0-9\.\-_]+$/', $staleModel) && !str_contains($staleModel, '..') && !isset($aiCatalog[$candidateProvider]['models'][$staleModel]))
+                    <option value="{{ $staleModel }}" class="text-rose-600 font-medium" selected disabled>{{ $staleModel }} (Tidak tersedia di katalog)</option>
+                  @endif
                   @foreach($aiCatalog[$candidateProvider]['models'] ?? [] as $modelId => $modelLabel)
                     <option value="{{ $modelId }}" @selected($candidateModel === $modelId)>{{ $modelLabel }}</option>
                   @endforeach
                 </select>
+                <div id="refresh-status" class="text-xs text-emerald-600 font-medium mt-1 hidden" aria-live="polite"></div>
                 <p id="ai-model-help" class="text-xs text-slate-500 mt-2">Pilihan baru aktif setelah Simpan. Test Model memakai kuota API dan hanya menguji koneksi tanpa dokumen RPJMD.</p>
                 <div id="ai-model-error">@foreach(['model', 'gemini_model'] as $modelField)@error($modelField)<p class="text-sm text-rose-600 mt-2" role="alert">{{ $message }}</p>@enderror @endforeach</div>
               </div>
