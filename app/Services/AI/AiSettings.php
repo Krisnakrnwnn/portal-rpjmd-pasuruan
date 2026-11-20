@@ -17,18 +17,47 @@ class AiSettings
     public function catalog(): array
     {
         // Only explicitly implemented providers are usable, even if config is extended.
-        return array_intersect_key(config('ai.providers', []), array_flip(['gemini', 'openai', 'anthropic']));
+        $catalog = array_intersect_key(config('ai.providers', []), array_flip(['gemini', 'openai', 'anthropic']));
+
+        // If cached dynamic Gemini catalog exists, use it in the catalog.
+        if (isset($catalog['gemini'])) {
+            $cached = \Illuminate\Support\Facades\Cache::get('gemini_model_catalog');
+            if (is_array($cached) && ! empty($cached)) {
+                $catalog['gemini']['models'] = $cached;
+            }
+        }
+
+        return $catalog;
     }
 
     public function models(mixed $provider): array
     {
+        if ($provider === 'gemini') {
+            $cached = \Illuminate\Support\Facades\Cache::get('gemini_model_catalog');
+            if (is_array($cached) && ! empty($cached)) {
+                return $cached;
+            }
+
+            return config('ai.providers.gemini.models', config('ai.providers.gemini.fallback_models', []));
+        }
+
         return is_string($provider) ? ($this->catalog()[$provider]['models'] ?? []) : [];
     }
 
     public function allows(mixed $provider, mixed $model): bool
     {
-        return is_string($provider) && ($this->catalog()[$provider]['enabled'] ?? false)
-            && is_string($model) && array_key_exists($model, $this->models($provider));
+        if (! is_string($provider) || ! ($this->catalog()[$provider]['enabled'] ?? false) || ! is_string($model)) {
+            return false;
+        }
+
+        if ($provider === 'gemini') {
+            $models = $this->models('gemini');
+            $fallback = config('ai.providers.gemini.fallback_models', config('ai.providers.gemini.models', []));
+
+            return array_key_exists($model, $models) || array_key_exists($model, $fallback);
+        }
+
+        return array_key_exists($model, $this->models($provider));
     }
 
     public function configured(string $provider): bool
@@ -80,11 +109,14 @@ class AiSettings
             throw new AIProviderException('configuration');
         }
 
+        $models = $this->models($provider);
+        $modelLabel = $models[$model] ?? config("ai.providers.{$provider}.fallback_models.{$model}", config("ai.providers.{$provider}.models.{$model}", $model));
+
         return [
             'provider' => $provider,
             'model' => $model,
-            'provider_label' => $this->catalog()[$provider]['label'],
-            'model_label' => $this->models($provider)[$model],
+            'provider_label' => $this->catalog()[$provider]['label'] ?? $provider,
+            'model_label' => $modelLabel,
             'fallback' => $fallback,
             'default' => ! $neutral && ! $stored->has('gemini_model'),
             'configured' => $this->configured($provider),
