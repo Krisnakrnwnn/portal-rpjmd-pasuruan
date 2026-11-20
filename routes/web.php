@@ -85,6 +85,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.role'])->grou
     Route::post('/settings', [AdminController::class, 'updateSettings'])->name('update_settings');
     Route::post('/settings/test-model', [AdminController::class, 'testAiModel'])
         ->middleware('throttle:5,1')->name('test_ai_model');
+    Route::post('/settings/refresh-models', [AdminController::class, 'refreshGeminiModels'])->name('refresh_gemini_models');
 
     // Chatbot Ingestion (Admin & Super Admin)
     Route::post('/chatbot/ingest', [AdminController::class, 'ingestPdf'])->name('chatbot.ingest');
