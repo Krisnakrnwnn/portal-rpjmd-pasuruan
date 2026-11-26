@@ -18,6 +18,7 @@ use App\Models\User;
 use App\Services\AI\AIManager;
 use App\Services\AI\AiSettings;
 use App\Services\AI\Exceptions\AIProviderException;
+use App\Services\AI\GeminiModelCatalog;
 use App\Support\AdminNavigation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -498,6 +499,13 @@ class AdminController extends Controller
         } catch (\Throwable) {
             return response()->json(['success' => false, 'provider' => $provider, 'model' => $model, 'reply' => 'Pengujian model belum berhasil. Silakan coba lagi nanti.'], 500);
         }
+    }
+
+    public function refreshGeminiModels(GeminiModelCatalog $catalog)
+    {
+        $models = $catalog->refresh();
+
+        return response()->json(['success' => true, 'models' => $models]);
     }
 
     public function destroyIngest($id)

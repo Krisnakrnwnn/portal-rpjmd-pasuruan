@@ -150,17 +150,41 @@ class AdminPageController extends Controller
 
     public function setelan(AiSettings $settings): View
     {
+        // Muat katalog Gemini dinamis (dari cache atau API)
+        $geminiCatalog = app(\App\Services\AI\GeminiModelCatalog::class)->list();
+
         try {
             $active = $settings->current();
         } catch (AIProviderException) {
             $active = null;
         }
 
+        $catalog = $settings->catalog();
+        if (isset($catalog['gemini'])) {
+            $catalog['gemini']['models'] = $geminiCatalog;
+        }
+
+        // Detect stale stored model: a model saved in DB that is no longer in the catalog.
+        $storedStats = \App\Models\Stat::whereIn('key', \App\Services\AI\AiSettings::RESERVED_KEYS)
+            ->pluck('value', 'key');
+        $rawStoredModel = $storedStats['ai_model'] ?? ($storedStats['gemini_model'] ?? null);
+        $rawStoredProvider = $storedStats['ai_provider'] ?? config('ai.default_provider');
+        $staleModel = null;
+        if (is_string($rawStoredModel) && $rawStoredModel !== '') {
+            $available = $rawStoredProvider === 'gemini'
+                ? $geminiCatalog
+                : ($catalog[$rawStoredProvider]['models'] ?? []);
+            if (! array_key_exists($rawStoredModel, $available)) {
+                $staleModel = $rawStoredModel;
+            }
+        }
+
         return $this->page('setelan/index', 'setelan', 'Setelan Konfigurasi', [
             'profiles' => Profile::orderBy('id')->lazy(200)->collect(),
             'aiSettings' => $active,
-            'aiCatalog' => $settings->catalog(),
+            'aiCatalog' => $catalog,
             'aiReadiness' => $settings->readiness(),
+            'staleModel' => $staleModel,
         ]);
     }
 

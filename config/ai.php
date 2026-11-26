@@ -8,10 +8,22 @@ return [
         'gemini' => [
             'label' => 'Google Gemini',
             'enabled' => true,
-            // Verified against Google model/deprecation documentation on 2026-09-15.
+            // Fallback / verified catalog. Dipakai saat API gagal, timeout, atau key belum siap.
             'models' => [
                 'gemini-2.5-flash' => 'Gemini 2.5 Flash',
                 'gemini-2.5-pro' => 'Gemini 2.5 Pro',
+                'gemini-2.0-flash' => 'Gemini 2.0 Flash',
+                'gemini-2.0-flash-lite' => 'Gemini 2.0 Flash-Lite',
+                'gemini-1.5-flash' => 'Gemini 1.5 Flash',
+                'gemini-1.5-pro' => 'Gemini 1.5 Pro',
+            ],
+            'fallback_models' => [
+                'gemini-2.5-flash' => 'Gemini 2.5 Flash',
+                'gemini-2.5-pro' => 'Gemini 2.5 Pro',
+                'gemini-2.0-flash' => 'Gemini 2.0 Flash',
+                'gemini-2.0-flash-lite' => 'Gemini 2.0 Flash-Lite',
+                'gemini-1.5-flash' => 'Gemini 1.5 Flash',
+                'gemini-1.5-pro' => 'Gemini 1.5 Pro',
             ],
         ],
         'openai' => [
